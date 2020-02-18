@@ -1,0 +1,34 @@
+<dom-module id="deposit-tagihan">
+    <template>
+        <style include="iron-flex iron-flex-alignment">
+            :host {
+                display: block;
+            }
+        </style>
+        
+        <tagihan-data data-tagihan="{{data}}" total-pengeluaran="{{pengeluaranTotal}}" data-tambah="{{dataTambah}}" data-edit="{{dataEdit}}"></tagihan-data>
+
+        <tagihan-list data="{{data}}" total-pengeluaran="{{pengeluaranTotal}}"></tagihan-list>
+
+        <tagihan-tambah data-tambah="{{dataTambah}}"></tagihan-tambah>
+
+        <tagihan-edit data-edit="{{dataEdit}}"></tagihan-edit>
+    </template>
+
+
+
+    <script>
+        (function() {
+            Polymer({
+                is: 'deposit-tagihan',
+                properties: {
+                    uid: String
+                },
+
+                ready: function() { 
+                }
+
+            });
+        })();
+    </script>
+</dom-module>

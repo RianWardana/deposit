@@ -1,0 +1,85 @@
+<dom-module id="app-deposit">
+    <template>
+        <style include="iron-flex iron-flex-alignment">
+            :host {
+                display: block;
+                --paper-tabs-selection-bar-color: #83ADCF; /*200*/
+                --paper-tab-ink: #043F71;
+            }
+
+            paper-tab:focus {
+                text-decoration: none;
+                font-weight: normal;
+            }
+
+            app-header {
+                background-color: var(--app-primary-color);
+                color: #fff;
+                /*width: 100%;*/
+            }
+            
+            @media (max-width: 800px) {
+                iron-pages#iron-pages-deposit {
+                    padding: 0px 16px;
+                }
+            }
+
+            @media (min-width: 801px) {
+                iron-pages#iron-pages-deposit {
+                    /*padding: 48px 62px 0;*/
+                    padding: 5% 20% 0;
+                }
+            }
+        </style>
+
+        <app-header-layout>
+            <app-header id="appHeader" fixed shadow slot="header">
+                <paper-tabs attr-for-selected="tab" selected="{{tab_sekarang}}" noink>
+                    <paper-tab tab="rekening">REKENING</paper-tab>
+                    <paper-tab tab="tagihan">PENGELUARAN</paper-tab>
+                    <paper-tab tab="tunai">TUNAI</paper-tab>
+                </paper-tabs>
+            </app-header>
+            
+            <iron-pages id="iron-pages-deposit" attr-for-selected="tab" selected="{{tab_sekarang}}">
+                <deposit-rekening tab="rekening"></deposit-rekening>
+                <deposit-tagihan tab="tagihan"></deposit-tagihan>
+                <deposit-tunai tab="tunai"></deposit-tunai>
+            </iron-pages>
+        </app-header-layout>
+    </template>
+
+
+
+    <script>
+        (function() {
+            Polymer({
+                is: 'app-deposit',
+                // behaviors: [Polymer.IronResizableBehavior],
+                properties: {
+                    tab_sekarang: { type: String, value: 'tagihan' },
+                    uid: String
+                },
+
+                ready: function() {
+                    this.setupToolbar();
+
+                    // auth.onAuthStateChanged(firebaseUser => {
+                    //     if (firebaseUser) {
+                    //         this.tab_sekarang = "rekening"
+                    //         console.log("cuy")
+                    //     }
+                    // })     
+                },
+
+                setupToolbar: function() {
+                    this.$.appHeader.style.top = '64px'
+                    that = this;
+                    window.addEventListener('scroll', function() {
+                        that.$.appHeader.style.top = (window.pageYOffset <= 64 ? (64 - window.pageYOffset) : 0) + 'px';
+                    });
+                }
+            });
+        })();
+    </script>
+</dom-module>

@@ -1,0 +1,32 @@
+<dom-module id="deposit-rekening">
+    <template>
+        <style include="iron-flex iron-flex-alignment">
+            :host {
+                display: block;
+            }
+        </style>
+        
+        <rekening-data data-rekening="{{data}}" last-saldo="{{saldo}}" data-tambah="{{dataTambah}}"></rekening-data>
+
+        <rekening-list data="{{data}}" saldo="{{saldo}}"></rekening-list>
+
+        <rekening-tambah data-tambah="{{dataTambah}}"></rekening-tambah>
+    </template>
+
+
+
+    <script>
+        (function() {
+            Polymer({
+                is: 'deposit-rekening',
+                properties: {
+                    uid: String
+                },
+
+                ready: function() { 
+                }
+
+            });
+        })();
+    </script>
+</dom-module>

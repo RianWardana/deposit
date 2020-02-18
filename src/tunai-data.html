@@ -1,0 +1,46 @@
+<dom-module id="tunai-data">
+    <template>
+
+    </template>
+
+    <script>
+        (function() {
+            Polymer({
+                is: 'tunai-data',
+                properties: {
+                    dataTunai: { 
+                        type: Array,
+                        notify: true
+                    },
+                    uid: String
+                },
+
+                ready: function() {
+                    thisTunDat = this
+                    console.log("[READY] tunai-data")
+                    
+                    auth.onAuthStateChanged(firebaseUser => {
+                        if (firebaseUser) {
+                            thisTunDat.uid = firebaseUser.uid
+                            thisTunDat.loadTunai()
+                        }
+                        else {
+                            console.log("Tidak boleh akses tunai") 
+                        }
+                    })
+                },
+
+                loadTunai: function() {  
+                    console.log("loadTunai")
+
+                    dbTunai = firebase.database().ref(thisTunDat.uid + "/tunai")
+
+                    dbTunai.on('value', snap => {
+                        
+                    })
+                }
+
+            });
+        })();
+    </script>
+</dom-module>

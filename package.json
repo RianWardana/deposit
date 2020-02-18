@@ -1,0 +1,20 @@
+{
+  "name": "deposit",
+  "version": "2.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rian Wardana",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-crisper": "^1.1.0",
+    "gulp-file-sync": "^1.0.8"
+  },
+  "dependencies": {
+    "gulp-vulcanize": "^8.0.0",
+    "vinyl-fs": "^3.0.3"
+  }
+}

@@ -1,0 +1,55 @@
+<dom-module id="rekening-item">
+    <template>
+        <style include="iron-flex iron-flex-alignment shared-styles">  
+        </style>
+
+        <paper-material>
+            <template is="dom-if" if="{{apakahKredit(jenis)}}"><div class="banner kredit"></div></template>
+            <template is="dom-if" if="{{!apakahKredit(jenis)}}"><div class="banner debit"></div></template>
+            <paper-ripple recenters></paper-ripple>
+            <div class="content">
+                <div class="horizontal layout">
+                    <span>{{nama}}</span> 
+                    <span class="flex"></span>
+                    <span>{{formatJumlah(jenis, jumlah)}}</span>
+                </div>
+                <div class="horizontal layout">
+                    <span>{{waktu}}</span> 
+                    <span class="flex"></span>
+                </div>
+            </div>
+        </paper-material>
+    </template>
+
+
+
+    <script>
+        (function() {
+            Polymer({
+                is: 'rekening-item',
+                properties: {
+                    waktu: String,
+                    nama: String,
+                    jenis: String,
+                    jumlah: Number
+                },
+
+                ready: function() {  
+                },
+
+                formatJumlah: function(dataJenis, dataJumlah) {
+                    // console.log("formatJumlah()")
+
+                    var dataJumlahInt = parseInt(dataJumlah);
+                    return (dataJenis == 'kredit' ? '+ Rp' : '- Rp') + dataJumlahInt.toLocaleString('id-ID');
+                },
+
+                apakahKredit: function(jenis) {
+                    // console.log("apakahKredit()");
+                    return (jenis == 'kredit' ? true : false);
+                }
+                
+            });
+        })();
+    </script>
+</dom-module>
