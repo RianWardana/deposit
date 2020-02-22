@@ -31,6 +31,7 @@
             <div class="horizontal layout">
                 <paper-input list="daftar-pengeluaran" no-label-float label="Nama" value="{{nama}}" maxlength="64"></paper-input>
                 <datalist id="daftar-pengeluaran">
+                    <option value="hehe">
                     <template is="dom-repeat" items="{{daftarNamaPengeluaran}}" as="item">
                         <option value="{{item}}">
                     </template>
@@ -53,11 +54,18 @@
 
 
     <script>
-        (function() {
-            Polymer({
-                is: 'tagihan-tambah',
-                behaviors: [Polymer.NeonAnimationRunnerBehavior],
-                properties: {
+        class tagihanTambah extends
+            Polymer.mixinBehaviors([Polymer.NeonAnimationRunnerBehavior],
+            Polymer.Element) {
+
+        // class tagihanTambah extends Polymer.Element {
+
+            static get is() {
+                return 'tagihan-tambah';
+            }
+
+            static get properties() {
+                return {
                     daftarNamaPengeluaran: {
                         type: Array,
                         value: [
@@ -88,95 +96,107 @@
                     jumlah: Number,
 
                     // animationConfig: {
-                    //     value: function() {
+                    //     value() {
                     //         return {
                     //             'entry': [
                     //                 {
                     //                     name: 'fade-in-animation',
-                    //                     node: this.$.fab,
+                    //                     node: this,
                     //                     timing: {duration: 300}
                     //                 }
                     //             ],
-                    //             'exit': [
+                    //             'fabExit': [
                     //                 {
                     //                     name: 'fade-out-animation',
-                    //                     node: this.$.fab,
+                    //                     node: this,
                     //                     timing: {duration: 300}
                     //                 }
                     //             ]
                     //         }
                     //     }
                     // }
-                },
+                };
+            }
 
-                listeners: {
-                    'neon-animation-finish': '_animationFinished'
-                },
 
-                ready: function() {  
-                    thisTagTambah = this;
+            ready() {
+                super.ready();
+                this.addEventListener('neon-animation-finish', this._animationFinished);
 
-                    thisTagTambah.$.dialog.animationConfig = {
-                        'entry': [
-                            {
-                                name: 'fade-in-animation',
-                                node: this.$.dialog,
-                                timing: {duration: 300}
-                            }
-                        ],
-                        'exit': [
-                            {
-                                name: 'fade-out-animation',
-                                node: this.$.dialog,
-                                timing: {duration: 300}
-                            }
-                        ]
-                    }
-                },
-
-                tambah: function() {
-                    if ((this.nama != "") && (this.jumlah != "")) { 
-                        this.$.dialog.close();
-
-                        this.dataTambah = {
-                            nama: this.nama,
-                            jumlah: this.jumlah
+                this.$.dialog.animationConfig = {
+                    'entry': [
+                        {
+                            name: 'fade-in-animation',
+                            node: this.$.dialog,
+                            timing: {duration: 300}
                         }
-
-                        // Tambah ke rekening //
-                        if (salinKeRekening.checked) {
-                            thisRekDat.dataTambah = {
-                                nama: this.nama,
-                                debit: this.jumlah,
-                                kredit: 0
-                            }
+                    ],
+                    'exit': [
+                        {
+                            name: 'fade-out-animation',
+                            node: this.$.dialog,
+                            timing: {duration: 300}
                         }
-                    } else {
-                        this.$.toastKosong.open()
-                    }
-                },
-
-                _dialogClosed: function() {
-                    window.onresize = null
-                    this.$.fab.style.display = 'block'
-                    this.playAnimation('entry')
-                },
-
-                _animationFinished: function() {
-                    if (this.$.dialog.opened) {
-                        this.$.fab.style.display = 'none'
-                    }
-                },
-
-                fabClick: function() {
-                    this.playAnimation('exit')
-                    this.nama = ""
-                    this.jumlah = ""
-                    // salinKeRekening.checked = false;
-                    this.$.dialog.open()
+                    ]
                 }
+            }
+
+            // show() {
+            //     console.log("tagTambah here showed");
+            //     this.playAnimation();
+            //     this.$.fab.animate([
+            //         {transform:'translateY(0)', opacity: 1, easing: 'ease-out'},
+            //         {transform:'translateY(100%)', opacity: 1, easing: 'ease-in'},
+            //         {transform:'translateY(100%)', opacity: 0 }
+            //     ],
+            //     {
+            //         duration: 1500,
+            //     });
+            // }
+
+            tambah() {
+                if ((this.nama != "") && (this.jumlah != "")) { 
+                    this.$.dialog.close();
+
+                    this.dataTambah = {
+                        nama: this.nama,
+                        jumlah: this.jumlah
+                    }
+
+                    // Tambah ke rekening //
+                    if (salinKeRekening.checked) {
+                        thisRekDat.dataTambah = {
+                            nama: this.nama,
+                            debit: this.jumlah,
+                            kredit: 0
+                        }
+                    }
+                } else {
+                    this.$.toastKosong.open()
+                }
+            }
+
+            _dialogClosed() {
+                window.onresize = null;
+                this.$.fab.style.display = 'block';
+                // this.playAnimation('entry');
+            }
+
+            _animationFinished() {
+                if (this.$.dialog.opened) {
+                    this.$.fab.style.display = 'none';
+                }
+            }
+
+            fabClick() {
+                // thisTagTambah.playAnimation('fabExit')
+                this.nama = "";
+                this.jumlah = "";
+                this.$.salinKeRekening.checked = false;
+                this.$.dialog.open();
+            }
                 
-            });
-        })();
+            }
+        customElements.define(tagihanTambah.is, tagihanTambah);
     </script>
 </dom-module>

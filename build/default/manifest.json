@@ -1,0 +1,26 @@
+{
+  "name": "Deposit",
+  "short_name": "Deposit",
+  "icons": [
+  		{
+  			"src": "img/icon.png",
+  			"sizes": "96x96",
+  			"type": "image/png"
+  		},
+  		{
+  			"src": "img/icon-128x128.png",
+  			"sizes": "128x128",
+  			"type": "image/png"
+  		},
+  		{
+  			"src": "img/icon-384x384.png",
+  			"sizes": "384x384",
+  			"type": "image/png"
+  		}
+  ],
+  "start_url": "index.html",
+  "display": "standalone",
+  "theme_color": "#1E88E5",
+  "background_color": "#1E88E5",
+  "orientation": "portrait"
+}
