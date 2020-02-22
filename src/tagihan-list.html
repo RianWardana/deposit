@@ -140,11 +140,13 @@
     </template>
 
     <script>
-        (function() {
-            Polymer({
-                is: 'tagihan-list',
-                // behaviors: [Polymer.NeonAnimationRunnerBehavior],
-                properties: {
+        class tagihanList extends Polymer.Element {
+            static get is() {
+                return 'tagihan-list';
+            }
+
+            static get properties() {
+                return {
                     data: { 
                         type: Object,
                         notify: true,
@@ -157,11 +159,11 @@
                     },
 
                     totalPengeluaran: {
-                    	type: Object
+                        type: Object
                     },
 
                     // animationConfig: {
-                    //     value: function() {
+                    //     value() {
                     //         return {
                     //             'exitSpinner': [
                     //                 {
@@ -202,82 +204,79 @@
                     //         }
                     //     }
                     // }
-                },
+                };
+            }
 
-                listeners: {
-                    // 'neon-animation-finish': '_animationFinished'
-                },
+            ready() {
+                super.ready();
+                this.addEventListener('neon-animation-finish', this._animationFinished);
+                this.dataChangedCount = 0
 
-                ready: function() {
-                    thisTagList = this
-
-                    thisTagList.dataChangedCount = 0
-
-                    auth.onAuthStateChanged(firebaseUser => {
-                        if (firebaseUser) {
-                            dataChangedCount = 0
-                            thisTagList.$.spinner.style.display = 'block'
-                            thisTagList.$.list.style.display = 'none'  
-                        }
-                        else {
-                            dataChangedCount = -1
-                        }
-                    })
-                },
-
-                _dataChanged: function() {
-                    // Animation yang dijalankan saat awal //
-                    if (thisTagList.dataChangedCount == 0) {
-                        // thisTagList.playAnimation('exitSpinner')
-                        thisTagList.$.list.style.display = 'block'
-                        // thisTagList.playAnimation('entryList')
+                auth.onAuthStateChanged(firebaseUser => {
+                    if (firebaseUser) {
+                        dataChangedCount = 0
+                        this.$.spinner.style.display = 'block'
+                        this.$.list.style.display = 'none'  
                     }
-                    // Animation yang dijalankan saat ada perubahan data // 
                     else {
-                        
+                        dataChangedCount = -1
                     }
-                    
-                    thisTagList.dataChangedCount++
-                },
+                })
+            }
 
-                _animationFinished: function() {
-                    thisTagList.$.spinner.style.display = 'none'
-                },
-
-                formatTotalTagihan: function(total) {
-                    if (isNaN(total)) return 0;
-                    else return parseInt(total).toLocaleString('id-ID');
-                },
-
-                formatBatas: function(total) {
-                    var dateObject = new Date()
-                    var tanggal = dateObject.getDate()
-                    var hariTerakhir = new Date(dateObject.getFullYear(), dateObject.getMonth()+1, 0).getDate();
-                    var selisihHari = (hariTerakhir-tanggal < 1 ? 1 : hariTerakhir-tanggal);
-                    return parseFloat(((2250000-total) / selisihHari).toFixed(0)).toLocaleString('id-ID');
-                },
-
-                formatSisaPengeluaran: function(jumlah, jenis) {
-                    if (jenis == "makan") var alokasi = 912000;
-                    else if (jenis == "transport") var alokasi = 990000;
-                    else var alokasi = 348000;
-
-                    var sisaPengeluaran = alokasi - jumlah - thisTagList.defisitCarry;
-                    thisTagList.defisitCarry = (sisaPengeluaran > 0 ? 0 : Math.abs(sisaPengeluaran));
-                    return parseFloat((sisaPengeluaran > 0 ? sisaPengeluaran : 0)).toLocaleString('id-ID');
-                },
-
-                _tapLunas: function() {
-                    thisTagList.$.toastLunas.open();
-                },
-
-                _tapLunasConfirm: function() {
-                	thisTagDat.lunasiSemua();
-                	thisTagList.$.toastLunas.close();
-                	thisTagList.playAnimation('exitList');
+            _dataChanged() {
+                // Animation yang dijalankan saat awal //
+                if (this.dataChangedCount == 0) {
+                    // this.playAnimation('exitSpinner')
+                    this.$.list.style.display = 'block'
+                    // this.playAnimation('entryList')
                 }
+                // Animation yang dijalankan saat ada perubahan data // 
+                else {
+                    
+                }
+                
+                this.dataChangedCount++
+            }
 
-            });
-        })();
+            _animationFinished() {
+                this.$.spinner.style.display = 'none'
+            }
+
+            formatTotalTagihan(total) {
+                if (isNaN(total)) return 0;
+                else return parseInt(total).toLocaleString('id-ID');
+            }
+
+            formatBatas(total) {
+                var dateObject = new Date()
+                var tanggal = dateObject.getDate()
+                var hariTerakhir = new Date(dateObject.getFullYear(), dateObject.getMonth()+1, 0).getDate();
+                var selisihHari = (hariTerakhir-tanggal < 1 ? 1 : hariTerakhir-tanggal);
+                return parseFloat(((2250000-total) / selisihHari).toFixed(0)).toLocaleString('id-ID');
+            }
+
+            formatSisaPengeluaran(jumlah, jenis) {
+                if (jenis == "makan") var alokasi = 912000;
+                else if (jenis == "transport") var alokasi = 990000;
+                else var alokasi = 348000;
+
+                var sisaPengeluaran = alokasi - jumlah - this.defisitCarry;
+                this.defisitCarry = (sisaPengeluaran > 0 ? 0 : Math.abs(sisaPengeluaran));
+                return parseFloat((sisaPengeluaran > 0 ? sisaPengeluaran : 0)).toLocaleString('id-ID');
+            }
+
+            _tapLunas() {
+                this.$.toastLunas.open();
+            }
+
+            _tapLunasConfirm() {
+            	thisTagDat.lunasiSemua();
+            	this.$.toastLunas.close();
+            	this.playAnimation('exitList');
+            }
+        }
+
+        customElements.define(tagihanList.is, tagihanList);
     </script>
 </dom-module>

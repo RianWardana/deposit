@@ -40,11 +40,13 @@
 
 
     <script>
-        (function() {
-            Polymer({
-                is: 'tagihan-edit',
-                behaviors: [Polymer.NeonAnimationRunnerBehavior],
-                properties: {
+        class tagihanEdit extends Polymer.Element {
+            static get is() {
+                return 'tagihan-edit';
+            }
+
+            static get properties() {
+                return {
                     triggerEdit: {
                         type: Boolean,
                         observer: '_editTriggered'
@@ -64,59 +66,61 @@
 
                     nama: String,
                     jumlah: Number
-                },
-
-                ready: function() {  
-                    thisTagEdit = this;
-
-                    this.$.dialog.animationConfig = {
-                        'entry': [
-                            {
-                                name: 'fade-in-animation',
-                                node: this.$.dialog,
-                                timing: {duration: 300}
-                            }
-                        ],
-                        'exit': [
-                            {
-                                name: 'fade-out-animation',
-                                node: this.$.dialog,
-                                timing: {duration: 300}
-                            }
-                        ]
-                    }
-                },
-
-                _editTriggered: function() {
-                    this.$.dialog.open()
-                },
-
-                _tapHapus: function() {
-                    this.$.dialog.close();
-                        this.dataEdit = {
-                            key: this.key,
-                            jumlah: 0
-                        }
-                },
-
-                _tapSimpan: function() {
-                    if ((this.nama != "") && (this.jumlah != "")) { 
-                        this.$.dialog.close();
-                        this.dataEdit = {
-                            key: this.key,
-                            nama: this.nama,
-                            jumlah: this.jumlah
-                        }
-                    } else {
-                        this.$.toastKosong.open()
-                    }
-                },
-
-                _dialogClosed: function() {
-                    window.onresize = null
                 }
-                
-            });
-        })();
+            }
+
+            ready() {
+                super.ready(); 
+                window.thisTagEdit = this;
+
+                this.$.dialog.animationConfig = {
+                    'entry': [
+                        {
+                            name: 'fade-in-animation',
+                            node: this.$.dialog,
+                            timing: {duration: 300}
+                        }
+                    ],
+                    'exit': [
+                        {
+                            name: 'fade-out-animation',
+                            node: this.$.dialog,
+                            timing: {duration: 300}
+                        }
+                    ]
+                }
+            }
+
+            _editTriggered() {
+                this.$.dialog.open()
+            }
+
+            _tapHapus() {
+                this.$.dialog.close();
+                    this.dataEdit = {
+                        key: this.key,
+                        jumlah: 0
+                    }
+            }
+
+            _tapSimpan() {
+                if ((this.nama != "") && (this.jumlah != "")) { 
+                    this.$.dialog.close();
+                    this.dataEdit = {
+                        key: this.key,
+                        nama: this.nama,
+                        jumlah: this.jumlah
+                    }
+                } else {
+                    this.$.toastKosong.open()
+                }
+            }
+
+            _dialogClosed() {
+                window.onresize = null
+            }
+
+        }
+        customElements.define(tagihanEdit.is, tagihanEdit);
     </script>
 </dom-module>

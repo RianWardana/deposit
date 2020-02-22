@@ -31,33 +31,33 @@
 
 
     <script>
-        (function() {
-            Polymer({
-                is: 'tagihan-item',
-                properties: {
+        class tagihanItem extends Polymer.Element {
+            static get is() {
+                return 'tagihan-item';
+            }
+
+            static get properties() {
+                return {
                     key: String,
                     waktu: String,
                     nama: String,
                     jumlah: Number
-                },
-
-                ready: function() {  
-                    // thisTagItem = this;
-                },
-
-                formatJumlah: function(dataJumlah) {
-                    var dataJumlahInt = parseInt(dataJumlah);
-                    return "Rp" + dataJumlahInt.toLocaleString('id-ID');
-                },
-
-                _tapEdit: function(e) {
-                    thisTagEdit.key = e.target.key
-                    thisTagEdit.nama = e.target.nama
-                    thisTagEdit.jumlah = e.target.jumlah
-                    thisTagEdit.triggerEdit = (thisTagEdit.triggerEdit ? false : true)
                 }
+            }
+
+            formatJumlah(dataJumlah) {
+                var dataJumlahInt = parseInt(dataJumlah);
+                return "Rp" + dataJumlahInt.toLocaleString('id-ID');
+            }
+
+            _tapEdit(e) {
+                thisTagEdit.key = e.target.key
+                thisTagEdit.nama = e.target.nama
+                thisTagEdit.jumlah = e.target.jumlah
+                thisTagEdit.triggerEdit = (thisTagEdit.triggerEdit ? false : true)
+            }
+        }
                 
-            });
-        })();
+        customElements.define(tagihanItem.is, tagihanItem);
     </script>
 </dom-module>
