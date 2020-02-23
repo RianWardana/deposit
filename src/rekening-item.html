@@ -24,32 +24,31 @@
 
 
     <script>
-        (function() {
-            Polymer({
-                is: 'rekening-item',
-                properties: {
+        class rekeningItem extends Polymer.Element {
+
+            static get is() {
+                return 'rekening-item';
+            }
+
+            static get properties() {
+                return {
                     waktu: String,
                     nama: String,
                     jenis: String,
                     jumlah: Number
-                },
+                };
+            }
 
-                ready: function() {  
-                },
+            formatJumlah(dataJenis, dataJumlah) {
+                var dataJumlahInt = parseInt(dataJumlah);
+                return (dataJenis == 'kredit' ? '+ Rp' : '- Rp') + dataJumlahInt.toLocaleString('id-ID');
+            }
 
-                formatJumlah: function(dataJenis, dataJumlah) {
-                    // console.log("formatJumlah()")
+            apakahKredit(jenis) {
+                return (jenis == 'kredit' ? true : false);
+            }
+        }
 
-                    var dataJumlahInt = parseInt(dataJumlah);
-                    return (dataJenis == 'kredit' ? '+ Rp' : '- Rp') + dataJumlahInt.toLocaleString('id-ID');
-                },
-
-                apakahKredit: function(jenis) {
-                    // console.log("apakahKredit()");
-                    return (jenis == 'kredit' ? true : false);
-                }
-                
-            });
-        })();
+        customElements.define(rekeningItem.is, rekeningItem);
     </script>
 </dom-module>

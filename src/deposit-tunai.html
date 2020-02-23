@@ -7,24 +7,16 @@
         </style>
         
         Halaman deposit tunai.
-
-        <tunai-data data-tunai="{{data}}"></tunai-data>
-
+        <!-- <tunai-data data-tunai="{{data}}"></tunai-data> -->
     </template>
 
-
-
     <script>
-        (function() {
-            Polymer({
-                is: 'deposit-tunai',
-                properties: {
-                },
+        class depositTunai extends Polymer.Element {
+            static get is() {
+                return 'deposit-tunai';
+            }
+        }
 
-                ready: function() { 
-                }
-
-            });
-        })();
+        customElements.define(depositTunai.is, depositTunai);
     </script>
 </dom-module>

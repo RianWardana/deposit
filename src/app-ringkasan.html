@@ -64,47 +64,37 @@
 
 
     <script>
-        (function() {
-            Polymer({
-                is: 'app-ringkasan',
-                // behaviors: [Polymer.IronResizableBehavior],
-                properties: {
-                    // tab_sekarang: { type: String, value: 'tagihan' },
-                    // uid: String
-                },
+        class appRingkasan extends Polymer.Element {
 
-                ready: function() {
-                    console.log("[READY] app-ringkasan.html");
-                    thisAppRing = this;
-                    var yearToday = (new Date()).getFullYear();
-                    var monthToday = (new Date()).getMonth();
-                    thisAppRing.yearMonthMax = new Date(yearToday, monthToday+1).toISOString().slice(0,7);
-                    thisAppRing.yearMonthLast = new Date(yearToday, monthToday).toISOString().slice(0,7);
-                },
+            static get is() {
+                return 'app-ringkasan';
+            }
 
-                _toArray: function(object) {
-                    if (Object.keys(object) < 1) return [['Pengeluaran', 0]];
-                    return Object.entries(object);
-                },
+            ready() {
+                super.ready();
+                console.log("[READY] app-ringkasan.html");
+                var yearToday = (new Date()).getFullYear();
+                var monthToday = (new Date()).getMonth();
+                this.yearMonthMax = new Date(yearToday, monthToday+1).toISOString().slice(0,7);
+                this.yearMonthLast = new Date(yearToday, monthToday).toISOString().slice(0,7);
+            }
 
-                _formatJumlah: function(jumlah) {
-                    return 'Rp' + parseInt(jumlah).toLocaleString('id-ID')
-                },
+            _toArray(object) {
+                if (Object.keys(object) < 1) return [['Pengeluaran', 0]];
+                return Object.entries(object);
+            }
 
-                _tapSearch: function() {
-                    var year = (thisAppRing.$.inputBulan.value).slice(0,4);
-                    var month = (thisAppRing.$.inputBulan.value).slice(5,7);
-                    thisRingDat.loadPengeluaran(year, month-1);
-                }
+            _formatJumlah(jumlah) {
+                return 'Rp' + parseInt(jumlah).toLocaleString('id-ID')
+            }
 
-                // setupToolbar: function() {
-                //     this.$.appHeader.style.top = '64px'
-                //     that = this;
-                //     window.addEventListener('scroll', function() {
-                //         that.$.appHeader.style.top = (window.pageYOffset <= 64 ? (64 - window.pageYOffset) : 0) + 'px';
-                //     });
-                // }
-            });
-        })();
+            _tapSearch() {
+                var year = (this.$.inputBulan.value).slice(0,4);
+                var month = (this.$.inputBulan.value).slice(5,7);
+                thisRingDat.loadPengeluaran(year, month-1);
+            }
+        }
+
+        customElements.define(appRingkasan.is, appRingkasan);
     </script>
 </dom-module>

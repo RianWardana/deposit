@@ -44,7 +44,7 @@
             <iron-pages id="iron-pages-deposit" attr-for-selected="tab" selected="{{tab_sekarang}}">
                 <deposit-rekening tab="rekening"></deposit-rekening>
                 <deposit-tagihan tab="tagihan"></deposit-tagihan>
-                <deposit-tunai tab="tunai"></deposit-tunai>
+                <!-- <deposit-tunai tab="tunai"></deposit-tunai> -->
             </iron-pages>
         </app-header-layout>
     </template>
@@ -52,34 +52,33 @@
 
 
     <script>
-        (function() {
-            Polymer({
-                is: 'app-deposit',
-                // behaviors: [Polymer.IronResizableBehavior],
-                properties: {
+        class appDeposit extends Polymer.Element {
+
+            static get is() {
+                return 'app-deposit';
+            }
+
+            static get properties() {
+                return {
                     tab_sekarang: { type: String, value: 'tagihan' },
                     uid: String
-                },
+                };
+            }
 
-                ready: function() {
-                    this.setupToolbar();
+            ready() {
+                super.ready();
+                this.setupToolbar();   
+            }
 
-                    // auth.onAuthStateChanged(firebaseUser => {
-                    //     if (firebaseUser) {
-                    //         this.tab_sekarang = "rekening"
-                    //         console.log("cuy")
-                    //     }
-                    // })     
-                },
+            setupToolbar() {
+                this.$.appHeader.style.top = '64px';
+                window.that = this;
+                window.addEventListener('scroll', function() {
+                    that.$.appHeader.style.top = (window.pageYOffset <= 64 ? (64 - window.pageYOffset) : 0) + 'px';
+                });
+            }
+        }
 
-                setupToolbar: function() {
-                    this.$.appHeader.style.top = '64px'
-                    that = this;
-                    window.addEventListener('scroll', function() {
-                        that.$.appHeader.style.top = (window.pageYOffset <= 64 ? (64 - window.pageYOffset) : 0) + 'px';
-                    });
-                }
-            });
-        })();
+        customElements.define(appDeposit.is, appDeposit);
     </script>
 </dom-module>

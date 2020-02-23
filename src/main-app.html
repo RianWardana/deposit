@@ -40,25 +40,24 @@
 
 <!-- <link rel="import" href="../bower_components/platinum-sw/platinum-sw-register.html"> -->
 <!-- <link rel="import" href="../bower_components/platinum-sw/platinum-sw-cache.html"> -->
-
 <!-- <link rel="import" href="../bower_components/iron-swipeable-pages/iron-swipeable-pages.html"> -->
-
 <link rel="import" href="shared-styles.html">
 
 <!-- deposit app -> * page -->
-<link rel="import" href="app-auth.html">
-<link rel="import" href="app-deposit.html">
+<link rel="import" href="app-auth.html">        <!-- ES6 -->
+<link rel="import" href="app-deposit.html">     <!-- ES6 -->
+<link rel="import" href="app-ringkasan.html">   <!-- ES6 -->
 
 <!-- deposit app -> deposit page -> * tab -->
-<link rel="import" href="deposit-rekening.html">
-<link rel="import" href="deposit-tagihan.html">
-<link rel="import" href="deposit-tunai.html">
+<link rel="import" href="deposit-rekening.html"><!-- ES6 -->
+<link rel="import" href="deposit-tagihan.html"> <!-- ES6 -->
+<!-- <link rel="import" href="deposit-tunai.html"> -->
 
 <!-- deposit app -> deposit page -> rekening tab -->
-<link rel="import" href="rekening-data.html">
-<link rel="import" href="rekening-list.html">
-<link rel="import" href="rekening-item.html">
-<link rel="import" href="rekening-tambah.html">
+<link rel="import" href="rekening-data.html">   <!-- ES6 -->
+<link rel="import" href="rekening-list.html">   <!-- ES6 -->
+<link rel="import" href="rekening-item.html">   <!-- ES6 -->
+<link rel="import" href="rekening-tambah.html"> <!-- ES6 -->
 
 <!-- deposit app -> deposit page -> pengeluaran tab -->
 <link rel="import" href="tagihan-data.html">    <!-- ES6 -->
@@ -68,12 +67,7 @@
 <link rel="import" href="tagihan-edit.html">    <!-- ES6 -->
 
 <!-- deposit app -> deposit page -> tunai tab -->
-<link rel="import" href="tunai-data.html">
-
-<!-- deposit app -> ringkasan page -->
-<link rel="import" href="app-ringkasan.html">
-
-
+<!-- <link rel="import" href="tunai-data.html"> -->
 
 <dom-module id="main-app">
     <template>
@@ -148,7 +142,6 @@
             
                     <iron-pages attr-for-selected="halaman" selected="{{halaman_sekarang}}">
                         <app-deposit halaman="Deposit"></app-deposit>
-                        <!-- <div halaman="Ringkasan">Ringkasan deposit</div> -->
                         <app-ringkasan halaman="Ringkasan"></app-ringkasan>
                     </iron-pages>
             
@@ -170,63 +163,65 @@
     
 
     <script>
-        Polymer({
-            is: 'main-app',
-            behaviors: [Polymer.NeonAnimatableBehavior],
-            properties: {
-                halaman_sekarang: { 
-                    type: String, 
-                    value: 'Deposit',
-                    observer: '_halamanChanged'
-                },
+        class mainApp extends Polymer.Element {
 
-                loadRingkasan: {
-                    type: Boolean,
-                    value: false
-                },
+            static get is() {
+                return 'main-app';
+            }
 
-                isRingkasanLoaded: {
-                    type: Boolean,
-                    value: false
-                },
-                
-                triggerLogout: {
-                    type: Number
-                }
-            },
+            static get properties() {
+                return {
+                    halaman_sekarang: { 
+                        type: String, 
+                        value: 'Deposit',
+                        observer: '_halamanChanged'
+                    },
 
-            ready: function() {
-                thisMainApp = this;
-                console.log("[READY] main-app.html")
+                    loadRingkasan: {
+                        type: Boolean,
+                        value: false
+                    },
 
-                // auth.onAuthStateChanged(firebaseUser => {
-                //     if (firebaseUser) {
-                //         this.halaman_sekarang = "Deposit"
-                //     }
-                // })
-            },
+                    isRingkasanLoaded: {
+                        type: Boolean,
+                        value: false
+                    },
+                    
+                    triggerLogout: {
+                        type: Number
+                    }
+                };
+            }
 
-            _halamanChanged: function() {
+            ready() {
+                super.ready();
+                window.thisMainApp = this;
+                console.log("[READY] main-app.html");
+            }
+
+            _halamanChanged() {
                 if (this.halaman_sekarang == 'Ringkasan') {
                     if (!this.isRingkasanLoaded) {
                         this.loadRingkasan = true;
                         this.isRingkasanLoaded = true;
                     }
                 }
-            },
+            }
 
-            _tapLogOut: function() {
+            _tapLogOut() {
                 this.triggerLogout = Math.random()
-            },
+            }
 
-            _swInstalled: function() {
+            _swInstalled() {
                 console.log("SW Installed")
-            },
+            }
 
-            onMenuSelect: function() {
+            onMenuSelect() {
                 if (this.$.appdrawerlayout.narrow) 
                     this.$.appdrawer.close();
             }
-        });
+        }
+
+        customElements.define(mainApp.is, mainApp);
     </script>
 </dom-module>

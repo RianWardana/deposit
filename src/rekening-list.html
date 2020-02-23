@@ -44,11 +44,14 @@
     </template>
 
     <script>
-        (function() {
-            Polymer({
-                is: 'rekening-list',
-                // behaviors: [Polymer.NeonAnimationRunnerBehavior],
-                properties: {
+        class rekeningList extends Polymer.Element {
+
+            static get is() {
+                return 'rekening-list';
+            }
+
+            static get properties() {
+                return {
                     data: { 
                         type: Object,
                         notify: true,
@@ -110,52 +113,50 @@
                     //         }
                     //     }
                     // }
-                },
+                };
+            }
 
-                listeners: {
-                    // 'neon-animation-finish': '_animationFinished'
-                },
-
-                ready: function() {
-                    dataChangedCount = 0
-                    animationFinishedCount = 0
+                ready() {
+                    super.ready();
+                    this.dataChangedCount = 0;
+                    this.animationFinishedCount = 0;
 
                     auth.onAuthStateChanged(firebaseUser => {
                         if (firebaseUser) {
-                            dataChangedCount = 0
-                            animationFinishedCount = 0
-                            this.$.spinner.style.display = 'block'
-                            this.$.list.style.display = 'none'  
+                            this.dataChangedCount = 0;
+                            this.animationFinishedCount = 0;
+                            this.$.spinner.style.display = 'block';
+                            this.$.list.style.display = 'none';
                         }
                         else {
-                            dataChangedCount = -1
+                            this.dataChangedCount = -1;
                         }
                     })
-                },
+                }
 
-                _dataChanged: function() {
-                    console.log("_dataChanged number " + dataChangedCount + " is called.")
-                    // this.playAnimation('exitSpinner')
-                    this.$.list.style.display = 'block'
-                    // this.playAnimation('entryList')
-                    dataChangedCount++
-                },
+                _dataChanged() {
+                    console.log("_dataChanged number " + this.dataChangedCount + " is called.");
+                    // this.playAnimation('exitSpinner');
+                    this.$.list.style.display = 'block';
+                    // this.playAnimation('entryList');
+                    this.dataChangedCount++;
+                }
 
-                _animationFinished: function() {
-                    if (animationFinishedCount == 0) {
-                        this.$.spinner.style.display = 'none'
-                        // this.$.list.style.display = 'block'
-                        // this.playAnimation('entryList')
-                        animationFinishedCount++
+                _animationFinished() {
+                    if (this.animationFinishedCount == 0) {
+                        this.$.spinner.style.display = 'none';
+                        // this.$.list.style.display = 'block';
+                        // this.playAnimation('entryList');
+                        this.animationFinishedCount++;
                     }
-                },
+                }
 
-                formatSaldo: function(dataSaldo) {
+                formatSaldo(dataSaldo) {
                     if (isNaN(dataSaldo)) return 0;
                     else return parseInt(dataSaldo).toLocaleString('id-ID');
                 }
+        }
 
-            });
-        })();
+        customElements.define(rekeningList.is, rekeningList);
     </script>
 </dom-module>

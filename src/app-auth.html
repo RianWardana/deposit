@@ -34,10 +34,14 @@
 
     <script src="https://www.gstatic.com/firebasejs/3.6.4/firebase.js"></script>
     <script>
-        (function() {
-            Polymer({
-                is: 'app-auth',
-                properties: {
+        class appAuth extends Polymer.Element {
+
+            static get is() {
+                return 'app-auth';
+            }
+
+            static get properties() {
+                return {
                     loginStatus: {
                         type: Number,
                         notify: true
@@ -54,52 +58,59 @@
 
                     password: {
                         type: String
+                    },
+
+                    uid: {
+                        type: String
                     }
-                },
+                };
+            }
 
-                ready: function() {
-                    this.$.container.style.marginTop = (window.innerHeight - 280)/2 - 100 + 'px'
-                    this.$.container.style.marginLeft = (window.innerWidth - 280)/2 + 'px'
+            ready() {
+                super.ready();
+                this.$.container.style.marginTop = (window.innerHeight - 280)/2 - 100 + 'px'
+                this.$.container.style.marginLeft = (window.innerWidth - 280)/2 + 'px'
 
-                    var config = {
-                        apiKey: "AIzaSyCAmpmMEFT9nbMaTjI4YDqAa1H1zufc9r0",
-                        authDomain: "deposit-ce46e.firebaseapp.com",
-                        databaseURL: "https://deposit-ce46e.firebaseio.com",
-                        storageBucket: "deposit-ce46e.appspot.com",
-                        messagingSenderId: "713372742623"
-                    }; 
-                    firebase.initializeApp(config);
+                var config = {
+                    apiKey: "AIzaSyCAmpmMEFT9nbMaTjI4YDqAa1H1zufc9r0",
+                    authDomain: "deposit-ce46e.firebaseapp.com",
+                    databaseURL: "https://deposit-ce46e.firebaseio.com",
+                    storageBucket: "deposit-ce46e.appspot.com",
+                    messagingSenderId: "713372742623"
+                }; 
+                firebase.initializeApp(config);
 
-                    auth = firebase.auth()
+                window.auth = firebase.auth()
 
-                    auth.onAuthStateChanged(firebaseUser => {
-                        if (firebaseUser) {
-                            this.loginStatus = 1
-                            this.email = ""
-                            this.password = ""
-                            this.$.toast.close()
-                        }
-                        else {
-                            this.loginStatus = 0
-                        }
-                    })
-                },
+                auth.onAuthStateChanged(firebaseUser => {
+                    if (firebaseUser) {
+                        this.uid = firebaseUser.uid;
+                        this.loginStatus = 1;
+                        this.email = "";
+                        this.password = "";
+                        this.$.toast.close();
+                    }
+                    else {
+                        this.loginStatus = 0;
+                    }
+                })
+            }
 
-                _triggerLogout: function() {
-                    auth.signOut()
-                },
+            _triggerLogout() {
+                auth.signOut()
+            }
 
-                _tapLogin: function() {
-                    var ini = this
-                    this.$.toast.show({text: 'Logging in...', duration: 5000})
-                    promise = auth.signInWithEmailAndPassword(this.email, this.password)
-                    promise.catch(e => {
-                        ini.$.toast.close()
-                        ini.$.toast.show(e.message)
-                    })
-                }
+            _tapLogin() {
+                var ini = this
+                this.$.toast.show({text: 'Logging in...', duration: 5000})
+                window.promise = auth.signInWithEmailAndPassword(this.email, this.password)
+                promise.catch(e => {
+                    ini.$.toast.close()
+                    ini.$.toast.show(e.message)
+                })
+            }
+        }
 
-            });
-        })();
+        customElements.define(appAuth.is, appAuth);
     </script>
 </dom-module>

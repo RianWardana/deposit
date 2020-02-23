@@ -58,8 +58,8 @@
             loadTagihan() {
                 console.log('loadTagihan')
 
-                this.dbTagihan = firebase.database().ref(this.uid + "/tagihan")
-                this.dbTagihanLimited = this.dbTagihan.orderByChild('lunas').equalTo(0)
+                window.dbTagihan = firebase.database().ref(this.uid + "/tagihan")
+                this.dbTagihanLimited = dbTagihan.orderByChild('lunas').equalTo(0)
 
                 var dateObjectToday = new Date()
                 var tanggalToday = (dateObjectToday.getDate() < 10 ? "0" : "") + dateObjectToday.getDate()
@@ -126,7 +126,7 @@
                     lunas: 0
                 }
 
-                var submission = this.dbTagihan.child(epoch).set(data)
+                var submission = dbTagihan.child(epoch).set(data)
                 submission.then(e => {
                     console.log("Penambahan berhasil.")
                 })
@@ -142,9 +142,9 @@
                     lunas: 0
                 }
 
-                if (ini.dataEdit['jumlah'] == 0) this.dbTagihan.child(ini.dataEdit['key']).remove()
+                if (ini.dataEdit['jumlah'] == 0) dbTagihan.child(ini.dataEdit['key']).remove()
                 else {
-                    var submission = this.dbTagihan.child(ini.dataEdit['key']).set(data)
+                    var submission = dbTagihan.child(ini.dataEdit['key']).set(data)
                     submission.then(e => {
                         console.log("Edit berhasil.")
                     })
@@ -155,7 +155,7 @@
             lunasiSemua() {
                 this.dataTagihan.forEach(tagihan => {
                     console.log(tagihan.key)
-                    this.dbTagihan.child(tagihan.key).update({lunas: 1})
+                    dbTagihan.child(tagihan.key).update({lunas: 1})
                 })
             }
         }

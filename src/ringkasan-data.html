@@ -30,11 +30,13 @@
                 },
 
                 loadPengeluaran: function(year, month) {
+                    console.log('ringkasan-data: loadPengeluaran');
                     var startTime = new Date(year, month).getTime() / -1000; // pembagi negatif karena key yang negatif
                     var endTime = new Date(year, month+1).getTime() / -1000;
 
-                    dbTagihan = firebase.database().ref(this.uid + "/tagihan");
-                    dbTagihanMonth = dbTagihan.orderByKey().startAt(endTime.toString()).endAt(startTime.toString()); // dibalik antara endTime dan startTime karena key yang negatif
+                    // Selanjutnya jangan minta uid dari thisRekDat, cari cara lain
+                    window.dbTagihan = firebase.database().ref(thisRekDat.uid + "/tagihan");
+                    window.dbTagihanMonth = dbTagihan.orderByKey().startAt(endTime.toString()).endAt(startTime.toString()); // dibalik antara endTime dan startTime karena key yang negatif
                     dbTagihanMonth.once('value', entries => {
                         var pengeluaran = {};
                         var total = 0;
@@ -46,7 +48,6 @@
                             else pengeluaran[nama] = jumlah;
 
                             total += jumlah;
-                            // console.log(nama);
                         });
                         thisRingDat.pengeluaran = pengeluaran;
                         thisRingDat.total = total;

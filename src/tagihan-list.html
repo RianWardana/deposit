@@ -141,6 +141,7 @@
 
     <script>
         class tagihanList extends Polymer.Element {
+
             static get is() {
                 return 'tagihan-list';
             }
@@ -214,12 +215,12 @@
 
                 auth.onAuthStateChanged(firebaseUser => {
                     if (firebaseUser) {
-                        dataChangedCount = 0
+                        this.dataChangedCount = 0
                         this.$.spinner.style.display = 'block'
                         this.$.list.style.display = 'none'  
                     }
                     else {
-                        dataChangedCount = -1
+                        this.dataChangedCount = -1
                     }
                 })
             }
