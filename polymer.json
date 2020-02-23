@@ -1,0 +1,22 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/main-app.html",
+  "sources": [
+   "src/**/*",
+   "img/**/*"
+  ],
+  "extraDependencies": [
+    "manifest.json",
+    "bower_components/webcomponentsjs/webcomponents-lite.js",
+    "favicon.ico"
+  ],
+  "lint": {
+    "rules": ["polymer-2"]
+  },
+  "builds": [{
+    "bundle": true,
+    "js": {"minify": true},
+    "css": {"minify": true},
+    "html": {"minify": true}
+  }]
+}

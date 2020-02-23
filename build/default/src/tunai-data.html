@@ -1,0 +1,41 @@
+<html><head></head><body><dom-module id="tunai-data"><template></template><script>
+        class tunaiData extends Polymer.Element {
+
+            static get is() {
+                return 'tunai-data';
+            }
+
+            static get properties() {
+                return {
+                    dataTunai: { 
+                        type: Array,
+                        notify: true
+                    },
+                    uid: String
+                };
+            }
+
+            ready() {
+                super.ready();
+                console.log("[READY] tunai-data")
+                
+                auth.onAuthStateChanged(firebaseUser => {
+                    if (firebaseUser) {
+                        this.uid = firebaseUser.uid
+                        this.loadTunai()
+                    }
+                    else {
+                        console.log("Tidak boleh akses tunai") 
+                    }
+                })
+            }
+
+            loadTunai() {
+                this.dbTunai = firebase.database().ref(this.uid + "/tunai")
+                dbTunai.on('value', snap => {
+                    
+                })
+            }
+
+        customElements.define(tunaiData.is, tunaiData);
+    </script></dom-module></body></html>
