@@ -1,6 +1,7 @@
 import {PolymerElement, html} from '@polymer/polymer';
 
 class rekeningList extends PolymerElement {
+  // nanti pakai ${ until(content, <spinner/>) }
   static get template() {
     return html`
         <style include="iron-flex iron-flex-alignment shared-styles">

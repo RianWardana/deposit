@@ -36,10 +36,6 @@ import './shared-styles.js';
 
 import './app-auth.js';
 import './app-deposit.js';
-// import './app-ringkasan.js';
-
-// import './deposit-rekening.js';
-// import './deposit-tagihan.js';
 
 import './rekening-data.js';
 import './rekening-list.js';
@@ -107,7 +103,7 @@ class mainApp extends PolymerElement {
 
             <app-drawer-layout id="appdrawerlayout" fullbleed="">
                 <app-drawer id="appdrawer" slot="drawer">
-                    <iron-image style="width:256px; height:225px;" sizing="cover" src="../img/drawer.png"></iron-image>
+                    <iron-image style="width:256px; height:225px;" sizing="cover" src="./img/drawer.png"></iron-image>
                     <iron-selector attr-for-selected="halaman" selected="{{halaman_sekarang}}" on-iron-select="onMenuSelect"> <!-- saat sudah berhasil login dia tidak mau ke halaman "Deposit". Variabel {{halaman_sekarang}} iseng2 saya ganti asal. Eh bisa. saya ngga ngerti kenapa -->
                         <paper-item halaman="Deposit"><iron-icon icon="list"></iron-icon>Deposit</paper-item>
                         <paper-item halaman="Ringkasan"><iron-icon icon="timeline"></iron-icon>Ringkasan</paper-item>
@@ -138,16 +134,7 @@ class mainApp extends PolymerElement {
             <platinum-sw-cache default-cache-strategy="networkFirst">
             </platinum-sw-cache>
         </platinum-sw-register>
-    
-        <!-- Fail di Gulp -->
-        <!-- <template is="dom-if" if="{{loadRingkasan}}">
-            <link rel="import" href="src/app-ringkasan.html">
-        </template> -->
-`;
-  }
-
-  static get is() {
-      return 'main-app';
+    `;
   }
 
   static get properties() {
@@ -209,4 +196,4 @@ class mainApp extends PolymerElement {
   }
 }
 
-customElements.define(mainApp.is, mainApp);
+customElements.define('main-app', mainApp);

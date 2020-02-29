@@ -26,7 +26,7 @@ class appAuth extends PolymerElement {
 
 
         <div id="container" class="vertical layout">
-            <iron-image style="width:280px; height:80px;" sizing="cover" src="../img/auth.png"></iron-image>
+            <iron-image style="width:280px; height:80px;" sizing="cover" src="./img/auth.png"></iron-image>
             <paper-input label="E-mail address" value="{{email}}" maxlength="64"></paper-input>
             <paper-input label="Password" type="password" value="{{password}}" maxlength="32"></paper-input>
             <paper-button raised="" on-tap="_tapLogin">Log in</paper-button>
