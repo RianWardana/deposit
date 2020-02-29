@@ -1,5 +1,8 @@
-<dom-module id="deposit-tagihan">
-    <template>
+import {PolymerElement, html} from '@polymer/polymer';
+
+class depositTagihan extends PolymerElement {
+  static get template() {
+    return html`
         <style include="iron-flex iron-flex-alignment">
             :host {
                 display: block;
@@ -10,15 +13,12 @@
         <tagihan-list data="{{data}}" total-pengeluaran="{{pengeluaranTotal}}"></tagihan-list>
         <tagihan-tambah data-tambah="{{dataTambah}}"></tagihan-tambah>
         <tagihan-edit data-edit="{{dataEdit}}"></tagihan-edit>
-    </template>
+`;
+  }
 
-    <script>
-        class depositTagihan extends Polymer.Element {
-            static get is() {
-                return 'deposit-tagihan';
-            }
-        }
+  static get is() {
+      return 'deposit-tagihan';
+  }
+}
 
-        customElements.define(depositTagihan.is, depositTagihan);
-    </script>
-</dom-module>
+customElements.define(depositTagihan.is, depositTagihan);

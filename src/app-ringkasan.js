@@ -1,7 +1,9 @@
-<link rel="import" href="ringkasan-data.html">
+import {PolymerElement, html} from '@polymer/polymer';
+// import './ringkasan-data.js';
 
-<dom-module id="app-ringkasan">
-    <template>
+class appRingkasan extends PolymerElement {
+  static get template() {
+    return html`
         <style include="iron-flex iron-flex-alignment shared-styles">
             :host {
                 display: block;
@@ -59,42 +61,36 @@
         </app-header-layout>
         
         <ringkasan-data pengeluaran="{{pengeluaran}}" total="{{total}}"></ringkasan-data>
-    </template>
+`;
+  }
 
+  static get is() {
+      return 'app-ringkasan';
+  }
 
+  ready() {
+      super.ready();
+      console.log("[READY] app-ringkasan.html");
+      var yearToday = (new Date()).getFullYear();
+      var monthToday = (new Date()).getMonth();
+      this.yearMonthMax = new Date(yearToday, monthToday+1).toISOString().slice(0,7);
+      this.yearMonthLast = new Date(yearToday, monthToday).toISOString().slice(0,7);
+  }
 
-    <script>
-        class appRingkasan extends Polymer.Element {
+  _toArray(object) {
+      if (Object.keys(object) < 1) return [['Pengeluaran', 0]];
+      return Object.entries(object);
+  }
 
-            static get is() {
-                return 'app-ringkasan';
-            }
+  _formatJumlah(jumlah) {
+      return 'Rp' + parseInt(jumlah).toLocaleString('id-ID')
+  }
 
-            ready() {
-                super.ready();
-                console.log("[READY] app-ringkasan.html");
-                var yearToday = (new Date()).getFullYear();
-                var monthToday = (new Date()).getMonth();
-                this.yearMonthMax = new Date(yearToday, monthToday+1).toISOString().slice(0,7);
-                this.yearMonthLast = new Date(yearToday, monthToday).toISOString().slice(0,7);
-            }
+  _tapSearch() {
+      var year = (this.$.inputBulan.value).slice(0,4);
+      var month = (this.$.inputBulan.value).slice(5,7);
+      thisRingDat.loadPengeluaran(year, month-1);
+  }
+}
 
-            _toArray(object) {
-                if (Object.keys(object) < 1) return [['Pengeluaran', 0]];
-                return Object.entries(object);
-            }
-
-            _formatJumlah(jumlah) {
-                return 'Rp' + parseInt(jumlah).toLocaleString('id-ID')
-            }
-
-            _tapSearch() {
-                var year = (this.$.inputBulan.value).slice(0,4);
-                var month = (this.$.inputBulan.value).slice(5,7);
-                thisRingDat.loadPengeluaran(year, month-1);
-            }
-        }
-
-        customElements.define(appRingkasan.is, appRingkasan);
-    </script>
-</dom-module>
+customElements.define(appRingkasan.is, appRingkasan);

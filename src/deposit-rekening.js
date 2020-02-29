@@ -1,5 +1,8 @@
-<dom-module id="deposit-rekening">
-    <template>
+import {PolymerElement, html} from '@polymer/polymer';
+
+class depositRekening extends PolymerElement {
+  static get template() {
+    return html`
         <style include="iron-flex iron-flex-alignment">
             :host {
                 display: block;
@@ -9,15 +12,12 @@
         <rekening-data data-rekening="{{data}}" last-saldo="{{saldo}}" data-tambah="{{dataTambah}}"></rekening-data>
         <rekening-list data="{{data}}" saldo="{{saldo}}"></rekening-list>
         <rekening-tambah data-tambah="{{dataTambah}}"></rekening-tambah>
-    </template>
+`;
+  }
 
-    <script>
-        class depositRekening extends Polymer.Element {
-            static get is() {
-                return 'deposit-rekening';
-            }
-        }
+  static get is() {
+      return 'deposit-rekening';
+  }
+}
 
-        customElements.define(depositRekening.is, depositRekening);
-    </script>
-</dom-module>
+customElements.define(depositRekening.is, depositRekening);

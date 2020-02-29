@@ -1,4 +1,6 @@
-<dom-module id="shared-styles">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<dom-module id="shared-styles">
     <template>
         <style>
             div.banner.kredit { background-color: #4CAF50; }
@@ -40,4 +42,6 @@
             }
         </style>
     </template>
-</dom-module>
+</dom-module>`;
+
+document.head.appendChild($_documentContainer.content);

@@ -1,5 +1,8 @@
-<dom-module id="app-deposit">
-    <template>
+import {PolymerElement, html} from '@polymer/polymer';
+
+class appDeposit extends PolymerElement {
+  static get template() {
+    return html`
         <style include="iron-flex iron-flex-alignment">
             :host {
                 display: block;
@@ -33,8 +36,8 @@
         </style>
 
         <app-header-layout>
-            <app-header id="appHeader" fixed shadow slot="header">
-                <paper-tabs attr-for-selected="tab" selected="{{tab_sekarang}}" noink>
+            <app-header id="appHeader" fixed="" shadow="" slot="header">
+                <paper-tabs attr-for-selected="tab" selected="{{tab_sekarang}}" noink="">
                     <paper-tab tab="rekening">REKENING</paper-tab>
                     <paper-tab tab="tagihan">PENGELUARAN</paper-tab>
                     <paper-tab tab="tunai">TUNAI</paper-tab>
@@ -47,38 +50,32 @@
                 <!-- <deposit-tunai tab="tunai"></deposit-tunai> -->
             </iron-pages>
         </app-header-layout>
-    </template>
+`;
+  }
 
+  static get is() {
+      return 'app-deposit';
+  }
 
+  static get properties() {
+      return {
+          tab_sekarang: { type: String, value: 'tagihan' },
+          uid: String
+      };
+  }
 
-    <script>
-        class appDeposit extends Polymer.Element {
+  ready() {
+      super.ready();
+      this.setupToolbar();   
+  }
 
-            static get is() {
-                return 'app-deposit';
-            }
+  setupToolbar() {
+      this.$.appHeader.style.top = '64px';
+      window.that = this;
+      window.addEventListener('scroll', function() {
+          that.$.appHeader.style.top = (window.pageYOffset <= 64 ? (64 - window.pageYOffset) : 0) + 'px';
+      });
+  }
+}
 
-            static get properties() {
-                return {
-                    tab_sekarang: { type: String, value: 'tagihan' },
-                    uid: String
-                };
-            }
-
-            ready() {
-                super.ready();
-                this.setupToolbar();   
-            }
-
-            setupToolbar() {
-                this.$.appHeader.style.top = '64px';
-                window.that = this;
-                window.addEventListener('scroll', function() {
-                    that.$.appHeader.style.top = (window.pageYOffset <= 64 ? (64 - window.pageYOffset) : 0) + 'px';
-                });
-            }
-        }
-
-        customElements.define(appDeposit.is, appDeposit);
-    </script>
-</dom-module>
+customElements.define(appDeposit.is, appDeposit);
