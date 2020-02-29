@@ -55,8 +55,6 @@ class tagihanTambah extends PolymerElement {
 `;
   }
 
-  // class tagihanTambah extends Polymer.Element {
-
   static get is() {
       return 'tagihan-tambah';
   }
@@ -161,7 +159,7 @@ class tagihanTambah extends PolymerElement {
           }
 
           // Tambah ke rekening //
-          if (salinKeRekening.checked) {
+          if (this.$.salinKeRekening.checked) {
               thisRekDat.dataTambah = {
                   nama: this.nama,
                   debit: this.jumlah,
@@ -193,4 +191,5 @@ class tagihanTambah extends PolymerElement {
       this.$.dialog.open();
   }
 }
+
 customElements.define(tagihanTambah.is, tagihanTambah);

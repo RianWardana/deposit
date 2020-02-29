@@ -19,7 +19,7 @@ class rekeningData extends PolymerElement {
           },
           dataTambah: {
               type: Object,
-              observer: '_triggerKirim'
+              observer: '_dataTambahChanged'
           },
           waktu: String,
           nama: String,
@@ -33,8 +33,8 @@ class rekeningData extends PolymerElement {
 
   ready() {
       super.ready();
-      window.thisRekDat = this
-      console.log("[READY] rekening-data")
+      window.thisRekDat = this;
+      console.log("[READY] rekening-data");
 
       auth.onAuthStateChanged(firebaseUser => {
           if (firebaseUser) {
@@ -43,63 +43,57 @@ class rekeningData extends PolymerElement {
               console.log("rekening-data knows if you are signed in and your UID is " + firebaseUser.uid)
           }
           else {
-              thisRekDat.dataRekening = []
-              thisRekDat.lastSaldo = null
-              console.log("rekening-data knows if you are not signed in.")
+              thisRekDat.dataRekening = [];
+              thisRekDat.lastSaldo = null;
+              console.log("rekening-data knows if you are not signed in.");
           }
       })
   }
 
   loadRekening() {  
-      // if (this.uid != 0) {
-          console.log("loadRekening")
+    console.log("loadRekening");
 
-          this.dbRekening = firebase.database().ref(thisRekDat.uid + "/rekening")
-          this.dbRekeningLimited = this.dbRekening.orderByKey().limitToFirst(10)
+    this.dbRekening = firebase.database().ref(thisRekDat.uid + "/rekening");
+    this.dbRekeningLimited = this.dbRekening.orderByKey().limitToFirst(10);
 
-          // Tereksekusi setiap ada perubahaan di database 'rekening' //
-          this.dbRekeningLimited.on('value', snap => {
-              // Mencari nilai saldo pada entri awal //
-              var keys = Object.keys(snap.val())
-              var lastKey = keys[0]
-              thisRekDat.lastSaldo = parseInt(snap.val()[lastKey].saldo)
+    // Tereksekusi setiap ada perubahaan di database 'rekening' //
+    this.dbRekeningLimited.on('value', snap => {
+      // Mencari nilai saldo pada entri awal //
+      var keys = Object.keys(snap.val());
+      var lastKey = keys[0];
+      thisRekDat.lastSaldo = parseInt(snap.val()[lastKey].saldo);
 
-              // Tereksekusi untuk setiap entri di 'rekening' //
-              thisRekDat.dataRekening = []
-              snap.forEach(snapEach => {
-                  var dateObject = new Date(parseInt(snapEach.key)*(-1000))
-                  var tanggal = (dateObject.getDate() < 10 ? "0" : "") + dateObject.getDate()
-                  var bulan = (dateObject.getMonth() < 9 ? "0" : "") + (dateObject.getMonth() + 1)
-                  var tahun = dateObject.getYear() - 100
-                  thisRekDat.waktu = tanggal + "/" + bulan + "/" + tahun
-                  thisRekDat.nama = snapEach.val()['nama']
-                  var debit = snapEach.val()['debit']
-                  var kredit = snapEach.val()['kredit']
-                  thisRekDat.jumlah = (debit == 0 ? kredit : debit)
-                  thisRekDat.jenis = (debit == 0 ? "kredit" : "debit")
-                  thisRekDat.push('dataRekening', {
-                      waktu: thisRekDat.waktu,
-                      nama: thisRekDat.nama,
-                      jumlah: thisRekDat.jumlah,
-                      jenis: thisRekDat.jenis
-                  })
-              })
-          })
-      // } else {
-      //     this.dataRekening = []
-      //     this.dbRekening = null
-      //     this.dbRekeningLimited = null
-      //     console.log("data destroyed")
-      // }
+      // Tereksekusi untuk setiap entri di 'rekening' //
+      thisRekDat.dataRekening = [];
+      snap.forEach(snapEach => {
+        var dateObject = new Date(parseInt(snapEach.key)*(-1000));
+        var tanggal = (dateObject.getDate() < 10 ? "0" : "") + dateObject.getDate();
+        var bulan = (dateObject.getMonth() < 9 ? "0" : "") + (dateObject.getMonth() + 1);
+        var tahun = dateObject.getYear() - 100;
+        thisRekDat.waktu = tanggal + "/" + bulan + "/" + tahun;
+        thisRekDat.nama = snapEach.val()['nama'];
+        var debit = snapEach.val()['debit'];
+        var kredit = snapEach.val()['kredit'];
+        thisRekDat.jumlah = (debit == 0 ? kredit : debit);
+        thisRekDat.jenis = (debit == 0 ? "kredit" : "debit");
+        
+        thisRekDat.push('dataRekening', {
+          waktu: thisRekDat.waktu,
+          nama: thisRekDat.nama,
+          jumlah: thisRekDat.jumlah,
+          jenis: thisRekDat.jenis
+        })
+      })
+    })
   }
 
-  _triggerKirim() {
-      var ini = this
+  _dataTambahChanged() {
+      var ini = this;
 
-      var epoch = Math.floor(new Date() / -1000)
-      var debit = parseInt(ini.dataTambah['debit'])
-      var kredit = parseInt(ini.dataTambah['kredit'])
-      var saldo = ini.lastSaldo + (kredit - debit)
+      var epoch = Math.floor(new Date() / -1000);
+      var debit = parseInt(ini.dataTambah['debit']);
+      var kredit = parseInt(ini.dataTambah['kredit']);
+      var saldo = ini.lastSaldo + (kredit - debit);
       
       var data = {
           nama: ini.dataTambah['nama'],
@@ -108,7 +102,7 @@ class rekeningData extends PolymerElement {
           saldo: saldo,
       }
 
-      kirimData = this.dbRekening.child(epoch).set(data)
+      var kirimData = this.dbRekening.child(epoch).set(data)
       kirimData.then(e => {
           console.log("Penambahan berhasil.")
       })

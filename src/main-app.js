@@ -36,10 +36,10 @@ import './shared-styles.js';
 
 import './app-auth.js';
 import './app-deposit.js';
-import './app-ringkasan.js';
+// import './app-ringkasan.js';
 
-import './deposit-rekening.js';
-import './deposit-tagihan.js';
+// import './deposit-rekening.js';
+// import './deposit-tagihan.js';
 
 import './rekening-data.js';
 import './rekening-list.js';
@@ -158,10 +158,10 @@ class mainApp extends PolymerElement {
               observer: '_halamanChanged'
           },
 
-          loadRingkasan: {
-              type: Boolean,
-              value: false
-          },
+          // loadRingkasan: {
+          //     type: Boolean,
+          //     value: false
+          // },
 
           isRingkasanLoaded: {
               type: Boolean,
@@ -177,16 +177,22 @@ class mainApp extends PolymerElement {
   ready() {
       super.ready();
       window.thisMainApp = this;
-      console.log("[READY] main-app.html");
+      console.log("[READY] main-app");
   }
 
   _halamanChanged() {
-      if (this.halaman_sekarang == 'Ringkasan') {
-          if (!this.isRingkasanLoaded) {
-              this.loadRingkasan = true;
-              this.isRingkasanLoaded = true;
-          }
+    if (this.halaman_sekarang == 'Ringkasan') {
+      if (!this.isRingkasanLoaded) {
+        console.log("[LOADING] app-ringkasan");
+        // this.loadRingkasan = true;
+        import('./app-ringkasan.js').then((appRingkasan) => {
+          console.log("[LOADED] app-ringkasan");
+        }).catch((reason) => {
+          console.log("app-ringkasan failed to load.", reason);
+        });
+        this.isRingkasanLoaded = true;
       }
+    }
   }
 
   _tapLogOut() {

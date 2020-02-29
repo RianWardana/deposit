@@ -45,8 +45,17 @@ class appDeposit extends PolymerElement {
             </app-header>
             
             <iron-pages id="iron-pages-deposit" attr-for-selected="tab" selected="{{tab_sekarang}}">
-                <deposit-rekening tab="rekening"></deposit-rekening>
-                <deposit-tagihan tab="tagihan"></deposit-tagihan>
+                <div tab="rekening">
+                  <rekening-data data-rekening="{{dataRekening}}" last-saldo="{{saldo}}" data-tambah="{{mutasiRekening}}"></rekening-data>
+                  <rekening-list data="{{dataRekening}}" saldo="{{saldo}}"></rekening-list>
+                  <rekening-tambah data-tambah="{{mutasiRekening}}"></rekening-tambah>
+                </div>
+                <div tab="tagihan">
+                  <tagihan-data data-tagihan="{{data}}" total-pengeluaran="{{pengeluaranTotal}}" data-tambah="{{dataTambah}}" data-edit="{{dataEdit}}"></tagihan-data>
+                  <tagihan-list data="{{data}}" total-pengeluaran="{{pengeluaranTotal}}"></tagihan-list>
+                  <tagihan-tambah data-tambah="{{dataTambah}}"></tagihan-tambah>
+                  <tagihan-edit data-edit="{{dataEdit}}"></tagihan-edit>
+                </div>
                 <!-- <deposit-tunai tab="tunai"></deposit-tunai> -->
             </iron-pages>
         </app-header-layout>

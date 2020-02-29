@@ -1,5 +1,5 @@
 import {PolymerElement, html} from '@polymer/polymer';
-// import './ringkasan-data.js';
+import './ringkasan-data.js';
 
 class appRingkasan extends PolymerElement {
   static get template() {
@@ -34,7 +34,7 @@ class appRingkasan extends PolymerElement {
         <app-header-layout>
             <app-header slot="header">
                 <app-toolbar>
-                    <input type="month" id="inputBulan" min="2015-08" max="{{yearMonthMax}}" value="{{yearMonthLast}}">
+                    <input type="month" id="inputBulan" min="2015-08" max="{{yearMonthLast}}" value="{{yearMonthLast}}">
                     <span class="flex"></span>
                     <paper-icon-button icon="search" on-tap="_tapSearch"></paper-icon-button>
                 </app-toolbar>
@@ -70,10 +70,10 @@ class appRingkasan extends PolymerElement {
 
   ready() {
       super.ready();
-      console.log("[READY] app-ringkasan.html");
+      console.log("[READY] app-ringkasan");
       var yearToday = (new Date()).getFullYear();
       var monthToday = (new Date()).getMonth();
-      this.yearMonthMax = new Date(yearToday, monthToday+1).toISOString().slice(0,7);
+      // this.yearMonthMax = new Date(yearToday, monthToday+1).toISOString().slice(0,7);
       this.yearMonthLast = new Date(yearToday, monthToday).toISOString().slice(0,7);
   }
 
