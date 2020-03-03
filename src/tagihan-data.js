@@ -42,6 +42,7 @@ class tagihanData extends PolymerElement {
 
   ready() {
       super.ready();
+      window.thisTagDat = this;
 
       auth.onAuthStateChanged(firebaseUser => {
           if (firebaseUser) {

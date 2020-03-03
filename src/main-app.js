@@ -29,7 +29,9 @@ import '@polymer/paper-material';
 import '@polymer/paper-spinner/paper-spinner'; 
 import '@polymer/paper-tabs';      
 import '@polymer/paper-toast';
-import '@polymer/paper-toggle-button'; 
+import '@polymer/paper-toggle-button';
+import '@vaadin/vaadin-combo-box/theme/material/vaadin-combo-box.js';
+import '@vaadin/vaadin-text-field/theme/material/vaadin-integer-field.js';
 // <link rel="import" href="../bower_components/paper-styles/typography.html">     
 
 import './shared-styles.js';

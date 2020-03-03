@@ -271,7 +271,7 @@ class tagihanList extends PolymerElement {
   _tapLunasConfirm() {
       thisTagDat.lunasiSemua();
       this.$.toastLunas.close();
-      this.playAnimation('exitList');
+      //this.playAnimation('exitList');
   }
 }
 

@@ -26,22 +26,16 @@ class tagihanTambah extends PolymerElement {
                 }
             }
 
-            paper-input[label="Nama"] { margin-right: 20px; }
+            vaadin-combo-box { margin-right: 20px; }
         </style>
 
         <paper-dialog id="dialog" on-iron-overlay-closed="_dialogClosed">
             <h2>Tambah Pengeluaran</h2>
             <div class="horizontal layout">
-                <paper-input list="daftar-pengeluaran" no-label-float="" label="Nama" value="{{nama}}" maxlength="64"></paper-input>
-                <datalist id="daftar-pengeluaran">
-                    <option value="hehe">
-                    <template is="dom-repeat" items="{{daftarNamaPengeluaran}}" as="item">
-                        <option value="{{item}}">
-                    </option></template>
-                </option></datalist>
-                <paper-input no-label-float="" type="number" value="{{jumlah}}" auto-validate="" pattern="[0-9]*" maxlength="8">
-                    <div slot="prefix">Rp</div>
-                </paper-input>
+                <vaadin-combo-box id="comboBox" placeholder="Nama" value="{{nama}}" allow-custom-value></vaadin-combo-box>
+                <vaadin-integer-field min="1" value="{{jumlah}}">
+                  <div slot="prefix">Rp</div>
+                </vaadin-integer-field>
             </div>
             <paper-checkbox id="salinKeRekening">Salin ke rekening</paper-checkbox>
             <div class="buttons">
@@ -134,6 +128,10 @@ class tagihanTambah extends PolymerElement {
               }
           ]
       }
+
+      customElements.whenDefined('vaadin-combo-box').then(() => {
+        this.$.comboBox.items = this.daftarNamaPengeluaran;
+      });
   }
 
   // show() {

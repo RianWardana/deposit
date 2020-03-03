@@ -17,7 +17,7 @@ class rekeningTambah extends PolymerElement {
                 }
             }
 
-            paper-input[label="Nama"] { margin-right: 20px; }
+            vaadin-combo-box { margin-right: 20px; }
 
             paper-toggle-button {
                 --paper-toggle-button-unchecked-bar-color:  var(--paper-orange-500);
@@ -32,15 +32,10 @@ class rekeningTambah extends PolymerElement {
         <paper-dialog id="dialog" on-iron-overlay-closed="_dialogClosed">
             <h2>Mutasi Rekening</h2>
             <div class="horizontal layout">
-                <paper-input list="daftar-rekening" no-label-float label="Nama" value="{{nama}}" maxlength="64"></paper-input>
-                <datalist id="daftar-rekening">
-                    <template is="dom-repeat" items="{{daftarNamaRekening}}" as="item">
-                        <option value="{{item}}">
-                    </option></template>
-                </datalist>
-                <paper-input no-label-float type="number" value="{{jumlah}}" auto-validate="" pattern="[0-9]*" maxlength="8">
-                    <div slot="prefix">Rp</div>
-                </paper-input>
+                <vaadin-combo-box id="comboBox" placeholder="Nama" value="{{nama}}" allow-custom-value></vaadin-combo-box>
+                <vaadin-integer-field min="1" value="{{jumlah}}">
+                  <div slot="prefix">Rp</div>
+                </vaadin-integer-field>
             </div>
             <div class="horizontal layout around-justified">
                 <span>Debit</span>
@@ -110,6 +105,10 @@ class rekeningTambah extends PolymerElement {
   ready() {  
     super.ready();
     this.addEventListener('neon-animation-finish', this._animationFinished);
+
+    customElements.whenDefined('vaadin-combo-box').then(() => {
+      this.$.comboBox.items = this.daftarNamaRekening;
+    });
     // this.$.dialog.animationConfig = {
     //     'entry': [
     //         {
@@ -137,7 +136,7 @@ class rekeningTambah extends PolymerElement {
             kredit: (this.jenis ? this.jumlah : 0)
         }
     } else {
-        this.$.toastKosong.open()
+        this.$.toastKosong.open();
     }
   }
 
