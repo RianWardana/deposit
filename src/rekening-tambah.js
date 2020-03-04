@@ -3,7 +3,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 class rekeningTambah extends PolymerElement {
   static get template() {
     return html`
-        <style include="iron-flex iron-flex-alignment">
+        <style include="iron-flex iron-flex-alignment shared-styles">
             paper-fab {
                 background-color: var(--app-primary-color);
                 position: fixed;
@@ -16,8 +16,6 @@ class rekeningTambah extends PolymerElement {
                     bottom: 0;
                 }
             }
-
-            vaadin-combo-box { margin-right: 20px; }
 
             paper-toggle-button {
                 --paper-toggle-button-unchecked-bar-color:  var(--paper-orange-500);

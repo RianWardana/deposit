@@ -40,6 +40,15 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
                     padding-right: 16px;
                 }
             }
+
+            vaadin-combo-box { 
+                margin-right: 20px;
+                max-width: calc(60% - 10px);
+            }
+
+            vaadin-integer-field {
+                max-width: calc(40% - 10px);
+            }
         </style>
     </template>
 </dom-module>`;

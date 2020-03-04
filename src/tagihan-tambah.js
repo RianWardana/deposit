@@ -3,7 +3,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 class tagihanTambah extends PolymerElement {
   static get template() {
     return html`
-        <style include="iron-flex iron-flex-alignment">
+        <style include="iron-flex iron-flex-alignment shared-styles">
             paper-button {
                 color: #FFAB00;
             }
@@ -26,7 +26,14 @@ class tagihanTambah extends PolymerElement {
                 }
             }
 
-            vaadin-combo-box { margin-right: 20px; }
+            /* vaadin-combo-box { 
+                margin-right: 20px;
+                max-width: calc(60% - 10px);
+            }
+
+            vaadin-integer-field {
+                max-width: calc(40% - 10px);
+            } */
         </style>
 
         <paper-dialog id="dialog" on-iron-overlay-closed="_dialogClosed">
