@@ -40,7 +40,7 @@ class appDeposit extends PolymerElement {
                 <paper-tabs attr-for-selected="tab" selected="{{tab_sekarang}}" noink="">
                     <paper-tab tab="rekening">REKENING</paper-tab>
                     <paper-tab tab="tagihan">PENGELUARAN</paper-tab>
-                    <paper-tab tab="tunai">TUNAI</paper-tab>
+                    <paper-tab tab="tunai">AKUN-AKUN</paper-tab>
                 </paper-tabs>
             </app-header>
             

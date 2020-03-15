@@ -21,6 +21,18 @@ class appRingkasan extends PolymerElement {
                 margin: 16px;
             }
 
+            @media (max-width: 800px) {
+                paper-material {
+                    margin: 16px 16px;
+                }
+            }
+
+            @media (min-width: 801px) {
+                paper-material {
+                    margin: 16px 20% 0;
+                }
+            }
+
             #inputBulan {
                 background-color: #fff;
                 border: 0;
@@ -34,7 +46,7 @@ class appRingkasan extends PolymerElement {
         <app-header-layout>
             <app-header slot="header">
                 <app-toolbar>
-                    <input type="month" id="inputBulan" min="2015-08" max="{{yearMonthLast}}" value="{{yearMonthLast}}">
+                    <input type="month" id="inputBulan" min="2015-08" max="{{yearMonthLast+1}}" value="{{yearMonthLast}}">
                     <span class="flex"></span>
                     <paper-icon-button icon="search" on-tap="_tapSearch"></paper-icon-button>
                 </app-toolbar>
@@ -73,7 +85,6 @@ class appRingkasan extends PolymerElement {
       console.log("[READY] app-ringkasan");
       var yearToday = (new Date()).getFullYear();
       var monthToday = (new Date()).getMonth();
-      // this.yearMonthMax = new Date(yearToday, monthToday+1).toISOString().slice(0,7);
       this.yearMonthLast = new Date(yearToday, monthToday).toISOString().slice(0,7);
   }
 

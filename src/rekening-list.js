@@ -79,38 +79,7 @@ class rekeningList extends PolymerElement {
               value: [
                   'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
               ]
-          },
-
-          // animationConfig: {
-          //     value: function() {
-          //         return {
-          //             'exitSpinner': [
-          //                 {
-          //                     name: 'fade-out-animation',
-          //                     node: this.$.spinner,
-          //                     timing: {delay: 100, duration: 200}
-          //                 },
-          //                 {
-          //                     name: 'slide-up-animation',
-          //                     node: this.$.spinner,
-          //                     timing: {duration: 800}
-          //                 }
-          //             ],
-          //             'entryList': [
-          //                 {
-          //                     name: 'fade-in-animation',
-          //                     node: this.$.list,
-          //                     timing: {delay: 500, duration: 500}
-          //                 },
-          //                 {
-          //                     name: 'slide-from-bottom-animation',
-          //                     node: this.$.list,
-          //                     timing: {duration: 1000}
-          //                 }
-          //             ]
-          //         }
-          //     }
-          // }
+          }
       };
   }
 
@@ -136,6 +105,7 @@ class rekeningList extends PolymerElement {
       console.log("_dataChanged number " + this.dataChangedCount + " is called.");
       // this.playAnimation('exitSpinner');
       this.$.list.style.display = 'block';
+      this.$.spinner.style.display = 'none';
       // this.playAnimation('entryList');
       this.dataChangedCount++;
   }
