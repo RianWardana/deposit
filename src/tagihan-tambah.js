@@ -25,15 +25,6 @@ class tagihanTambah extends PolymerElement {
                     bottom: 0;
                 }
             }
-
-            /* vaadin-combo-box { 
-                margin-right: 20px;
-                max-width: calc(60% - 10px);
-            }
-
-            vaadin-integer-field {
-                max-width: calc(40% - 10px);
-            } */
         </style>
 
         <paper-dialog id="dialog" on-iron-overlay-closed="_dialogClosed">
@@ -89,28 +80,7 @@ class tagihanTambah extends PolymerElement {
           },
 
           nama: String,
-          jumlah: Number,
-
-          // animationConfig: {
-          //     value() {
-          //         return {
-          //             'entry': [
-          //                 {
-          //                     name: 'fade-in-animation',
-          //                     node: this,
-          //                     timing: {duration: 300}
-          //                 }
-          //             ],
-          //             'fabExit': [
-          //                 {
-          //                     name: 'fade-out-animation',
-          //                     node: this,
-          //                     timing: {duration: 300}
-          //                 }
-          //             ]
-          //         }
-          //     }
-          // }
+          jumlah: Number
       };
   }
 

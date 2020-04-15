@@ -1,8 +1,20 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import firebase from '@firebase/app';
 import '@firebase/database';
+import 'https://apis.google.com/js/api.js';
 
 class tagihanData extends PolymerElement {
+  static get template() {
+    return html `
+      <!-- Dialog saat ada pengeluaran bulan sebelumnya -->
+      <script type="module" src="src/main-app.js"></script>
+        <script async defer src="https://apis.google.com/js/api.js"
+        onload="this.onload=function(){};handleClientLoad();alert()"
+        onreadystatechange="if (this.readyState === 'complete') this.onload()">
+        </script>
+    `
+  }
+
   static get is() {
       return 'tagihan-data';
   }
@@ -62,7 +74,8 @@ class tagihanData extends PolymerElement {
       this.dbTagihanLimited = dbTagihan.orderByChild('lunas').equalTo(0)
 
       var dateObjectToday = new Date()
-      var tanggalToday = (dateObjectToday.getDate() < 10 ? "0" : "") + dateObjectToday.getDate()
+      var tanggalToday = (dateObjectToday.getDate() < 10 ? "0" : "") + dateObjectToday.getDate();
+      var bulanToday = (dateObjectToday.getMonth() < 9 ? "0" : "") + (dateObjectToday.getMonth() + 1);
 
       // Tereksekusi setiap ada perubahaan di database 'tagihan' //
       this.dbTagihanLimited.on('value', snap => {
@@ -83,10 +96,14 @@ class tagihanData extends PolymerElement {
               var nama = snapEach.val()['nama']
               var jumlah = snapEach.val()['jumlah']
 
+              // Jika terdapat pengeluaran bulan sebelumnya
+              if (bulan != bulanToday)
+                this.
+
               // Perhitungan
               total += jumlah
 
-              if (tanggal == tanggalToday) 
+              if ((tanggal == tanggalToday) && (bulan == bulanToday))
                   today += jumlah
 
               if ((nama == "Makan") || (nama == "Minum") || (nama == "Go-Food") || (nama == "GrabFood") || (nama == "Sereal"))

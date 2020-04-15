@@ -205,8 +205,8 @@ class tagihanList extends PolymerElement {
   }
 
   formatBatas(total) {
-      var dateObject = new Date()
-      var tanggal = dateObject.getDate()
+      var dateObject = new Date();
+      var tanggal = dateObject.getDate();
       var hariTerakhir = new Date(dateObject.getFullYear(), dateObject.getMonth()+1, 0).getDate();
       var selisihHari = (hariTerakhir-tanggal < 1 ? 1 : hariTerakhir-tanggal);
       return parseFloat(((2250000-total) / selisihHari).toFixed(0)).toLocaleString('id-ID');
