@@ -1,19 +1,19 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import firebase from '@firebase/app';
 import '@firebase/database';
-import 'https://apis.google.com/js/api.js';
+// import 'https://apis.google.com/js/api.js';
 
 class tagihanData extends PolymerElement {
-  static get template() {
-    return html `
-      <!-- Dialog saat ada pengeluaran bulan sebelumnya -->
-      <script type="module" src="src/main-app.js"></script>
-        <script async defer src="https://apis.google.com/js/api.js"
-        onload="this.onload=function(){};handleClientLoad();alert()"
-        onreadystatechange="if (this.readyState === 'complete') this.onload()">
-        </script>
-    `
-  }
+//   static get template() {
+//     return html `
+//       <!-- Dialog saat ada pengeluaran bulan sebelumnya -->
+//       <script type="module" src="src/main-app.js"></script>
+//         <script async defer src="https://apis.google.com/js/api.js"
+//         onload="this.onload=function(){};handleClientLoad();alert()"
+//         onreadystatechange="if (this.readyState === 'complete') this.onload()">
+//         </script>
+//     `
+//   }
 
   static get is() {
       return 'tagihan-data';
@@ -98,7 +98,7 @@ class tagihanData extends PolymerElement {
 
               // Jika terdapat pengeluaran bulan sebelumnya
               if (bulan != bulanToday)
-                this.
+                return;
 
               // Perhitungan
               total += jumlah
