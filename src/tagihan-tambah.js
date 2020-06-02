@@ -58,19 +58,25 @@ class tagihanTambah extends PolymerElement {
               value: [
                   "Makan",
                   "Minum",
+                  "Sereal",
                   "Go-Food",
                   "GrabFood",
                   "Transportasi",
+                  "Parkir",
+                  "e-Money",
                   "Go-Ride",
                   "Go-Car",
                   "Go-Jek Subs",
                   "GrabRide",
                   "GrabCar",
                   "Grab Subs",
-                  "Sereal",
+                  "Higiene",
                   "Sabun",
-                  "Parkir",
-                  "e-Money"
+                  "Tisu",
+                  "Obat",
+                  "Pulsa XL",
+                  "Listrik",
+                  "Laundry"
               ]
           },
 

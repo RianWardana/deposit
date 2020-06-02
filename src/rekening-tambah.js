@@ -65,7 +65,10 @@ class rekeningTambah extends PolymerElement {
                   "e-Toll",
                   "Go-Pay",
                   "OVO",
+                  "Gaji",
                   "Transferan",
+                  "Tarik tunai",
+                  "Alfamidi",
                   "Tokopedia"
               ]
           },
