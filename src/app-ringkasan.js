@@ -15,22 +15,11 @@ class appRingkasan extends PolymerElement {
                 top: 64px;
                 background-color: var(--app-primary-color);
                 color: #fff;
+                padding: 0;
             }
 
-            paper-material {
-                margin: 16px;
-            }
-
-            @media (max-width: 800px) {
-                paper-material {
-                    margin: 16px 16px;
-                }
-            }
-
-            @media (min-width: 801px) {
-                paper-material {
-                    margin: 16px 20% 0;
-                }
+            #containerRingkasan {
+                margin-top: 30px;
             }
 
             #inputBulan {
@@ -39,41 +28,46 @@ class appRingkasan extends PolymerElement {
                 border-radius: 2px;
                 font-family: 'Roboto', 'Noto', sans-serif;
                 padding: 5px;
-                width: 240px;
+                width: 100%;
             }
         </style>
 
         <app-header-layout>
             <app-header slot="header">
                 <app-toolbar>
-                    <input type="month" id="inputBulan" min="2015-08" max="{{yearMonthLast+1}}" value="{{yearMonthLast}}">
-                    <span class="flex"></span>
-                    <paper-icon-button icon="search" on-tap="_tapSearch"></paper-icon-button>
+                    <input class="narrow" type="month" id="inputBulan" 
+                        on-change="_tapSearch"
+                        min="2015-08" 
+                        max="{{yearMonthLast}}" 
+                        value="{{yearMonthLast}}"
+                    >
                 </app-toolbar>
             </app-header>
 
-            <paper-material>
-                <template is="dom-repeat" items="{{_toArray(pengeluaran)}}" as="item">
-                    <div class="horizontal layout">
-                        <span>{{item.0}}</span>
-                        <span class="flex"></span>
-                        <span>{{_formatJumlah(item.1)}}</span>
-                    </div>
-                </template>
-            </paper-material>
+            <div class="narrow" id="containerRingkasan">  
+                <paper-material>
+                    <template is="dom-repeat" items="{{_toArray(pengeluaran)}}" as="item">
+                        <div class="horizontal layout">
+                            <span>{{item.0}}</span>
+                            <span class="flex"></span>
+                            <span>{{_formatJumlah(item.1)}}</span>
+                        </div>
+                    </template>
+                </paper-material>
 
-            <paper-material>
-                <div class="horizontal layout">
-                    <span>Total pengeluaran</span>
-                    <span class="flex"></span>
-                    <span>{{_formatJumlah(total)}}</span>
-                </div>
-            </paper-material>
+                <paper-material>
+                    <div class="horizontal layout">
+                        <span>Total pengeluaran</span>
+                        <span class="flex"></span>
+                        <span>{{_formatJumlah(total)}}</span>
+                    </div>
+                </paper-material>
+            </div>
             
         </app-header-layout>
-        
+    
         <ringkasan-data pengeluaran="{{pengeluaran}}" total="{{total}}"></ringkasan-data>
-`;
+    `;
   }
 
   static get is() {
@@ -85,7 +79,7 @@ class appRingkasan extends PolymerElement {
       console.log("[READY] app-ringkasan");
       var yearToday = (new Date()).getFullYear();
       var monthToday = (new Date()).getMonth();
-      this.yearMonthLast = new Date(yearToday, monthToday).toISOString().slice(0,7);
+      this.yearMonthLast = new Date(yearToday, monthToday+1).toISOString().slice(0,7);
   }
 
   _toArray(object) {

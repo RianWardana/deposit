@@ -27,7 +27,7 @@ class ringkasanData extends PolymerElement {
     var dateObjectToday = new Date();
     var yearToday = dateObjectToday.getFullYear();
     var monthToday = dateObjectToday.getMonth();
-    thisRingDat.loadPengeluaran(yearToday, monthToday-1);
+    thisRingDat.loadPengeluaran(yearToday, monthToday);
   }
 
   loadPengeluaran(year, month) {
