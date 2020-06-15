@@ -11,9 +11,8 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
                 background: white;
                 border-radius: 2px;
                 height: 100%;
-                margin: 0 auto 21px;
+                margin-bottom: 16px;
                 padding: 16px 0 16px 0;
-                /*max-width: 600px;*/
             }
 
             div.banner {
@@ -25,19 +24,30 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
                 width: 100%;
             }
 
-            @media (min-width: 601px) {
+            @media (min-width: 801px) {
                 paper-material {
-                    margin-bottom: 16px;
                     padding-left: 30px;
                     padding-right: 30px;
                 }
+
+                .narrow {
+                    // margin: 5% 20% 0;
+                    margin-left: 20%;
+                    margin-right: 20%;
+                }
             }
 
-            @media (max-width: 600px) {
+            @media (max-width: 800px) {
                 paper-material {
-                    --menu-container-display: none;
+                    // --menu-container-display: none;
                     padding-left: 16px;
                     padding-right: 16px;
+                }
+
+                .narrow {
+                    // margin: 0px 16px;
+                    margin-left: 16px;
+                    margin-right: 16px;
                 }
             }
 

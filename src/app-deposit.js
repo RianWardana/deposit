@@ -18,20 +18,6 @@ class appDeposit extends PolymerElement {
             app-header {
                 background-color: var(--app-primary-color);
                 color: #fff;
-                /*width: 100%;*/
-            }
-            
-            @media (max-width: 800px) {
-                iron-pages#iron-pages-deposit {
-                    padding: 0px 16px;
-                }
-            }
-
-            @media (min-width: 801px) {
-                iron-pages#iron-pages-deposit {
-                    /*padding: 48px 62px 0;*/
-                    padding: 5% 20% 0;
-                }
             }
         </style>
 

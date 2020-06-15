@@ -27,7 +27,7 @@ class rekeningList extends PolymerElement {
             <paper-spinner id="spinner" active=""></paper-spinner>
         </div>
 
-        <div id="list">
+        <div class="narrow" id="list">
             <paper-material id="paper-material-saldo">
                 <div class="horizontal layout">
                     <span>Saldo di rekening</span>

@@ -61,7 +61,7 @@ class tagihanList extends PolymerElement {
             <paper-spinner id="spinner" active=""></paper-spinner>
         </div>
 
-        <div id="list">
+        <div class="narrow" id="list">
             <!-- PENGELUARAN BULAN INI (HIJAU) -->
             <paper-material id="paperMaterialTagihan">
             	<paper-ripple recenters=""></paper-ripple>
