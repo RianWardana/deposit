@@ -85,6 +85,11 @@ class tagihanList extends PolymerElement {
 	                    <span>Pengeluaran transportasi</span>
 	                    <span class="flex"></span>
 	                    <span><b>Rp{{formatTotalTagihan(totalPengeluaran.transportasi)}}</b></span>
+                    </div>
+                    <div class="horizontal layout">
+	                    <span>Pengeluaran utilities</span>
+	                    <span class="flex"></span>
+	                    <span><b>Rp{{formatTotalTagihan(totalPengeluaran.utilities)}}</b></span>
 	                </div>
 	                <div class="horizontal layout">
 	                    <span>Pengeluaran lainnya</span>

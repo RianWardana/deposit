@@ -1,19 +1,8 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import firebase from '@firebase/app';
 import '@firebase/database';
-// import 'https://apis.google.com/js/api.js';
 
 class tagihanData extends PolymerElement {
-//   static get template() {
-//     return html `
-//       <!-- Dialog saat ada pengeluaran bulan sebelumnya -->
-//       <script type="module" src="src/main-app.js"></script>
-//         <script async defer src="https://apis.google.com/js/api.js"
-//         onload="this.onload=function(){};handleClientLoad();alert()"
-//         onreadystatechange="if (this.readyState === 'complete') this.onload()">
-//         </script>
-//     `
-//   }
 
   static get is() {
       return 'tagihan-data';
@@ -77,59 +66,81 @@ class tagihanData extends PolymerElement {
       var tanggalToday = (dateObjectToday.getDate() < 10 ? "0" : "") + dateObjectToday.getDate();
       var bulanToday = (dateObjectToday.getMonth() < 9 ? "0" : "") + (dateObjectToday.getMonth() + 1);
 
-      // Tereksekusi setiap ada perubahaan di database 'tagihan' //
-      this.dbTagihanLimited.on('value', snap => {
-          this.dataTagihan = []
-          this.totalTagihan = 0
-          var total = 0
-          var today = 0
-          var totalMakan = 0
-          var totalTransportasi = 0
-          var totalLainnya = 0
-          // Tereksekusi untuk setiap entri di 'tagihan' //
-          snap.forEach(snapEach => {
-              var dateObject = new Date(parseInt(snapEach.key)*(-1000))
-              var tanggal = (dateObject.getDate() < 10 ? "0" : "") + dateObject.getDate()
-              var bulan = (dateObject.getMonth() < 9 ? "0" : "") + (dateObject.getMonth() + 1)
-              var tahun = dateObject.getYear() - 100
-              var waktu = tanggal + "/" + bulan + "/" + tahun
-              var nama = snapEach.val()['nama']
-              var jumlah = snapEach.val()['jumlah']
+    // Tereksekusi setiap ada perubahaan di database 'tagihan' //
+    this.dbTagihanLimited.on('value', snap => {
+        this.dataTagihan = [];
+        this.totalTagihan = 0;
+        var total = 0;
+        var today = 0;
+        var totalMakan = 0;
+        var totalTransportasi = 0;
+        var totalUtilities = 0;
+        var totalLainnya = 0;
+        // Tereksekusi untuk setiap entri di 'tagihan' //
+        snap.forEach(snapEach => {
+            var dateObject = new Date(parseInt(snapEach.key)*(-1000))
+            var tanggal = (dateObject.getDate() < 10 ? "0" : "") + dateObject.getDate()
+            var bulan = (dateObject.getMonth() < 9 ? "0" : "") + (dateObject.getMonth() + 1)
+            var tahun = dateObject.getYear() - 100
+            var waktu = tanggal + "/" + bulan + "/" + tahun
+            var nama = snapEach.val()['nama']
+            var jumlah = snapEach.val()['jumlah']
 
-              // Jika terdapat pengeluaran bulan sebelumnya
-              if (bulan != bulanToday)
-                return;
+            // Jika terdapat pengeluaran bulan sebelumnya
+            if (bulan != bulanToday)
+            return;
 
-              // Perhitungan
-              total += jumlah
+            // Perhitungan
+            total += jumlah
 
-              if ((tanggal == tanggalToday) && (bulan == bulanToday))
-                  today += jumlah
+            if ((tanggal == tanggalToday) && (bulan == bulanToday))
+                today += jumlah
 
-              if ((nama == "Makan") || (nama == "Minum") || (nama == "Go-Food") || (nama == "GrabFood") || (nama == "Sereal"))
-                  totalMakan += jumlah
+            if ((nama == "Makan") || 
+                    (nama == "Minum") || 
+                    (nama == "Go-Food") || 
+                    (nama == "GrabFood") || 
+                    (nama == "Sereal")
+                )
+                totalMakan += jumlah
 
-              else if ((nama == "Transportasi") || (nama == "e-Money") || (nama == "Parkir") || (nama == "Go-Jek Subs") || (nama == "Grab Subs") || (nama == "Go-Ride") || (nama == "GrabRide") || (nama == "Go-Car") || (nama == "GrabCar"))
-                  totalTransportasi += jumlah
+            else if ((nama == "Transportasi") || 
+                    (nama == "e-Money") || 
+                    (nama == "Parkir") || 
+                    (nama == "Go-Jek Subs") || 
+                    (nama == "Grab Subs") || 
+                    (nama == "Go-Ride") || 
+                    (nama == "GrabRide") || 
+                    (nama == "Go-Car") || 
+                    (nama == "GrabCar")
+                )
+                totalTransportasi += jumlah
 
-              else totalLainnya += jumlah
+            else if ((nama == "Listrik") ||
+                    (nama == "FirstMedia") ||
+                    (nama == "Pulsa XL")
+                )
+                totalUtilities += jumlah
+
+            else totalLainnya += jumlah
               
-              this.totalPengeluaran = {
-                  transportasi: totalTransportasi,
-                  makan: totalMakan,
-                  lainnya: totalLainnya,
-                  today: today,
-                  total: total
-              }
+            this.totalPengeluaran = {
+                transportasi: totalTransportasi,
+                makan: totalMakan,
+                utilities: totalUtilities,
+                lainnya: totalLainnya,
+                today: today,
+                total: total
+            }
 
-              this.push('dataTagihan', {
-                  key: snapEach.key,
-                  waktu: waktu,
-                  nama: nama,
-                  jumlah: jumlah
-              })
-          })
-      })
+            this.push('dataTagihan', {
+                key: snapEach.key,
+                waktu: waktu,
+                nama: nama,
+                jumlah: jumlah
+            })
+        })
+    })
   }
 
   kirimDataTambah() {
