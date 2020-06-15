@@ -44,7 +44,8 @@ class appRingkasan extends PolymerElement {
                 </app-toolbar>
             </app-header>
 
-            <div class="narrow" id="containerRingkasan">  
+            <div class="narrow" id="containerRingkasan">
+                <!-- DAFTAR PENGELUARAN -->
                 <paper-material>
                     <template is="dom-repeat" items="{{_toArray(pengeluaran)}}" as="item">
                         <div class="horizontal layout">
@@ -55,6 +56,18 @@ class appRingkasan extends PolymerElement {
                     </template>
                 </paper-material>
 
+                <!-- TOTAL KATEGORI PENGELUARAN -->
+                <paper-material>
+                    <template is="dom-repeat" items="{{_toArray(totalPerKategori)}}" as="item">
+                        <div class="horizontal layout">
+                            <span>{{item.0}}</span>
+                            <span class="flex"></span>
+                            <span>{{_formatJumlah(item.1)}}</span>
+                        </div>
+                    </template>
+                </paper-material>
+
+                <!-- TOTAL PENGELUARAN -->
                 <paper-material>
                     <div class="horizontal layout">
                         <span>Total pengeluaran</span>
@@ -66,7 +79,11 @@ class appRingkasan extends PolymerElement {
             
         </app-header-layout>
     
-        <ringkasan-data pengeluaran="{{pengeluaran}}" total="{{total}}"></ringkasan-data>
+        <ringkasan-data 
+            pengeluaran="{{pengeluaran}}" 
+            total="{{total}}" 
+            total-per-kategori="{{totalPerKategori}}" >
+        </ringkasan-data>
     `;
   }
 

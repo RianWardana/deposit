@@ -13,10 +13,10 @@ class tagihanList extends PolymerElement {
                 transition: max-height 0.5s ease-out;
             }
 
-			paper-material#paperMaterialTagihan:hover {
+			/* paper-material#paperMaterialTagihan:hover {
 				max-height: 500px;
 				transition: max-height 0.5s ease-in;
-			}
+			} */
 
             paper-material#paper-material-batas {
                 margin-top: 16px;
@@ -27,10 +27,10 @@ class tagihanList extends PolymerElement {
                 transition: max-height 0.5s ease-out;
             }
 
-            paper-material#paper-material-batas:hover {
+            /* paper-material#paper-material-batas:hover {
                 max-height: 500px;
                 transition: max-height 0.5s ease-in;
-            }
+            } */
 
             paper-spinner {
                 --paper-spinner-layer-1-color: #FF9800;
@@ -50,9 +50,9 @@ class tagihanList extends PolymerElement {
                 width: 100%;
             }
 
-			.detilPengeluaran {
+			/* .detilPengeluaran {
 				margin-top: 32px;
-			}
+			} */
 
             span[role="button"] { color: #FFAB00; margin: 10px; }
         </style>
@@ -64,7 +64,7 @@ class tagihanList extends PolymerElement {
         <div class="narrow" id="list">
             <!-- PENGELUARAN BULAN INI (HIJAU) -->
             <paper-material id="paperMaterialTagihan">
-            	<paper-ripple recenters=""></paper-ripple>
+                <paper-ripple recenters=""></paper-ripple>
                 <div class="horizontal layout">
                     <span>Pengeluaran bulan ini</span>
                     <span class="flex"></span>
@@ -75,28 +75,28 @@ class tagihanList extends PolymerElement {
                     <span class="flex"></span>
                     <span><b>Rp{{formatTotalTagihan(totalPengeluaran.today)}}</b></span>
                 </div>
-                <div class="detilPengeluaran">
+                <!-- <div class="detilPengeluaran">
                 	<div class="horizontal layout">
 	                    <span>Pengeluaran makan</span>
 	                    <span class="flex"></span>
-	                    <span><b>Rp{{formatTotalTagihan(totalPengeluaran.makan)}}</b></span>
+	                    <span><b>Rp{{formatTotalTagihan(totalPengeluaran.Makan)}}</b></span>
 	                </div>
 	                <div class="horizontal layout">
 	                    <span>Pengeluaran transportasi</span>
 	                    <span class="flex"></span>
-	                    <span><b>Rp{{formatTotalTagihan(totalPengeluaran.transportasi)}}</b></span>
+	                    <span><b>Rp{{formatTotalTagihan(totalPengeluaran.Transportasi)}}</b></span>
                     </div>
                     <div class="horizontal layout">
 	                    <span>Pengeluaran utilities</span>
 	                    <span class="flex"></span>
-	                    <span><b>Rp{{formatTotalTagihan(totalPengeluaran.utilities)}}</b></span>
+	                    <span><b>Rp{{formatTotalTagihan(totalPengeluaran.Utilities)}}</b></span>
 	                </div>
 	                <div class="horizontal layout">
 	                    <span>Pengeluaran lainnya</span>
 	                    <span class="flex"></span>
-	                    <span><b>Rp{{formatTotalTagihan(totalPengeluaran.lainnya)}}</b></span>
+	                    <span><b>Rp{{formatTotalTagihan(totalPengeluaran.Lainnya)}}</b></span>
 	                </div>
-                </div>
+                </div> -->
             </paper-material>
             
             <!-- BATAS PENGELUARAN (KUNING) -->
@@ -107,7 +107,7 @@ class tagihanList extends PolymerElement {
                     <span class="flex"></span>
                     <span><b>Rp{{formatBatas(totalPengeluaran.total)}}</b></span>
                 </div>
-                <div class="detilPengeluaran">
+                <!-- <div class="detilPengeluaran">
                     <div class="horizontal layout">
                         <span>Sisa alokasi makan</span>
                         <span class="flex"></span>
@@ -123,13 +123,10 @@ class tagihanList extends PolymerElement {
                         <span class="flex"></span>
                         <span><b>Rp{{formatSisaPengeluaran(totalPengeluaran.lainnya, "lainnya")}}</b></span>
                     </div>
-                </div>
+                </div> -->
             </paper-material>
 
-            <!-- <paper-material>
-                <paper-progress value="800" min="100" max="1000" class="red"></paper-progress>
-            </paper-material> -->
-
+            <!-- PENGELUARAN -->
             <template is="dom-repeat" items="{{data}}" as="item">
                 <tagihan-item key="{{item.key}}" waktu="{{item.waktu}}" nama="{{item.nama}}" jumlah="{{item.jumlah}}">
                 </tagihan-item>
@@ -236,6 +233,11 @@ class tagihanList extends PolymerElement {
       this.$.toastLunas.close();
       //this.playAnimation('exitList');
   }
+
+    _toArray(object) {
+        if (Object.keys(object) < 1) return [['Pengeluaran', 0]];
+        return Object.entries(object);
+    }
 }
 
 customElements.define(tagihanList.is, tagihanList);

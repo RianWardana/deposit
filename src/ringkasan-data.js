@@ -13,9 +13,27 @@ class ringkasanData extends PolymerElement {
         type: Object,
         notify: true
       },
+
       total: {
-        type: Object,
+        type: Number,
         notify: true
+      },
+
+      totalPerKategori: {
+        type: Object,
+        value: {},
+        notify: true
+      },
+
+      kategoriPengeluaran: {
+        type: Array,
+        notify: true,
+        value: [
+            {nama: "Makan", entri: ["Makan", "Minum", "Go-Food", "GrabFood", "Sereal"]},
+            {nama: "Transportasi", entri: ["Transportasi", "e-Money", "Parkir", "Go-Jek Subs", "Grab Subs", "Go-Ride", "GrabRide", "Go-Car", "GrabCar"]},
+            {nama: "Utilities", entri: ["Listrik", "FirstMedia", "Pulsa XL"]},
+            {nama: "Lainnya", entri: ["Lainnya"]}
+        ]
       }
     }
   }
@@ -38,9 +56,12 @@ class ringkasanData extends PolymerElement {
     // Selanjutnya jangan minta uid dari thisRekDat, cari cara lain
     window.dbTagihan = firebase.database().ref(thisRekDat.uid + "/tagihan");
     window.dbTagihanMonth = dbTagihan.orderByKey().startAt(endTime.toString()).endAt(startTime.toString()); // dibalik antara endTime dan startTime karena key yang negatif
+    
     dbTagihanMonth.once('value', entries => {
         var pengeluaran = {};
         var total = 0;
+        var totalPerKategori = {};
+
         entries.forEach(entry => {
             var nama = entry.val()['nama'];
             var jumlah = entry.val()['jumlah'];
@@ -49,9 +70,25 @@ class ringkasanData extends PolymerElement {
             else pengeluaran[nama] = jumlah;
 
             total += jumlah;
+
+            // Hitung total per kategori
+            var stopLoop = false;
+            for (let kategori of this.kategoriPengeluaran) {
+                if (stopLoop) break;
+                for (let entriEach of kategori.entri) {
+                    if ( (nama == entriEach) || (entriEach == "Lainnya") ) { // pastikan user tidak membuat entri "Lainnya" di kategori lain
+                        var a = totalPerKategori[kategori.nama];
+                        totalPerKategori[kategori.nama] = (isNaN(a) ? jumlah : a + jumlah);
+                        stopLoop = true;
+                        break;
+                    }
+                }
+            }
         });
+        
         thisRingDat.pengeluaran = pengeluaran;
         thisRingDat.total = total;
+        thisRingDat.totalPerKategori = totalPerKategori;
     });   
   }
 }

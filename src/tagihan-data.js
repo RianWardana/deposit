@@ -15,9 +15,22 @@ class tagihanData extends PolymerElement {
               notify: true
           },
 
+          /* Perhitungan total per kategori dipindah ke ringkasan, 
+          tapi yg disini blm didelete jaga2 berubah pikiran */
+        //   kategoriPengeluaran: {
+        //     type: Array,
+        //     notify: true,
+        //     value: [
+        //         {nama: "Makan", entri: ["Makan", "Minum", "Go-Food", "GrabFood", "Sereal"]},
+        //         {nama: "Transportasi", entri: ["Transportasi", "e-Money", "Parkir", "Go-Jek Subs", "Grab Subs", "Go-Ride", "GrabRide", "Go-Car", "GrabCar"]},
+        //         {nama: "Utilities", entri: ["Listrik", "FirstMedia", "Pulsa XL"]},
+        //         {nama: "Lainnya", entri: ["Lainnya"]}
+        //     ]
+        //   },
+
           totalPengeluaran: {
               type: Object,
-              value: {total: 0, today: 0, makan: 0, transportasi: 0, lainnya: 0},
+              value: {total: 0, today: 0},
               notify: true
           },
 
@@ -69,13 +82,9 @@ class tagihanData extends PolymerElement {
     // Tereksekusi setiap ada perubahaan di database 'tagihan' //
     this.dbTagihanLimited.on('value', snap => {
         this.dataTagihan = [];
-        this.totalTagihan = 0;
         var total = 0;
         var today = 0;
-        var totalMakan = 0;
-        var totalTransportasi = 0;
-        var totalUtilities = 0;
-        var totalLainnya = 0;
+        
         // Tereksekusi untuk setiap entri di 'tagihan' //
         snap.forEach(snapEach => {
             var dateObject = new Date(parseInt(snapEach.key)*(-1000))
@@ -96,42 +105,19 @@ class tagihanData extends PolymerElement {
             if ((tanggal == tanggalToday) && (bulan == bulanToday))
                 today += jumlah
 
-            if ((nama == "Makan") || 
-                    (nama == "Minum") || 
-                    (nama == "Go-Food") || 
-                    (nama == "GrabFood") || 
-                    (nama == "Sereal")
-                )
-                totalMakan += jumlah
-
-            else if ((nama == "Transportasi") || 
-                    (nama == "e-Money") || 
-                    (nama == "Parkir") || 
-                    (nama == "Go-Jek Subs") || 
-                    (nama == "Grab Subs") || 
-                    (nama == "Go-Ride") || 
-                    (nama == "GrabRide") || 
-                    (nama == "Go-Car") || 
-                    (nama == "GrabCar")
-                )
-                totalTransportasi += jumlah
-
-            else if ((nama == "Listrik") ||
-                    (nama == "FirstMedia") ||
-                    (nama == "Pulsa XL")
-                )
-                totalUtilities += jumlah
-
-            else totalLainnya += jumlah
-              
-            this.totalPengeluaran = {
-                transportasi: totalTransportasi,
-                makan: totalMakan,
-                utilities: totalUtilities,
-                lainnya: totalLainnya,
-                today: today,
-                total: total
-            }
+            // Hitung total per kategori
+            // var stopLoop = false;
+            // for (let kategori of this.kategoriPengeluaran) {
+            //     if (stopLoop) break;
+            //     for (let entriEach of kategori.entri) {
+            //         if ( (nama == entriEach) || (entriEach == "Lainnya") ) { // pastikan user tidak membuat entri "Lainnya" di kategori lain
+            //             var a = this.totalPengeluaran[kategori.nama];
+            //             this.totalPengeluaran[kategori.nama] = (isNaN(a) ? jumlah : a + jumlah);
+            //             stopLoop = true;
+            //             break;
+            //         }
+            //     }
+            // }
 
             this.push('dataTagihan', {
                 key: snapEach.key,
@@ -139,8 +125,13 @@ class tagihanData extends PolymerElement {
                 nama: nama,
                 jumlah: jumlah
             })
-        })
-    })
+        });
+
+        this.totalPengeluaran = {
+            today: today,
+            total: total
+        }
+    });
   }
 
   kirimDataTambah() {
