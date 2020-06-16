@@ -1,7 +1,6 @@
 import {PolymerElement, html} from '@polymer/polymer';
 import firebase from '@firebase/app';
 import '@firebase/auth';
-// please uninstall firebase and firebaseui from npm
 /* 
 16 Juni 2020
 Tidak bisa menggunakan FirebaseUI karena masalah Polymer 3 di ES6 import
@@ -32,9 +31,12 @@ class appAuth extends PolymerElement {
 
         <div id="container" class="vertical layout">
             <iron-image style="width:280px; height:80px;" sizing="cover" src="./img/auth.png"></iron-image>
-            <paper-input label="E-mail address" value="{{email}}" maxlength="64"></paper-input>
+            <!-- Sign in with email and password is disabled -->
+            <!-- <paper-input label="E-mail address" value="{{email}}" maxlength="64"></paper-input>
             <paper-input label="Password" type="password" value="{{password}}" maxlength="32"></paper-input>
-            <paper-button raised="" on-tap="_tapLogin">Log in</paper-button>
+            <paper-button raised="" on-tap="_tapLogin">Sign in</paper-button> -->
+            <paper-button raised="" on-tap="_tapLoginGoogle">Sign in with Google</paper-button>
+            <paper-button raised="" on-tap="_tapLoginMicrosoft">Sign in with Microsoft</paper-button>
         </div>
 
         <paper-toast id="toast"></paper-toast>
@@ -71,7 +73,7 @@ class appAuth extends PolymerElement {
       };
   }
 
-  ready() {
+    ready() {
         super.ready();
         this.$.container.style.marginTop = (window.innerHeight - 280)/2 - 100 + 'px'
         this.$.container.style.marginLeft = (window.innerWidth - 280)/2 + 'px'
@@ -99,21 +101,33 @@ class appAuth extends PolymerElement {
                 this.loginStatus = 0;
             }
         })
-  }
+    }
 
-  _triggerLogout() {
-      auth.signOut();
-  }
+    _triggerLogout() {
+        auth.signOut();
+    }
 
-  _tapLogin() {
-      var ini = this
-      this.$.toast.show({text: 'Logging in...', duration: 5000})
-      window.promise = auth.signInWithEmailAndPassword(this.email, this.password)
-      promise.catch(e => {
-          ini.$.toast.close()
-          ini.$.toast.show(e.message)
-      })
-  }
+    _tapLogin() {
+        var ini = this
+        this.$.toast.show({text: 'Logging in...', duration: 5000})
+        window.promise = auth.signInWithEmailAndPassword(this.email, this.password)
+        promise.catch(e => {
+            ini.$.toast.close()
+            ini.$.toast.show(e.message)
+        })
+    }
+
+    _tapLoginGoogle() {
+        this.$.toast.show({text: 'Logging in...', duration: 5000})
+        var provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithRedirect(provider);
+    }
+
+    _tapLoginMicrosoft() {
+        this.$.toast.show({text: 'Logging in...', duration: 5000})
+        var provider = new firebase.auth.OAuthProvider('microsoft.com');
+        firebase.auth().signInWithRedirect(provider);
+    }
 }
 
 customElements.define(appAuth.is, appAuth);
