@@ -24,6 +24,16 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
                 width: 100%;
             }
 
+            @media (min-width: 641px) {
+                paper-dialog {
+                    left: 268px; /* it works but not optimal */
+                }
+
+                paper-toast {
+                    margin-left: 268px;
+                }
+            }
+
             @media (min-width: 801px) {
                 paper-material {
                     padding-left: 30px;
@@ -31,7 +41,6 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
                 }
 
                 .narrow {
-                    // margin: 5% 20% 0;
                     margin-left: 20%;
                     margin-right: 20%;
                 }
@@ -39,7 +48,6 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
 
             @media (max-width: 800px) {
                 paper-material {
-                    // --menu-container-display: none;
                     padding-left: 16px;
                     padding-right: 16px;
                 }
