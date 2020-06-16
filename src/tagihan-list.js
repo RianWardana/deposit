@@ -32,15 +32,6 @@ class tagihanList extends PolymerElement {
                 transition: max-height 0.5s ease-in;
             } */
 
-            paper-spinner {
-                --paper-spinner-layer-1-color: #FF9800;
-                --paper-spinner-layer-2-color: #1E88E5;
-                --paper-spinner-layer-3-color: #FF9800;
-                --paper-spinner-layer-4-color: #1E88E5;
-                position: fixed;
-                padding-top: calc(50vh - 120px);
-            }
-
             paper-button {
             	color: white;
                 background: #5cb860;
@@ -153,10 +144,10 @@ class tagihanList extends PolymerElement {
               observer: '_dataChanged'
           },
 
-          defisitCarry: {
-              type: Number,
-              value: 0
-          },
+        //   defisitCarry: {
+        //       type: Number,
+        //       value: 0
+        //   },
 
           totalPengeluaran: {
               type: Object
@@ -214,15 +205,15 @@ class tagihanList extends PolymerElement {
       return parseFloat(((2250000-total) / selisihHari).toFixed(0)).toLocaleString('id-ID');
   }
 
-  formatSisaPengeluaran(jumlah, jenis) {
-      if (jenis == "makan") var alokasi = 912000;
-      else if (jenis == "transport") var alokasi = 990000;
-      else var alokasi = 348000;
+//   formatSisaPengeluaran(jumlah, jenis) {
+//       if (jenis == "makan") var alokasi = 912000;
+//       else if (jenis == "transport") var alokasi = 990000;
+//       else var alokasi = 348000;
 
-      var sisaPengeluaran = alokasi - jumlah - this.defisitCarry;
-      this.defisitCarry = (sisaPengeluaran > 0 ? 0 : Math.abs(sisaPengeluaran));
-      return parseFloat((sisaPengeluaran > 0 ? sisaPengeluaran : 0)).toLocaleString('id-ID');
-  }
+//       var sisaPengeluaran = alokasi - jumlah - this.defisitCarry;
+//       this.defisitCarry = (sisaPengeluaran > 0 ? 0 : Math.abs(sisaPengeluaran));
+//       return parseFloat((sisaPengeluaran > 0 ? sisaPengeluaran : 0)).toLocaleString('id-ID');
+//   }
 
   _tapLunas() {
       this.$.toastLunas.open();
@@ -233,11 +224,6 @@ class tagihanList extends PolymerElement {
       this.$.toastLunas.close();
       //this.playAnimation('exitList');
   }
-
-    _toArray(object) {
-        if (Object.keys(object) < 1) return [['Pengeluaran', 0]];
-        return Object.entries(object);
-    }
 }
 
 customElements.define(tagihanList.is, tagihanList);

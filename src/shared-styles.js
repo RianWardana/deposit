@@ -15,6 +15,15 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
                 padding: 16px 0 16px 0;
             }
 
+            paper-spinner {
+                --paper-spinner-layer-1-color: #FF9800;
+                --paper-spinner-layer-2-color: #1E88E5;
+                --paper-spinner-layer-3-color: #FF9800;
+                --paper-spinner-layer-4-color: #1E88E5;
+                position: fixed;
+                padding-top: calc(50vh - 120px);
+            }
+
             div.banner {
                 margin: 0;
                 height: 5px;

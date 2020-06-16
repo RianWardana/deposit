@@ -11,16 +11,6 @@ class rekeningList extends PolymerElement {
                 background: var(--app-primary-color);
                 color: white;
             }
-
-            paper-spinner {
-                --paper-spinner-layer-1-color: #FF9800;
-                --paper-spinner-layer-2-color: #1E88E5;
-                --paper-spinner-layer-3-color: #FF9800;
-                --paper-spinner-layer-4-color: #1E88E5;
-                position: fixed;
-                padding-top: calc(50vh - 120px);
-                /*z-index: 999;*/
-            }
         </style>
         
         <div class="horizontal layout center-justified">

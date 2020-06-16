@@ -3,7 +3,7 @@ import {PolymerElement, html} from '@polymer/polymer';
 class tagihanEdit extends PolymerElement {
   static get template() {
     return html`
-        <style include="iron-flex iron-flex-alignment">
+        <style include="iron-flex iron-flex-alignment shared-styles">
             paper-button {
                 color: #FFAB00;
             }
