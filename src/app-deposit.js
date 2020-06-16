@@ -1,5 +1,16 @@
 import {PolymerElement, html} from '@polymer/polymer';
 
+import './rekening-data.js';
+import './rekening-list.js';
+import './rekening-item.js';
+import './rekening-tambah.js';
+
+import './tagihan-data.js';
+import './tagihan-list.js';
+import './tagihan-item.js';
+import './tagihan-tambah.js';
+import './tagihan-edit.js';
+
 class appDeposit extends PolymerElement {
   static get template() {
     return html`
@@ -42,10 +53,9 @@ class appDeposit extends PolymerElement {
                   <tagihan-tambah data-tambah="{{dataTambah}}"></tagihan-tambah>
                   <tagihan-edit data-edit="{{dataEdit}}"></tagihan-edit>
                 </div>
-                <!-- <deposit-tunai tab="tunai"></deposit-tunai> -->
             </iron-pages>
         </app-header-layout>
-`;
+    `;
   }
 
   static get is() {

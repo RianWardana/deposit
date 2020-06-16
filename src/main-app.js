@@ -11,6 +11,7 @@ import '@polymer/app-layout/app-toolbar/app-toolbar';
 import '@polymer/iron-flex-layout/iron-flex-layout-classes';
 import '@polymer/iron-icon';
 import '@polymer/iron-icons';
+import '@polymer/iron-icons/image-icons.js';
 import '@polymer/iron-image';
 import '@polymer/iron-pages';
 import '@polymer/iron-selector/iron-selector';
@@ -35,25 +36,13 @@ import '@vaadin/vaadin-text-field/theme/material/vaadin-integer-field.js';
 // <link rel="import" href="../bower_components/paper-styles/typography.html">     
 
 import './shared-styles.js';
-
 import './app-auth.js';
 import './app-deposit.js';
-
-import './rekening-data.js';
-import './rekening-list.js';
-import './rekening-item.js';
-import './rekening-tambah.js';
-
-import './tagihan-data.js';
-import './tagihan-list.js';
-import './tagihan-item.js';
-import './tagihan-tambah.js';
-import './tagihan-edit.js';
 
 class mainApp extends PolymerElement {
   static get template() {
     return html`
-        <style include="iron-flex iron-flex-alignment">
+        <style include="iron-flex iron-flex-alignment shared-styles">
             :host {
                 display: block;
                 --app-primary-color: #1E88E5; /*500 065A9F*/
@@ -109,6 +98,7 @@ class mainApp extends PolymerElement {
                     <iron-selector attr-for-selected="halaman" selected="{{halaman_sekarang}}" on-iron-select="onMenuSelect"> <!-- saat sudah berhasil login dia tidak mau ke halaman "Deposit". Variabel {{halaman_sekarang}} iseng2 saya ganti asal. Eh bisa. saya ngga ngerti kenapa -->
                         <paper-item halaman="Deposit"><iron-icon icon="list"></iron-icon>Deposit</paper-item>
                         <paper-item halaman="Ringkasan"><iron-icon icon="timeline"></iron-icon>Ringkasan</paper-item>
+                        <paper-item halaman="Pengaturan"><iron-icon icon="image:tune"></iron-icon>Pengaturan</paper-item> <!-- icon "settings-ethernet" juga bagus -->
                         <hr>
                         <paper-item id="logout" on-tap="_tapLogOut"><iron-icon icon="exit-to-app"></iron-icon>Log out</paper-item>
                     </iron-selector>
@@ -121,10 +111,16 @@ class mainApp extends PolymerElement {
                             <div main-title="" style="margin-left: 10px">{{halaman_sekarang}}</div>
                         </app-toolbar>
                     </app-header>
-            
+
                     <iron-pages attr-for-selected="halaman" selected="{{halaman_sekarang}}">
                         <app-deposit halaman="Deposit"></app-deposit>
+                        <div halaman="Ringkasan" id="spinnerRingkasan" class="horizontal layout center-justified">
+                            <paper-spinner id="spinner" active=""></paper-spinner>
+                        </div>
                         <app-ringkasan halaman="Ringkasan"></app-ringkasan>
+                        <div halaman="Pengaturan" id="spinnerPengaturan" class="horizontal layout center-justified">
+                            <paper-spinner id="spinner" active=""></paper-spinner>
+                        </div>
                     </iron-pages>
             
                     <div style="height: 120px"></div>
@@ -139,50 +135,52 @@ class mainApp extends PolymerElement {
     `;
   }
 
-  static get properties() {
-      return {
-          halaman_sekarang: { 
-              type: String, 
-              value: 'Deposit',
-              observer: '_halamanChanged'
-          },
-
-          // loadRingkasan: {
-          //     type: Boolean,
-          //     value: false
-          // },
-
-          isRingkasanLoaded: {
-              type: Boolean,
-              value: false
-          },
-          
-          triggerLogout: {
-              type: Number
-          }
-      };
-  }
-
-  ready() {
-      super.ready();
-      window.thisMainApp = this;
-      console.log("[READY] main-app");
-  }
-
-  _halamanChanged() {
-    if (this.halaman_sekarang == 'Ringkasan') {
-      if (!this.isRingkasanLoaded) {
-        console.log("[LOADING] app-ringkasan");
-        // this.loadRingkasan = true;
-        import('./app-ringkasan.js').then((appRingkasan) => {
-          console.log("[LOADED] app-ringkasan");
-        }).catch((reason) => {
-          console.log("app-ringkasan failed to load.", reason);
-        });
-        this.isRingkasanLoaded = true;
-      }
+    static get properties() {
+        return {
+            halaman_sekarang: { 
+                type: String, 
+                value: 'Deposit',
+                observer: '_halamanChanged'
+            },
+            
+            triggerLogout: {
+                type: Number
+            }
+        };
     }
-  }
+
+    ready() {
+        super.ready();
+        window.thisMainApp = this;
+        console.log("[READY] main-app");
+    }
+
+    // Lazy-loading halaman non-esensial
+    _halamanChanged() {
+        if (this.halaman_sekarang == 'Ringkasan') {
+            if (!this.isRingkasanLoaded) {
+                import('./app-ringkasan.js').then(() => {
+                    console.log("[LOADED] app-ringkasan");
+                    this.isRingkasanLoaded = true;
+                    this.$.spinnerRingkasan.remove();
+                }).catch((reason) => {
+                    console.log("app-ringkasan failed to load.", reason);
+                });
+            }
+        }
+
+        else if (this.halaman_sekarang == 'Pengaturan') {
+            if (!this.isPengaturanLoaded) {
+                import('./app-pengaturan.js').then(() => {
+                    console.log("[LOADED] app-pengaturan");
+                    this.isPengaturanLoaded = true;
+                    this.$.spinnerPengaturan.remove();
+                }).catch((reason) => {
+                    console.log("app-pengaturan failed to load.", reason);
+                });
+            }
+        }
+    }
 
   _tapLogOut() {
       this.triggerLogout = Math.random()
