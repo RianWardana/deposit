@@ -1,13 +1,18 @@
 import {LitElement, html, css} from 'lit-element';
+import {styles} from './lit-styles.js';
 
 //打算用这个页面对试试一下Lit-Element
 //但是Lit-Element没有两个街道的关系
 //需要用Redux如果想有两个街道的关系
-//此也没有shared-styles
 
 class rekeningItem extends LitElement {
     static get styles() {
-        return css`
+        return [styles, css`
+            #namaJumlah {
+                display: flex;
+                justify-content: space-between;
+            }
+
             div.banner.kredit { background-color: #4CAF50; }
             div.banner.debit { background-color: #FF9800; }
 
@@ -19,40 +24,7 @@ class rekeningItem extends LitElement {
                 left: 0;
                 width: 100%;
             }
-
-            paper-material {
-                background: white;
-                border-radius: 2px;
-                height: 100%;
-                margin-bottom: 16px;
-                padding: 16px 0 16px 0;
-            }
-
-            @media (min-width: 801px) {
-                paper-material {
-                    padding-left: 30px;
-                    padding-right: 30px;
-                }
-
-                .narrow {
-                    margin-left: auto;
-                    margin-right: auto;
-                    max-width: 500px;
-                }
-            }
-
-            @media (max-width: 800px) {
-                paper-material {
-                    padding-left: 16px;
-                    padding-right: 16px;
-                }
-
-                .narrow {
-                    margin-left: 16px;
-                    margin-right: 16px;
-                }
-            }
-        `;
+        `];
     }
 
     render() {
@@ -61,15 +33,11 @@ class rekeningItem extends LitElement {
                 <paper-ripple recenters=""></paper-ripple>
                 <div class="banner ${this.jenis}"></div>
                 <div class="content">
-                    <div class="horizontal layout">
-                        <span>${this.nama}</span> 
-                        <span class="flex"></span>
+                    <div id="namaJumlah">
+                        <span>${this.nama}</span>
                         <span>${this.formatJumlah(this.jenis, this.jumlah)}</span>
                     </div>
-                    <div class="horizontal layout">
-                        <span>${this.waktu}</span> 
-                        <span class="flex"></span>
-                    </div>
+                    <span>${this.waktu}</span>
                 </div>
             </paper-material>
         `;
