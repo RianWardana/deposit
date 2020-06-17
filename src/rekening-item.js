@@ -8,11 +8,6 @@ import {styles} from './lit-styles.js';
 class rekeningItem extends LitElement {
     static get styles() {
         return [styles, css`
-            #namaJumlah {
-                display: flex;
-                justify-content: space-between;
-            }
-
             div.banner.kredit { background-color: #4CAF50; }
             div.banner.debit { background-color: #FF9800; }
 
@@ -33,7 +28,7 @@ class rekeningItem extends LitElement {
                 <paper-ripple recenters=""></paper-ripple>
                 <div class="banner ${this.jenis}"></div>
                 <div class="content">
-                    <div id="namaJumlah">
+                    <div class="flex-space-between">
                         <span>${this.nama}</span>
                         <span>${this.formatJumlah(this.jenis, this.jumlah)}</span>
                     </div>

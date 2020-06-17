@@ -2,6 +2,11 @@ import {css} from 'lit-element';
 
 // semacam shared-styles.js tapi untuk lit-element, keduanya harus sinkron
 export const styles = css`
+    .flex-space-between {
+        display: flex;
+        justify-content: space-between;
+    }
+
     paper-dialog {
         margin: 20px;
     }

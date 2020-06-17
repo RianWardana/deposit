@@ -4,6 +4,11 @@ const sharedStyles = document.createElement('dom-module');
 sharedStyles.innerHTML = `
     <template>
         <style>
+            .flex-space-between {
+                display: flex;
+                justify-content: space-between;
+            }
+
             paper-dialog {
                 margin: 20px;
             }
