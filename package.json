@@ -41,7 +41,8 @@
     "@polymer/polymer": "^3.0.0",
     "@vaadin/vaadin-combo-box": "^5.0.10",
     "@vaadin/vaadin-text-field": "^2.5.4",
-    "@webcomponents/webcomponentsjs": "^2.0.0"
+    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "lit-element": "^2.3.1"
   },
   "resolutions": {
     "inherits": "2.0.3",
