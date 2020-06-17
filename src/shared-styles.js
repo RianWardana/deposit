@@ -6,7 +6,10 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
             div.banner.kredit { background-color: #4CAF50; }
             div.banner.debit { background-color: #FF9800; }
 
-            /* UNTUK PAPER-MATERIAL */
+            paper-dialog {
+                margin: 20px;
+            }
+
             paper-material {
                 background: white;
                 border-radius: 2px;
@@ -35,7 +38,7 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
 
             @media (min-width: 641px) {
                 paper-dialog {
-                    left: 268px; /* it works but not optimal */
+                    left: calc(50vw + 108px - 194px);
                 }
 
                 paper-toast {
@@ -50,8 +53,9 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
                 }
 
                 .narrow {
-                    margin-left: 20%;
-                    margin-right: 20%;
+                    margin-left: auto;
+                    margin-right: auto;
+                    max-width: 500px;
                 }
             }
 
@@ -62,7 +66,6 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
                 }
 
                 .narrow {
-                    // margin: 0px 16px;
                     margin-left: 16px;
                     margin-right: 16px;
                 }
