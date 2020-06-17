@@ -91,44 +91,40 @@ class tagihanTambah extends PolymerElement {
   }
 
 
-  ready() {
-      super.ready();
-      this.addEventListener('neon-animation-finish', this._animationFinished);
+    ready() {
+        super.ready();
+        this.addEventListener('neon-animation-finish', this._animationFinished);
 
-      this.$.dialog.animationConfig = {
-          'entry': [
-              {
-                  name: 'fade-in-animation',
-                  node: this.$.dialog,
-                  timing: {duration: 300}
-              }
-          ],
-          'exit': [
-              {
-                  name: 'fade-out-animation',
-                  node: this.$.dialog,
-                  timing: {duration: 300}
-              }
-          ]
-      }
+        this.$.dialog.animationConfig = {
+            'entry': [
+                {
+                    name: 'fade-in-animation',
+                    node: this.$.dialog,
+                    timing: {duration: 300}
+                }
+            ],
+            'exit': [
+                {
+                    name: 'fade-out-animation',
+                    node: this.$.dialog,
+                    timing: {duration: 300}
+                }
+            ]
+        }
 
-      customElements.whenDefined('vaadin-combo-box').then(() => {
-        this.$.comboBox.items = this.daftarNamaPengeluaran;
-      });
-  }
+        // 拿费用名的数据从tagihan-data的页面
+        // var 费用的名 = [];
+        // dataTagihan.kategoriPengeluaran.map(第一的事情 => {
+        //     第一的事情.entri.map(第二的事情 => {
+        //         费用的名.push(第二的事情);
+        //     });
+        // });
 
-  // show() {
-  //     console.log("tagTambah here showed");
-  //     this.playAnimation();
-  //     this.$.fab.animate([
-  //         {transform:'translateY(0)', opacity: 1, easing: 'ease-out'},
-  //         {transform:'translateY(100%)', opacity: 1, easing: 'ease-in'},
-  //         {transform:'translateY(100%)', opacity: 0 }
-  //     ],
-  //     {
-  //         duration: 1500,
-  //     });
-  // }
+        customElements.whenDefined('vaadin-combo-box').then(() => {
+            this.$.comboBox.items = this.daftarNamaPengeluaran;
+            // this.$.comboBox.items = 费用的名;
+        });
+    }
 
   tambah() {
       if ((this.nama != "") && (this.jumlah != "")) { 
@@ -155,7 +151,6 @@ class tagihanTambah extends PolymerElement {
   _dialogClosed() {
       window.onresize = null;
       this.$.fab.style.display = 'block';
-      // this.playAnimation('entry');
   }
 
   _animationFinished() {
@@ -165,7 +160,6 @@ class tagihanTambah extends PolymerElement {
   }
 
   fabClick() {
-      // thisTagTambah.playAnimation('fabExit')
       this.nama = "";
       this.jumlah = "";
       this.$.salinKeRekening.checked = false;

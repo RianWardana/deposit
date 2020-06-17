@@ -18,14 +18,14 @@ class tagihanItem extends PolymerElement {
             <paper-ripple recenters=""></paper-ripple>
             <div class="content">
                 <div class="horizontal layout">
-                    <span>{{nama}}</span> 
+                    <span>[[nama]]</span> 
                     <span class="flex"></span>
-                    <span>{{formatJumlah(jumlah)}}</span>
+                    <span>[[formatJumlah(jumlah)]]</span>
                 </div>
                 <div class="horizontal layout">
-                    <span>{{waktu}}</span> 
+                    <span>[[waktu]]</span> 
                     <span class="flex"></span>
-                    <a href="#"><span role="button" on-tap="_tapEdit" key="{{key}}" nama="{{nama}}" jumlah="{{jumlah}}">Edit</span></a>
+                    <a href="#"><span role="button" on-tap="_tapEdit" key="[[key]]" nama="[[nama]]" jumlah="[[jumlah]]">Edit</span></a>
                 </div>
             </div>
         </paper-material>
@@ -52,10 +52,10 @@ class tagihanItem extends PolymerElement {
 
   // Selanjutnya gunakanlah this.dispatch atau apalah gitu, intinya dia bikin event yang bisa di-listen
   _tapEdit(e) {
-      thisTagEdit.key = e.target.key
-      thisTagEdit.nama = e.target.nama
-      thisTagEdit.jumlah = e.target.jumlah
-      thisTagEdit.triggerEdit = (thisTagEdit.triggerEdit ? false : true)
+      thisTagEdit.key = e.target.key;
+      thisTagEdit.nama = e.target.nama;
+      thisTagEdit.jumlah = e.target.jumlah;
+      thisTagEdit.triggerEdit = (thisTagEdit.triggerEdit ? false : true);
   }
 }
 

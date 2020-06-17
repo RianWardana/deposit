@@ -1,11 +1,9 @@
-const $_documentContainer = document.createElement('template');
+const sharedStyles = document.createElement('dom-module');
 
-$_documentContainer.innerHTML = `<dom-module id="shared-styles">
+// jangan lupa ada lit-styles.js yang juga harus sinkron dengan CSS di sini
+sharedStyles.innerHTML = `
     <template>
         <style>
-            div.banner.kredit { background-color: #4CAF50; }
-            div.banner.debit { background-color: #FF9800; }
-
             paper-dialog {
                 margin: 20px;
             }
@@ -25,15 +23,6 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
                 --paper-spinner-layer-4-color: #1E88E5;
                 position: fixed;
                 padding-top: calc(50vh - 120px);
-            }
-
-            div.banner {
-                margin: 0;
-                height: 5px;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
             }
 
             @media (min-width: 641px) {
@@ -81,6 +70,6 @@ $_documentContainer.innerHTML = `<dom-module id="shared-styles">
             }
         </style>
     </template>
-</dom-module>`;
+`;
 
-document.head.appendChild($_documentContainer.content);
+sharedStyles.register('shared-styles'); 

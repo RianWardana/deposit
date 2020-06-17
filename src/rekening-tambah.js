@@ -4,6 +4,11 @@ class rekeningTambah extends PolymerElement {
   static get template() {
     return html`
         <style include="iron-flex iron-flex-alignment shared-styles">
+            #toggleContainer {
+              display: flex;
+              justify-content: space-evenly;
+            }
+            
             paper-fab {
                 background-color: var(--app-primary-color);
                 position: fixed;
@@ -35,7 +40,7 @@ class rekeningTambah extends PolymerElement {
                   <div slot="prefix">Rp</div>
                 </vaadin-integer-field>
             </div>
-            <div class="horizontal layout around-justified">
+            <div id="toggleContainer">
                 <span>Debit</span>
                 <paper-toggle-button id="toggleJenis" checked="{{jenis}}" noink></paper-toggle-button>
                 <span>Kredit</span>
