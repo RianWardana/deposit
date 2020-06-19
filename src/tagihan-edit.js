@@ -21,11 +21,6 @@ class tagihanEdit extends PolymerElement {
             <h2>Edit Pengeluaran</h2>
             <div class="horizontal layout">
                 <paper-input list="daftar-pengeluaran-edit" no-label-float="" label="Nama" value="{{nama}}" maxlength="64"></paper-input>
-                <datalist id="daftar-pengeluaran-edit">
-                    <template is="dom-repeat" items="{{_getDaftarPengeluaran}}" as="item">
-                        <option value="{{item}}">
-                    </option></template>
-                </datalist>
                 <paper-input no-label-float="" type="number" value="{{jumlah}}" auto-validate="" pattern="[0-9]*" maxlength="8">
                     <div slot="prefix">Rp</div>
                 </paper-input>
@@ -57,13 +52,6 @@ class tagihanEdit extends PolymerElement {
               notify: true
           },
 
-          // _getDaftarPengeluaran: {
-          //     type: Array,
-          //     value: function() {
-          //         return thisTagTambah.daftarNamaPengeluaran;
-          //     }
-          // },
-
           nama: String,
           jumlah: Number
       }
@@ -72,23 +60,6 @@ class tagihanEdit extends PolymerElement {
   ready() {
       super.ready(); 
       window.thisTagEdit = this;
-
-      this.$.dialog.animationConfig = {
-          'entry': [
-              {
-                  name: 'fade-in-animation',
-                  node: this.$.dialog,
-                  timing: {duration: 300}
-              }
-          ],
-          'exit': [
-              {
-                  name: 'fade-out-animation',
-                  node: this.$.dialog,
-                  timing: {duration: 300}
-              }
-          ]
-      }
   }
 
   _editTriggered() {

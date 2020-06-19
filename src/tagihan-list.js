@@ -155,22 +155,22 @@ class tagihanList extends PolymerElement {
       };
   }
 
-  ready() {
-      super.ready();
-      this.addEventListener('neon-animation-finish', this._animationFinished);
-      this.dataChangedCount = 0
+    ready() {
+        super.ready();
+        this.addEventListener('neon-animation-finish', this._animationFinished);
+        this.dataChangedCount = 0
 
-      auth.onAuthStateChanged(firebaseUser => {
-          if (firebaseUser) {
-              this.dataChangedCount = 0
-              this.$.spinner.style.display = 'block'
-              this.$.list.style.display = 'none'  
-          }
-          else {
-              this.dataChangedCount = -1
-          }
-      })
-  }
+        auth.onAuthStateChanged(firebaseUser => {
+            if (firebaseUser) {
+                this.dataChangedCount = 0
+                this.$.spinner.style.display = 'block'
+                this.$.list.style.display = 'none'  
+            }
+            else {
+                this.dataChangedCount = -1
+            }
+        })
+    }
 
   _dataChanged() {
       // Animation yang dijalankan saat awal //
@@ -222,7 +222,6 @@ class tagihanList extends PolymerElement {
   _tapLunasConfirm() {
       thisTagDat.lunasiSemua();
       this.$.toastLunas.close();
-      //this.playAnimation('exitList');
   }
 }
 

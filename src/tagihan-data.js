@@ -54,20 +54,20 @@ class tagihanData extends PolymerElement {
       };
   }
 
-  ready() {
-      super.ready();
-      window.thisTagDat = this;
+    ready() {
+        super.ready();
+        window.thisTagDat = this;
 
-      auth.onAuthStateChanged(firebaseUser => {
-          if (firebaseUser) {
-              this.uid = firebaseUser.uid
-              this.loadTagihan()
-          }
-          else {
-              this.dataTagihan = []
-          }
-      })
-  }
+        auth.onAuthStateChanged(firebaseUser => {
+            if (firebaseUser) {
+                this.uid = firebaseUser.uid
+                this.loadTagihan()
+            }
+            else {
+                this.dataTagihan = []
+            }
+        })
+    }
 
   loadTagihan() {
       console.log('loadTagihan')

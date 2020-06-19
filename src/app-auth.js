@@ -9,11 +9,12 @@ Tidak bisa menggunakan FirebaseUI karena masalah Polymer 3 di ES6 import
 class appAuth extends PolymerElement {
   static get template() {
     return html`
-        <style include="iron-flex iron-flex-alignment">
+        <style>
             :host {
-                position:fixed;
-                display: block;
                 height: 100vh;
+                margin-top: 20vh;
+                display: flex;
+                justify-content: center;
             }
 
             #container {
@@ -23,28 +24,26 @@ class appAuth extends PolymerElement {
             paper-button {
                 background-color: #1E88E5;
                 color: white;
-                margin: 30px 0 0;
-                width: 100%;
+                margin: 20px 0 0;
+                width: 280px;
+            }
+
+            span {
+                margin-top: 20px;
+                text-align: center;
             }
         </style>
 
 
         <div id="container" class="vertical layout">
             <iron-image style="width:280px; height:80px;" sizing="cover" src="./img/auth.png"></iron-image>
-            <!-- Sign in with email and password is disabled -->
-            <!-- <paper-input label="E-mail address" value="{{email}}" maxlength="64"></paper-input>
-            <paper-input label="Password" type="password" value="{{password}}" maxlength="32"></paper-input>
-            <paper-button raised="" on-tap="_tapLogin">Sign in</paper-button> -->
             <paper-button raised="" on-tap="_tapLoginGoogle">Sign in with Google</paper-button>
             <paper-button raised="" on-tap="_tapLoginMicrosoft">Sign in with Microsoft</paper-button>
+            <span>Your privacy is very important to us. This app will not share your personal information.</span>
         </div>
 
         <paper-toast id="toast"></paper-toast>
     `;
-  }
-
-  static get is() {
-      return 'app-auth';
   }
 
   static get properties() {
@@ -59,14 +58,6 @@ class appAuth extends PolymerElement {
               observer: '_triggerLogout'
           },
 
-          email: {
-              type: String
-          },
-
-          password: {
-              type: String
-          },
-
           uid: {
               type: String
           }
@@ -74,9 +65,8 @@ class appAuth extends PolymerElement {
   }
 
     ready() {
+        console.log("app-auth");
         super.ready();
-        this.$.container.style.marginTop = (window.innerHeight - 280)/2 - 100 + 'px'
-        this.$.container.style.marginLeft = (window.innerWidth - 280)/2 + 'px'
 
         var config = {
             apiKey: "AIzaSyCAmpmMEFT9nbMaTjI4YDqAa1H1zufc9r0",
@@ -85,6 +75,7 @@ class appAuth extends PolymerElement {
             storageBucket: "deposit-ce46e.appspot.com",
             messagingSenderId: "713372742623"
         }; 
+
         firebase.initializeApp(config);
 
         window.auth = firebase.auth();
@@ -107,16 +98,6 @@ class appAuth extends PolymerElement {
         auth.signOut();
     }
 
-    _tapLogin() {
-        var ini = this
-        this.$.toast.show({text: 'Logging in...', duration: 5000})
-        window.promise = auth.signInWithEmailAndPassword(this.email, this.password)
-        promise.catch(e => {
-            ini.$.toast.close()
-            ini.$.toast.show(e.message)
-        })
-    }
-
     _tapLoginGoogle() {
         this.$.toast.show({text: 'Logging in...', duration: 5000})
         var provider = new firebase.auth.GoogleAuthProvider();
@@ -130,4 +111,4 @@ class appAuth extends PolymerElement {
     }
 }
 
-customElements.define(appAuth.is, appAuth);
+customElements.define('app-auth', appAuth);

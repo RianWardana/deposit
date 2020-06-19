@@ -2,7 +2,7 @@ import {css} from 'lit-element';
 
 // semacam shared-styles.js tapi untuk lit-element, keduanya harus sinkron
 export const styles = css`
-    .flex-space-between {
+    .flexSpaceBetween {
         display: flex;
         justify-content: space-between;
     }
@@ -25,7 +25,7 @@ export const styles = css`
         --paper-spinner-layer-3-color: #FF9800;
         --paper-spinner-layer-4-color: #1E88E5;
         position: fixed;
-        padding-top: calc(50vh - 120px);
+        top: calc(50vh - 120px);
     }
 
     @media (min-width: 641px) {

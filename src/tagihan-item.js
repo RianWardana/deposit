@@ -20,11 +20,11 @@ class tagihanItem extends LitElement {
             <paper-material>
                 <paper-ripple recenters=""></paper-ripple>
                 <div class="content">
-                    <div class="flex-space-between">
+                    <div class="flexSpaceBetween">
                         <span>${this.nama}</span> 
                         <span>${this.formatJumlah(this.jumlah)}</span>
                     </div>
-                    <div class="flex-space-between">
+                    <div class="flexSpaceBetween">
                         <span>${this.waktu}</span> 
                         <a href="#">
                             <span role="button" @click="${

@@ -6,6 +6,16 @@ import {styles} from './lit-styles.js';
 //需要用Redux如果想有两个街道的关系
 
 class rekeningItem extends LitElement {
+    
+    static get properties() {
+        return {
+            waktu: String,
+            nama: String,
+            jenis: String,
+            jumlah: Number
+        };
+    }
+    
     static get styles() {
         return [styles, css`
             div.banner.kredit { background-color: #4CAF50; }
@@ -28,7 +38,7 @@ class rekeningItem extends LitElement {
                 <paper-ripple recenters=""></paper-ripple>
                 <div class="banner ${this.jenis}"></div>
                 <div class="content">
-                    <div class="flex-space-between">
+                    <div class="flexSpaceBetween">
                         <span>${this.nama}</span>
                         <span>${this.formatJumlah(this.jenis, this.jumlah)}</span>
                     </div>
@@ -36,15 +46,6 @@ class rekeningItem extends LitElement {
                 </div>
             </paper-material>
         `;
-    }
-
-    static get properties() {
-        return {
-            waktu: String,
-            nama: String,
-            jenis: String,
-            jumlah: Number
-        };
     }
 
     formatJumlah(dataJenis, dataJumlah) {

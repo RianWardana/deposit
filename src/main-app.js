@@ -89,7 +89,7 @@ class mainApp extends PolymerElement {
         </style>
 
 
-        <neon-animated-pages selected="{{sudah_login}}" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+        <neon-animated-pages selected="[[sudah_login]]">
             <app-auth login-status="{{sudah_login}}" trigger="{{triggerLogout}}"></app-auth>
 
             <app-drawer-layout id="appdrawerlayout" fullbleed="">
@@ -156,6 +156,7 @@ class mainApp extends PolymerElement {
     }
 
     // Lazy-loading halaman non-esensial
+    // Pakai until(content,<spinner>) lebih keren, nanti ya pas pakai LitElement
     _halamanChanged() {
         if (this.halaman_sekarang == 'Ringkasan') {
             if (!this.isRingkasanLoaded) {
