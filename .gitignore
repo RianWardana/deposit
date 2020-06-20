@@ -91,5 +91,7 @@ node_modules
 
 build
 
+dist
+
 .firebase
 .firebase/hosting.YnVpbGRcZGVmYXVsdA.cache

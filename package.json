@@ -53,6 +53,9 @@
     "type-detect": "1.0.0"
   },
   "devDependencies": {
-    "parcel-bundler": "^1.12.4"
-  }
+    "polymer-cli": "^1.9.11"
+  },
+  "browserslist": [
+    "Chrome > 50"
+  ]
 }
