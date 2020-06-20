@@ -4,10 +4,10 @@
   "version": "3.0.0",
   "main": "index.html",
   "scripts": {
-    "serve": "parcel index.html",
-    "serve:polymer": "polymer serve",
-    "build": "parcel build index.html",
-    "build:polymer": "polymer build",
+    "serve:parcel": "parcel index.html",
+    "serve": "polymer serve",
+    "build:parcel": "parcel build index.html",
+    "build": "polymer build",
     "deploy": "firebase deploy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
