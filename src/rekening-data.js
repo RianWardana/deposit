@@ -3,9 +3,6 @@ import firebase from '@firebase/app';
 import '@firebase/database';
 
 class rekeningData extends PolymerElement {
-    static get is() {
-        return 'rekening-data';
-    }
 
     static get properties() {
         return {
@@ -36,6 +33,7 @@ class rekeningData extends PolymerElement {
         window.thisRekDat = this;
         console.log("[READY] rekening-data");
 
+        // coba gunakan customElements.whenDefined('app-auth').then(() => {})
         auth.onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {
                 thisRekDat.uid = firebaseUser.uid
@@ -47,7 +45,7 @@ class rekeningData extends PolymerElement {
                 thisRekDat.lastSaldo = null;
                 console.log("rekening-data knows if you are not signed in.");
             }
-        })
+        });
     }
 
     loadRekening() {  
@@ -116,4 +114,4 @@ class rekeningData extends PolymerElement {
     }
 }
 
-customElements.define(rekeningData.is, rekeningData);
+customElements.define('rekening-data', rekeningData);

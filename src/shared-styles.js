@@ -4,7 +4,7 @@ const sharedStyles = document.createElement('dom-module');
 sharedStyles.innerHTML = `
     <template>
         <style>
-            .flex-space-between {
+            .flexSpaceBetween {
                 display: flex;
                 justify-content: space-between;
             }

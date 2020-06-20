@@ -8,13 +8,11 @@ class rekeningList extends LitElement {
         return {
             data: { 
                 type: Array,
-                notify: true,
-                observer: '_dataChanged'
+                notify: true
             },
 
             saldo: {
-                type: Number,
-                value: 0
+                type: Number
             }
         };
     }

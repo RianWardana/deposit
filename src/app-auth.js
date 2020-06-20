@@ -24,13 +24,8 @@ class appAuth extends PolymerElement {
             paper-button {
                 background-color: #1E88E5;
                 color: white;
-                margin: 20px 0 0;
+                margin: 10px 0 10px;
                 width: 280px;
-            }
-
-            span {
-                margin-top: 20px;
-                text-align: center;
             }
         </style>
 

@@ -157,6 +157,7 @@ class mainApp extends PolymerElement {
 
     // Lazy-loading halaman non-esensial
     // Pakai until(content,<spinner>) lebih keren, nanti ya pas pakai LitElement
+    // Pakai halaman_sekarang.hasChanged()
     _halamanChanged() {
         if (this.halaman_sekarang == 'Ringkasan') {
             if (!this.isRingkasanLoaded) {

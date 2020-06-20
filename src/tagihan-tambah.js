@@ -114,10 +114,8 @@ class tagihanTambah extends PolymerElement {
 
         // 拿费用名的数据从tagihan-data的页面
         // var 费用的名 = [];
-        // dataTagihan.kategoriPengeluaran.map(第一的事情 => {
-        //     第一的事情.entri.map(第二的事情 => {
-        //         费用的名.push(第二的事情);
-        //     });
+        // dataTagihan.kategoriPengeluaran.map(费用的事情 => {
+        //     费用的名 = [...费用的名, ...费用的事情.entri];
         // });
 
         customElements.whenDefined('vaadin-combo-box').then(() => {
