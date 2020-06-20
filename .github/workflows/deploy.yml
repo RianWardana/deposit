@@ -19,7 +19,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: build
-          path: build/default
+          path: build
   deploy:
     name: Deploy to Firebase Hosting
     needs: build
