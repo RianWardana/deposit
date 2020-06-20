@@ -1,16 +1,37 @@
-import {PolymerElement, html} from '@polymer/polymer';
-import './ringkasan-data.js';
+import {LitElement, html, css} from 'lit-element';
+import {styles} from './lit-styles.js';
+import firebase from '@firebase/app';
+import '@firebase/database';
 
-class appRingkasan extends PolymerElement {
-  static get template() {
-    return html`
-        <style include="iron-flex iron-flex-alignment shared-styles">
-            :host {
-                display: block;
-                --paper-tabs-selection-bar-color: #83ADCF; /*200*/
-                --paper-tab-ink: #043F71;
-            }
+class appRingkasan extends LitElement {
+    
+    static get properties() {
+        return {
+            pengeluaran: {type: Object},
+            total: {type: Number},
+            totalPerKategori: {type: Object},
+            kategoriPengeluaran: {type: Array}
+        }
+    }
 
+    constructor() {
+        super();
+        let yearToday = (new Date()).getFullYear();
+        let monthToday = (new Date()).getMonth();
+        this.yearMonthLast = new Date(yearToday, monthToday+1).toISOString().slice(0,7);
+
+        this.kategoriPengeluaran = [
+            {nama: "Makan", entri: ["Makan", "Minum", "Go-Food", "GrabFood", "Sereal"]},
+            {nama: "Transportasi", entri: ["Transportasi", "e-Money", "Parkir", "Go-Jek Subs", "Grab Subs", "Go-Ride", "GrabRide", "Go-Car", "GrabCar"]},
+            {nama: "Utilities", entri: ["Listrik", "FirstMedia", "Pulsa XL"]},
+            {nama: "Lainnya", entri: ["Lainnya"]}
+        ];
+
+        this.loadPengeluaran(yearToday, monthToday);
+    }
+
+    static get styles() {
+        return [styles, css`
             app-toolbar {
                 top: 64px;
                 background-color: var(--app-primary-color);
@@ -30,89 +51,122 @@ class appRingkasan extends PolymerElement {
                 padding: 5px;
                 width: 100%;
             }
-        </style>
+        `];
+    }
 
-        <app-header-layout>
-            <app-header slot="header">
-                <app-toolbar>
-                    <input class="narrow" type="month" id="inputBulan" 
-                        on-change="_tapSearch"
-                        min="2015-08" 
-                        max="{{yearMonthLast}}" 
-                        value="{{yearMonthLast}}"
-                    >
-                </app-toolbar>
-            </app-header>
+    render() {
+        return html`
+            <app-header-layout>
+                <app-header slot="header">
+                    <app-toolbar>
+                        <input class="narrow" type="month" id="inputBulan" 
+                            @change="${this.onChangedDate}"
+                            min="2015-08" 
+                            max="${this.yearMonthLast}" 
+                            value="${this.yearMonthLast}"
+                        >
+                    </app-toolbar>
+                </app-header>
 
-            <div class="narrow" id="containerRingkasan">
-                <!-- DAFTAR PENGELUARAN -->
-                <paper-material>
-                    <template is="dom-repeat" items="{{_toArray(pengeluaran)}}" as="item">
-                        <div class="horizontal layout">
-                            <span>{{item.0}}</span>
-                            <span class="flex"></span>
-                            <span>{{_formatJumlah(item.1)}}</span>
+                <div class="narrow" id="containerRingkasan">
+                    
+                    <!-- DAFTAR PENGELUARAN -->
+                    <paper-material>
+                        ${this._toArray(this.pengeluaran).map(item => {
+                            return html`
+                                <div class="flexSpaceBetween">
+                                    <span>${item.nama}</span>
+                                    <span>${this._formatJumlah(item.jumlah)}</span>
+                                </div>
+                            `;
+                        })}
+                    </paper-material>
+
+                    <!-- TOTAL KATEGORI PENGELUARAN -->
+                    <paper-material>
+                        <!-- <base-chart id="chart" type="doughnut" .data="${this.totalPerKategori}" .optionsa="{chartOptions}"></base-chart> -->
+                        ${this._toArray(this.totalPerKategori).map(item => {
+                            return html`
+                                <div class="flexSpaceBetween">
+                                    <span>${item.nama}</span>
+                                    <span>${this._formatJumlah(item.jumlah)}</span>
+                                </div>
+                            `;
+                        })}
+                    </paper-material>
+
+                    <!-- TOTAL PENGELUARAN -->
+                    <paper-material>
+                        <div class="flexSpaceBetween">
+                            <span>Total pengeluaran</span>
+                            <span>${this._formatJumlah(this.total)}</span>
                         </div>
-                    </template>
-                </paper-material>
+                    </paper-material>
+                </div>
+            </app-header-layout>
+        `;
+    }
 
-                <!-- TOTAL KATEGORI PENGELUARAN -->
-                <paper-material>
-                    <template is="dom-repeat" items="{{_toArray(totalPerKategori)}}" as="item">
-                        <div class="horizontal layout">
-                            <span>{{item.0}}</span>
-                            <span class="flex"></span>
-                            <span>{{_formatJumlah(item.1)}}</span>
-                        </div>
-                    </template>
-                </paper-material>
+    onChangedDate(e) {
+        var year = (e.target.value).slice(0,4);
+        var month = (e.target.value).slice(5,7);
+        this.loadPengeluaran(year, month-1);
+    }
 
-                <!-- TOTAL PENGELUARAN -->
-                <paper-material>
-                    <div class="horizontal layout">
-                        <span>Total pengeluaran</span>
-                        <span class="flex"></span>
-                        <span>{{_formatJumlah(total)}}</span>
-                    </div>
-                </paper-material>
-            </div>
+    _toArray(obj) {
+        let array = [];
+        for (const prop in obj) {
+            array.push({
+                nama: prop,
+                jumlah: obj[prop]
+            })
+        }
+        return (array && array.length ? array : [{nama: 'Pengeluaran', jumlah: 0}]);
+    }
+
+    _formatJumlah(jumlah) {
+        return 'Rp' + parseInt(jumlah).toLocaleString('id-ID')
+    }
+
+    loadPengeluaran(year, month) {
+        var startTime = new Date(year, month).getTime() / -1000; // pembagi negatif karena key di Firebase negatif
+        var endTime = new Date(year, month+1).getTime() / -1000;
+
+        // Selanjutnya jangan minta uid dari thisRekDat, cari cara lain, firebase.js mungkin (firebase.js export uid)
+        // Lit-Element bisa load global variables, tapi ga bisa store
+        window.dbTagihan = firebase.database().ref(thisRekDat.uid + "/tagihan");
+        window.dbTagihanMonth = dbTagihan.orderByKey().startAt(endTime.toString()).endAt(startTime.toString()); // dibalik antara endTime dan startTime karena key yang negatif
+        
+        dbTagihanMonth.once('value', entries => {
+            var pengeluaran = {};
+            var total = 0;
+            var totalPerKategori = {};
+
+            entries.forEach(entry => {
+                var nama = entry.val()['nama'];
+                var jumlah = entry.val()['jumlah'];
+
+                if (pengeluaran[nama] > 0) pengeluaran[nama] += jumlah;
+                else pengeluaran[nama] = jumlah;
+
+                // Hitung total pengeluaran
+                total += jumlah;
+
+                // Hitung total pengeluaran per kategori
+                for (let kategori of this.kategoriPengeluaran) {
+                    if ( (kategori.entri.includes(nama)) || (kategori.nama == 'Lainnya') ) { // user tidak boleh bisa membuat kategori bernama "Lainnya"
+                        let a = totalPerKategori[kategori.nama];
+                        totalPerKategori[kategori.nama] = (isNaN(a) ? jumlah : a + jumlah);
+                        break;
+                    }
+                }
+            });
             
-        </app-header-layout>
-    
-        <ringkasan-data 
-            pengeluaran="{{pengeluaran}}" 
-            total="{{total}}" 
-            total-per-kategori="{{totalPerKategori}}" >
-        </ringkasan-data>
-    `;
-  }
-
-  static get is() {
-      return 'app-ringkasan';
-  }
-
-  ready() {
-      super.ready();
-      console.log("[READY] app-ringkasan");
-      var yearToday = (new Date()).getFullYear();
-      var monthToday = (new Date()).getMonth();
-      this.yearMonthLast = new Date(yearToday, monthToday+1).toISOString().slice(0,7);
-  }
-
-  _toArray(object) {
-      if (Object.keys(object) < 1) return [['Pengeluaran', 0]];
-      return Object.entries(object);
-  }
-
-  _formatJumlah(jumlah) {
-      return 'Rp' + parseInt(jumlah).toLocaleString('id-ID')
-  }
-
-  _tapSearch() {
-      var year = (this.$.inputBulan.value).slice(0,4);
-      var month = (this.$.inputBulan.value).slice(5,7);
-      thisRingDat.loadPengeluaran(year, month-1);
-  }
+            this.pengeluaran = pengeluaran;
+            this.total = total;
+            this.totalPerKategori = totalPerKategori;
+        });   
+    }
 }
 
-customElements.define(appRingkasan.is, appRingkasan);
+customElements.define('app-ringkasan', appRingkasan);
