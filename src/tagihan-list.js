@@ -1,9 +1,18 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {LitElement, html, css} from 'lit-element';
+import {styles} from './lit-styles.js';
+import {until} from 'lit-html/directives/until.js';
 
-class tagihanList extends PolymerElement {
-  static get template() {
-    return html`
-        <style include="iron-flex iron-flex-alignment shared-styles">
+class tagihanList extends LitElement {
+    
+    static get properties() {
+        return {
+            data: Object,
+            totalPengeluaran: Object
+        };
+    }
+
+    static get styles() {
+        return [styles, css`
             paper-material#paperMaterialTagihan {
                 margin-top: 32px;
                 margin-bottom: 16px;
@@ -12,11 +21,6 @@ class tagihanList extends PolymerElement {
                 max-height: 50px;
                 transition: max-height 0.5s ease-out;
             }
-
-			/* paper-material#paperMaterialTagihan:hover {
-				max-height: 500px;
-				transition: max-height 0.5s ease-in;
-			} */
 
             paper-material#paper-material-batas {
                 margin-top: 16px;
@@ -27,13 +31,8 @@ class tagihanList extends PolymerElement {
                 transition: max-height 0.5s ease-out;
             }
 
-            /* paper-material#paper-material-batas:hover {
-                max-height: 500px;
-                transition: max-height 0.5s ease-in;
-            } */
-
             paper-button {
-            	color: white;
+                color: white;
                 background: #5cb860;
                 padding: 10px 20px;
                 font-weight: 500;
@@ -41,188 +40,88 @@ class tagihanList extends PolymerElement {
                 width: 100%;
             }
 
-			/* .detilPengeluaran {
-				margin-top: 32px;
-			} */
-
             span[role="button"] { color: #FFAB00; margin: 10px; }
-        </style>
-        
-        <div class="horizontal layout center-justified">
-            <paper-spinner id="spinner" active=""></paper-spinner>
-        </div>
-
-        <div class="narrow" id="list">
-            <!-- PENGELUARAN BULAN INI (HIJAU) -->
-            <paper-material id="paperMaterialTagihan">
-                <paper-ripple recenters=""></paper-ripple>
-                <div class="horizontal layout">
-                    <span>Pengeluaran bulan ini</span>
-                    <span class="flex"></span>
-                    <span><b>Rp{{formatTotalTagihan(totalPengeluaran.total)}}</b></span>
-                </div>
-                <div class="horizontal layout">
-                    <span>Pengeluaran hari ini</span>
-                    <span class="flex"></span>
-                    <span><b>Rp{{formatTotalTagihan(totalPengeluaran.today)}}</b></span>
-                </div>
-                <!-- <div class="detilPengeluaran">
-                	<div class="horizontal layout">
-	                    <span>Pengeluaran makan</span>
-	                    <span class="flex"></span>
-	                    <span><b>Rp{{formatTotalTagihan(totalPengeluaran.Makan)}}</b></span>
-	                </div>
-	                <div class="horizontal layout">
-	                    <span>Pengeluaran transportasi</span>
-	                    <span class="flex"></span>
-	                    <span><b>Rp{{formatTotalTagihan(totalPengeluaran.Transportasi)}}</b></span>
-                    </div>
-                    <div class="horizontal layout">
-	                    <span>Pengeluaran utilities</span>
-	                    <span class="flex"></span>
-	                    <span><b>Rp{{formatTotalTagihan(totalPengeluaran.Utilities)}}</b></span>
-	                </div>
-	                <div class="horizontal layout">
-	                    <span>Pengeluaran lainnya</span>
-	                    <span class="flex"></span>
-	                    <span><b>Rp{{formatTotalTagihan(totalPengeluaran.Lainnya)}}</b></span>
-	                </div>
-                </div> -->
-            </paper-material>
-            
-            <!-- BATAS PENGELUARAN (KUNING) -->
-            <paper-material id="paper-material-batas">
-            	<paper-ripple recenters=""></paper-ripple>
-                <div class="horizontal layout">
-                    <span>Batas pengeluaran harian</span>
-                    <span class="flex"></span>
-                    <span><b>Rp{{formatBatas(totalPengeluaran.total)}}</b></span>
-                </div>
-                <!-- <div class="detilPengeluaran">
-                    <div class="horizontal layout">
-                        <span>Sisa alokasi makan</span>
-                        <span class="flex"></span>
-                        <span><b>Rp{{formatSisaPengeluaran(totalPengeluaran.makan, "makan")}}</b></span>
-                    </div>
-                    <div class="horizontal layout">
-                        <span>Sisa alokasi transportasi</span>
-                        <span class="flex"></span>
-                        <span><b>Rp{{formatSisaPengeluaran(totalPengeluaran.transportasi, "transport")}}</b></span>
-                    </div>
-                    <div class="horizontal layout">
-                        <span>Sisa alokasi lainnya</span>
-                        <span class="flex"></span>
-                        <span><b>Rp{{formatSisaPengeluaran(totalPengeluaran.lainnya, "lainnya")}}</b></span>
-                    </div>
-                </div> -->
-            </paper-material>
-
-            <!-- PENGELUARAN -->
-            <template is="dom-repeat" items="{{data}}" as="item">
-                <tagihan-item key="{{item.key}}" waktu="{{item.waktu}}" nama="{{item.nama}}" jumlah="{{item.jumlah}}">
+        `];
+    }
+    
+    render() {
+        const items = new Promise(resolve => {
+            if (typeof this.data == 'undefined') return;
+            let load = this.data.map(item => html`
+                <tagihan-item 
+                    key="${item.key}"
+                    waktu="${item.waktu}" 
+                    nama="${item.nama}" 
+                    jumlah="${item.jumlah}">
                 </tagihan-item>
-            </template>
+            `)
+            this.shadowRoot.getElementById('buttonArsipkan').removeAttribute('hidden');
+            resolve(load);
+        });
 
-            <paper-button raised="" on-tap="_tapLunas">Lunasi Semua</paper-button>
-        </div>
-		
-		<paper-toast id="toastLunas" duration="5000" text="Entri pengeluaran akan terhapus.">
-			<span role="button" on-tap="_tapLunasConfirm">Lanjut</span>
-		</paper-toast>
-`;
-  }
+        const spinner = html`
+            <div class="spinnerContainer">
+                <paper-spinner active></paper-spinner>
+            </div>
+        `;
 
-  static get is() {
-      return 'tagihan-list';
-  }
+        return html`
+            <div class="narrow" id="list">
+                <!-- PENGELUARAN BULAN INI (HIJAU) -->
+                <paper-material id="paperMaterialTagihan">
+                    <paper-ripple recenters></paper-ripple>
+                    <div class="flexSpaceBetween">
+                        <span>Pengeluaran bulan ini</span>
+                        <span><b>Rp${this.formatTotalTagihan(this.totalPengeluaran.total)}</b></span>
+                    </div>
+                    <div class="flexSpaceBetween">
+                        <span>Pengeluaran hari ini</span>
+                        <span><b>Rp${this.formatTotalTagihan(this.totalPengeluaran.today)}</b></span>
+                    </div>
+                </paper-material>
+                
+                <!-- BATAS PENGELUARAN (KUNING) -->
+                <paper-material id="paper-material-batas">
+                    <paper-ripple recenters></paper-ripple>
+                    <div class="flexSpaceBetween">
+                        <span>Batas pengeluaran harian</span>
+                        <span><b>Rp${this.formatBatas(this.totalPengeluaran.total)}</b></span>
+                    </div>
+                </paper-material>
 
-  static get properties() {
-      return {
-          data: { 
-              type: Object,
-              notify: true,
-              observer: '_dataChanged'
-          },
+                <!-- PENGELUARAN -->
+                ${until(items, spinner)}
 
-        //   defisitCarry: {
-        //       type: Number,
-        //       value: 0
-        //   },
-
-          totalPengeluaran: {
-              type: Object
-          }
-      };
-  }
-
-    ready() {
-        super.ready();
-        this.addEventListener('neon-animation-finish', this._animationFinished);
-        this.dataChangedCount = 0
-
-        auth.onAuthStateChanged(firebaseUser => {
-            if (firebaseUser) {
-                this.dataChangedCount = 0
-                this.$.spinner.style.display = 'block'
-                this.$.list.style.display = 'none'  
-            }
-            else {
-                this.dataChangedCount = -1
-            }
-        })
+                <paper-button id="buttonArsipkan" hidden raised @click="${this.onClick}">Arsipkan Pengeluaran</paper-button>
+            </div>
+            
+            <paper-toast id="toastLunas" duration="5000" text="Entri pengeluaran akan diarsipkan.">
+                <span role="button" @click="${this.onClickConfirm}">Lanjut</span>
+            </paper-toast>
+        `;
     }
 
-  _dataChanged() {
-      // Animation yang dijalankan saat awal //
-      if (this.dataChangedCount == 0) {
-          // this.playAnimation('exitSpinner')
-          this.$.list.style.display = 'block';
-          this.$.spinner.style.display = 'none';
-          // this.playAnimation('entryList')
-      }
-      // Animation yang dijalankan saat ada perubahan data // 
-      else {
-          
-      }
-      
-      this.dataChangedCount++
-  }
+    formatTotalTagihan(total) {
+        if (isNaN(total)) return 0;
+        else return parseInt(total).toLocaleString('id-ID');
+    }
 
-  _animationFinished() {
-      this.$.spinner.style.display = 'none';
-  }
+    formatBatas(total) {
+        var dateObject = new Date();
+        var tanggal = dateObject.getDate();
+        var hariTerakhir = new Date(dateObject.getFullYear(), dateObject.getMonth()+1, 0).getDate();
+        var selisihHari = (hariTerakhir-tanggal < 1 ? 1 : hariTerakhir-tanggal);
+        return parseFloat(((2250000-total) / selisihHari).toFixed(0)).toLocaleString('id-ID');
+    }
 
-  formatTotalTagihan(total) {
-      if (isNaN(total)) return 0;
-      else return parseInt(total).toLocaleString('id-ID');
-  }
+    onClick() {
+        this.shadowRoot.getElementById('toastLunas').open();
+    }
 
-  formatBatas(total) {
-      var dateObject = new Date();
-      var tanggal = dateObject.getDate();
-      var hariTerakhir = new Date(dateObject.getFullYear(), dateObject.getMonth()+1, 0).getDate();
-      var selisihHari = (hariTerakhir-tanggal < 1 ? 1 : hariTerakhir-tanggal);
-      return parseFloat(((2250000-total) / selisihHari).toFixed(0)).toLocaleString('id-ID');
-  }
-
-//   formatSisaPengeluaran(jumlah, jenis) {
-//       if (jenis == "makan") var alokasi = 912000;
-//       else if (jenis == "transport") var alokasi = 990000;
-//       else var alokasi = 348000;
-
-//       var sisaPengeluaran = alokasi - jumlah - this.defisitCarry;
-//       this.defisitCarry = (sisaPengeluaran > 0 ? 0 : Math.abs(sisaPengeluaran));
-//       return parseFloat((sisaPengeluaran > 0 ? sisaPengeluaran : 0)).toLocaleString('id-ID');
-//   }
-
-  _tapLunas() {
-      this.$.toastLunas.open();
-  }
-
-  _tapLunasConfirm() {
-      thisTagDat.lunasiSemua();
-      this.$.toastLunas.close();
-  }
+    onClickConfirm() {
+        thisTagDat.lunasiSemua();
+        this.shadowRoot.getElementById('toastLunas').close();
+    }
 }
 
-customElements.define(tagihanList.is, tagihanList);
+customElements.define('tagihan-list', tagihanList);

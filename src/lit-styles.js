@@ -7,6 +7,11 @@ export const styles = css`
         justify-content: space-between;
     }
 
+    .spinnerContainer {
+        display: flex;
+        justify-content: center;
+    }
+
     paper-dialog {
         margin: 20px;
     }
