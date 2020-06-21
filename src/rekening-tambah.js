@@ -52,7 +52,7 @@ class rekeningTambah extends LitElement {
         return html`
             <paper-dialog id="dialog" @iron-overlay-closed="${this._dialogClosed}">
                 <h2>Mutasi Rekening</h2>
-                <div class="horizontal layout">
+                <div class="flexSpaceBetween">
                     <vaadin-combo-box id="comboBox" placeholder="Nama" @input="${this.onChangeInput}" allow-custom-value></vaadin-combo-box>
                     <vaadin-integer-field id="inputJumlah" min="1" @input="${this.onChangeInput}">
                         <div slot="prefix">Rp</div>
@@ -76,8 +76,6 @@ class rekeningTambah extends LitElement {
 
     constructor() {  
         super();
-        window.thisRekTam = this;
-
         this.daftarNamaRekening = [
             "Dana",
             "e-Money",
@@ -99,11 +97,13 @@ class rekeningTambah extends LitElement {
         
         if ((inputNama != "") && (inputJumlah != "")) { 
             this.shadowRoot.getElementById('dialog').close();
-            thisRekDat.mutasiBaru = {
+
+            let event = new CustomEvent('mutasi-baru', {detail: {
                 nama: inputNama,
                 debit: (toggleJenis ? 0 : inputJumlah),
                 kredit: (toggleJenis ? inputJumlah : 0)
-            }
+            }});
+            this.dispatchEvent(event);
         } else {
             this.shadowRoot.getElementById('toastKosong').open();
         }

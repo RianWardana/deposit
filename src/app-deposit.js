@@ -43,17 +43,15 @@ class appDeposit extends PolymerElement {
                 
                 <iron-pages id="iron-pages-deposit" attr-for-selected="tab" selected="[[tab_sekarang]]">
                     <div tab="rekening">
-                        <rekening-data data-rekening="{{dataRekening}}" last-saldo="{{saldo}}"></rekening-data>
+                        <rekening-data data-rekening="{{dataRekening}}" last-saldo="{{saldo}}" mutasi-baru="[[mutasiBaru]]"></rekening-data>
                         <rekening-list data="[[dataRekening]]" saldo="[[saldo]]"></rekening-list>
-                        <rekening-tambah></rekening-tambah>
+                        <rekening-tambah on-mutasi-baru="onMutasiBaru"></rekening-tambah>
                     </div>
                     <div tab="pengeluaran">
-                        <!-- lit-element pakai .pengeluaran={this.setPengeluaran.bind(this)} -->
-                        <!-- untuk convert ke litElement, gunakan custom events (mungkin) -->
-                        <!-- litElement best practice: "properties down, events up" -->
-                        <tagihan-data data-tagihan="{{data}}" total-pengeluaran="{{pengeluaranTotal}}" data-tambah="[[dataTambah]]" data-edit="[[dataEdit]]"></tagihan-data>
+                        <tagihan-data data-tagihan="{{data}}" total-pengeluaran="{{pengeluaranTotal}}" data-tambah="[[pengeluaranBaru]]" data-edit="[[dataEdit]]"></tagihan-data>
                         <tagihan-list data="[[data]]" total-pengeluaran="[[pengeluaranTotal]]"></tagihan-list>
-                        <tagihan-tambah data-tambah="{{dataTambah}}"></tagihan-tambah>
+                        <tagihan-tambah on-pengeluaran-baru="onPengeluaranBaru" on-mutasi-baru="onMutasiBaru"></tagihan-tambah>
+                        <!-- lit-element pakai .pengeluaran={this.setPengeluaran.bind(this)} -->
                         <tagihan-edit data-edit="{{dataEdit}}"></tagihan-edit>
                     </div>
                 </iron-pages>
@@ -70,7 +68,7 @@ class appDeposit extends PolymerElement {
 
     ready() {
         super.ready();
-        this.setupToolbar();   
+        this.setupToolbar();
     }
 
     setupToolbar() {
@@ -79,6 +77,14 @@ class appDeposit extends PolymerElement {
         window.addEventListener('scroll', function() {
             that.$.appHeader.style.top = (window.pageYOffset <= 64 ? (64 - window.pageYOffset) : 0) + 'px';
         });
+    }
+
+    onMutasiBaru(e) {
+        this.mutasiBaru = e.detail;
+    }
+
+    onPengeluaranBaru(e) {
+        this.pengeluaranBaru = e.detail;
     }
 }
 

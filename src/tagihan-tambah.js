@@ -47,7 +47,7 @@ class tagihanTambah extends LitElement {
         return html`
             <paper-dialog id="dialog" @iron-overlay-closed="${this.onDialogClosed}">
                 <h2>Tambah Pengeluaran</h2>
-                <div class="horizontal layout">
+                <div class="flexSpaceBetween">
                     <vaadin-combo-box id="comboBox" placeholder="Nama" @input="${this.onChangeInput}" allow-custom-value></vaadin-combo-box>
                     <vaadin-integer-field id="inputJumlah" min="1" @input="${this.onChangeInput}">
                         <div slot="prefix">Rp</div>
@@ -81,18 +81,21 @@ class tagihanTambah extends LitElement {
         if ((inputNama != "") && (inputJumlah != "")) { 
             this.shadowRoot.getElementById('dialog').close();
 
-            thisTagDat.dataTambah = {
+            // Passing data to the parent component using CustomEvent
+            let event = new CustomEvent('pengeluaran-baru', {detail: {
                 nama: inputNama,
                 jumlah: inputJumlah
-            }
+            }});
+            this.dispatchEvent(event);
 
             // Salin pengeluaran ke rekening //
             if (inputSalin) {
-                thisRekDat.mutasiBaru = {
+                let event = new CustomEvent('mutasi-baru', {detail: {
                     nama: inputNama,
                     debit: inputJumlah,
                     kredit: 0
-                }
+                }});
+                this.dispatchEvent(event);
             }
         } else {
             this.shadowRoot.getElementById('toastKosong').open()
