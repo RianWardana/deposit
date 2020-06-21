@@ -13,16 +13,17 @@ class tagihanData extends PolymerElement {
 
             /* Perhitungan total per kategori dipindah ke ringkasan, 
             tapi yg disini blm didelete jaga2 berubah pikiran */
-            //   kategoriPengeluaran: {
-            //     type: Array,
-            //     notify: true,
-            //     value: [
-            //         {nama: "Makan", entri: ["Makan", "Minum", "Go-Food", "GrabFood", "Sereal"]},
-            //         {nama: "Transportasi", entri: ["Transportasi", "e-Money", "Parkir", "Go-Jek Subs", "Grab Subs", "Go-Ride", "GrabRide", "Go-Car", "GrabCar"]},
-            //         {nama: "Utilities", entri: ["Listrik", "FirstMedia", "Pulsa XL"]},
-            //         {nama: "Lainnya", entri: ["Lainnya"]}
-            //     ]
-            //   },
+            kategoriPengeluaran: {
+                type: Array,
+                notify: true,
+                value: [
+                    {nama: "Makan", entri: ["Makan", "Minum", "Go-Food", "GrabFood", "Sereal"]},
+                    {nama: "Transportasi", entri: ["Transportasi", "e-Money", "Parkir", "Go-Jek Subs", "Grab Subs", "Go-Ride", "GrabRide", "Go-Car", "GrabCar"]},
+                    {nama: "Utilities", entri: ["Listrik", "FirstMedia", "Pulsa XL"]},
+                    {nama: "Higiene", entri: ["Higiene", "Sabun", "Tisu", "Laundry"]},
+                    {nama: "Lainnya", entri: ["Lainnya", "Obat"]}
+                ]
+            },
 
             totalPengeluaran: {
                 type: Object,

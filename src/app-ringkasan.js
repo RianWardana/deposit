@@ -19,15 +19,9 @@ class appRingkasan extends LitElement {
         let yearToday = (new Date()).getFullYear();
         let monthToday = (new Date()).getMonth();
         this.yearMonthLast = new Date(yearToday, monthToday+1).toISOString().slice(0,7);
-
-        this.kategoriPengeluaran = [
-            {nama: "Makan", entri: ["Makan", "Minum", "Go-Food", "GrabFood", "Sereal"]},
-            {nama: "Transportasi", entri: ["Transportasi", "e-Money", "Parkir", "Go-Jek Subs", "Grab Subs", "Go-Ride", "GrabRide", "Go-Car", "GrabCar"]},
-            {nama: "Utilities", entri: ["Listrik", "FirstMedia", "Pulsa XL"]},
-            {nama: "Lainnya", entri: ["Lainnya"]}
-        ];
-
         this.loadPengeluaran(yearToday, monthToday);
+
+        this.kategoriPengeluaran = thisTagDat.kategoriPengeluaran;
     }
 
     static get styles() {

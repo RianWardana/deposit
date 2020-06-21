@@ -5,10 +5,7 @@ class tagihanTambah extends LitElement {
     
     static get properties() {
         return {
-            daftarNamaPengeluaran: Array,
-            dataTambahan: Object,
-            nama: String,
-            jumlah: Number
+
         };
     }
 
@@ -44,7 +41,7 @@ class tagihanTambah extends LitElement {
     
     render() {
         customElements.whenDefined('vaadin-combo-box').then(() => {
-            this.shadowRoot.getElementById('comboBox').items = this.daftarNamaPengeluaran;
+            this.shadowRoot.getElementById('comboBox').items = this.loadNamaPengeluaran();
         });
 
         return html`
@@ -68,43 +65,12 @@ class tagihanTambah extends LitElement {
         `;
     }
 
-    constructor() {
-        super();
-
-        this.daftarNamaPengeluaran = [
-            "Makan",
-            "Minum",
-            "Sereal",
-            "Go-Food",
-            "GrabFood",
-            "Transportasi",
-            "Parkir",
-            "e-Money",
-            "Go-Ride",
-            "Go-Car",
-            "Go-Jek Subs",
-            "GrabRide",
-            "GrabCar",
-            "Grab Subs",
-            "Higiene",
-            "Sabun",
-            "Tisu",
-            "Obat",
-            "Pulsa XL",
-            "Listrik",
-            "Laundry"
-        ];
-
-        // 拿费用名的数据从tagihan-data的页面
-        // let 费用的名 = [];
-        // Ringkasan.kategoriPengeluaran.map(费用的事情 => {
-        //     费用的名 = [...费用的名, ...费用的事情.entri];
-        // });
-
-        // customElements.whenDefined('vaadin-combo-box').then(() => {
-        //     this.shadowRoot.getElementById('comboBox').items = this.daftarNamaPengeluaran;
-        //     this.shadowRoot.getElementById(comboBox).items = 费用的名;
-        // });
+    loadNamaPengeluaran() {
+        let daftarNamaPengeluaran = [];
+        thisTagDat.kategoriPengeluaran.map(费用的事情 => {
+            daftarNamaPengeluaran = [...daftarNamaPengeluaran, ...费用的事情.entri];
+        });
+        return daftarNamaPengeluaran;
     }
 
     tambah() {
@@ -114,7 +80,7 @@ class tagihanTambah extends LitElement {
 
         if ((inputNama != "") && (inputJumlah != "")) { 
             this.shadowRoot.getElementById('dialog').close();
-            
+
             thisTagDat.dataTambah = {
                 nama: inputNama,
                 jumlah: inputJumlah
