@@ -40,100 +40,103 @@ import './app-auth.js';
 import './app-deposit.js';
 
 class mainApp extends PolymerElement {
-  static get template() {
-    return html`
-        <style include="iron-flex iron-flex-alignment shared-styles">
-            :host {
-                display: block;
-                --app-primary-color: #1E88E5; /*500 065A9F*/
-                --app-secondary-color: black;
-            }
+    static get template() {
+        return html`
+            <style include="iron-flex iron-flex-alignment shared-styles">
+                :host {
+                    display: block;
+                    --app-primary-color: #1E88E5; /*500 065A9F*/
+                    --app-secondary-color: black;
+                }
 
-            app-drawer-layout:not([narrow]) [drawer-toggle] {
-                display: none;
-            }
+                app-drawer-layout:not([narrow]) [drawer-toggle] {
+                    display: none;
+                }
 
-            app-header {
-                background-color: var(--app-primary-color);
-                color: #fff;
-            }
+                app-header {
+                    background-color: var(--app-primary-color);
+                    color: #fff;
+                }
 
-            hr {
-                border: 0;
-                height: 1px;
-                background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
-            }
+                hr {
+                    border: 0;
+                    height: 1px;
+                    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+                }
 
-            iron-icon {
-                margin-right: 12px;
-            }
+                iron-icon {
+                    margin-right: 12px;
+                }
 
-            iron-selector > paper-item {
-                color: var(--app-primary-color);
-                font-weight: 500;
-                text-decoration: none;
-                outline-style:none;
-                box-shadow:none;
-                border-color:transparent;
-            }
+                iron-selector > paper-item {
+                    color: var(--app-primary-color);
+                    font-weight: 500;
+                    text-decoration: none;
+                    outline-style:none;
+                    box-shadow:none;
+                    border-color:transparent;
+                }
 
-            iron-selector > paper-item.iron-selected {
-                background: #e3ecf6;
-                color: var(--app-primary-color);
-            }
+                iron-selector > paper-item.iron-selected {
+                    background: #e3ecf6;
+                    color: var(--app-primary-color);
+                }
 
-            iron-selector > paper-item#logout {
-                color: #c0392b;
-                font-weight: 500;
-            }
-        </style>
+                iron-selector > paper-item#logout {
+                    color: #c0392b;
+                    font-weight: 500;
+                }
+            </style>
 
+            <!-- litElement best practice: "properties down, events up" -->
+            <neon-animated-pages selected="[[sudah_login]]">
+                <app-auth 
+                    on-login-status-changed="onLoginStatusChanged"
+                    logout-request="{{triggerLogout}}">
+                </app-auth>
 
-        <neon-animated-pages selected="[[sudah_login]]">
-            <app-auth login-status="{{sudah_login}}" trigger="{{triggerLogout}}"></app-auth>
+                <app-drawer-layout id="appdrawerlayout" fullbleed="">
+                    <app-drawer id="appdrawer" slot="drawer">
+                        <iron-image style="width:256px; height:225px;" sizing="cover" src="./img/drawer.png"></iron-image>
+                        <iron-selector attr-for-selected="halaman" selected="{{halaman_sekarang}}" on-iron-select="onMenuSelect"> <!-- saat sudah berhasil login dia tidak mau ke halaman "Deposit". Variabel {{halaman_sekarang}} iseng2 saya ganti asal. Eh bisa. saya ngga ngerti kenapa -->
+                            <paper-item halaman="Deposit"><iron-icon icon="list"></iron-icon>Deposit</paper-item>
+                            <paper-item halaman="Ringkasan"><iron-icon icon="timeline"></iron-icon>Ringkasan</paper-item>
+                            <paper-item halaman="Pengaturan"><iron-icon icon="image:tune"></iron-icon>Pengaturan</paper-item> <!-- icon "settings-ethernet" juga bagus -->
+                            <hr>
+                            <paper-item id="logout" on-tap="_tapLogOut"><iron-icon icon="exit-to-app"></iron-icon>Log out</paper-item>
+                        </iron-selector>
+                    </app-drawer>
+                
+                    <app-header-layout>
+                        <app-header slot="header">
+                            <app-toolbar>
+                                <paper-icon-button icon="menu" drawer-toggle=""></paper-icon-button>
+                                <div main-title="" style="margin-left: 10px">{{halaman_sekarang}}</div>
+                            </app-toolbar>
+                        </app-header>
 
-            <app-drawer-layout id="appdrawerlayout" fullbleed="">
-                <app-drawer id="appdrawer" slot="drawer">
-                    <iron-image style="width:256px; height:225px;" sizing="cover" src="./img/drawer.png"></iron-image>
-                    <iron-selector attr-for-selected="halaman" selected="{{halaman_sekarang}}" on-iron-select="onMenuSelect"> <!-- saat sudah berhasil login dia tidak mau ke halaman "Deposit". Variabel {{halaman_sekarang}} iseng2 saya ganti asal. Eh bisa. saya ngga ngerti kenapa -->
-                        <paper-item halaman="Deposit"><iron-icon icon="list"></iron-icon>Deposit</paper-item>
-                        <paper-item halaman="Ringkasan"><iron-icon icon="timeline"></iron-icon>Ringkasan</paper-item>
-                        <paper-item halaman="Pengaturan"><iron-icon icon="image:tune"></iron-icon>Pengaturan</paper-item> <!-- icon "settings-ethernet" juga bagus -->
-                        <hr>
-                        <paper-item id="logout" on-tap="_tapLogOut"><iron-icon icon="exit-to-app"></iron-icon>Log out</paper-item>
-                    </iron-selector>
-                </app-drawer>
-            
-                <app-header-layout>
-                    <app-header slot="header">
-                        <app-toolbar>
-                            <paper-icon-button icon="menu" drawer-toggle=""></paper-icon-button>
-                            <div main-title="" style="margin-left: 10px">{{halaman_sekarang}}</div>
-                        </app-toolbar>
-                    </app-header>
+                        <iron-pages attr-for-selected="halaman" selected="{{halaman_sekarang}}">
+                            <app-deposit halaman="Deposit"></app-deposit>
+                            <div halaman="Ringkasan" id="spinnerRingkasan" class="horizontal layout center-justified">
+                                <paper-spinner id="spinner" active=""></paper-spinner>
+                            </div>
+                            <app-ringkasan halaman="Ringkasan"></app-ringkasan>
+                            <div halaman="Pengaturan" id="spinnerPengaturan" class="horizontal layout center-justified">
+                                <paper-spinner id="spinner" active=""></paper-spinner>
+                            </div>
+                        </iron-pages>
+                
+                        <div style="height: 120px"></div>
+                    </app-header-layout>
+                </app-drawer-layout>
+            </neon-animated-pages>
 
-                    <iron-pages attr-for-selected="halaman" selected="{{halaman_sekarang}}">
-                        <app-deposit halaman="Deposit"></app-deposit>
-                        <div halaman="Ringkasan" id="spinnerRingkasan" class="horizontal layout center-justified">
-                            <paper-spinner id="spinner" active=""></paper-spinner>
-                        </div>
-                        <app-ringkasan halaman="Ringkasan"></app-ringkasan>
-                        <div halaman="Pengaturan" id="spinnerPengaturan" class="horizontal layout center-justified">
-                            <paper-spinner id="spinner" active=""></paper-spinner>
-                        </div>
-                    </iron-pages>
-            
-                    <div style="height: 120px"></div>
-                </app-header-layout>
-            </app-drawer-layout>
-        </neon-animated-pages>
-
-        <platinum-sw-register auto-register="" clients-claim="" skip-waiting="" on-service-worker-installed="_swInstalled">
-            <platinum-sw-cache default-cache-strategy="networkFirst">
-            </platinum-sw-cache>
-        </platinum-sw-register>
-    `;
-  }
+            <platinum-sw-register auto-register="" clients-claim="" skip-waiting="" on-service-worker-installed="_swInstalled">
+                <platinum-sw-cache default-cache-strategy="networkFirst">
+                </platinum-sw-cache>
+            </platinum-sw-register>
+        `;
+    }
 
     static get properties() {
         return {
@@ -153,6 +156,10 @@ class mainApp extends PolymerElement {
         super.ready();
         window.thisMainApp = this;
         console.log("[READY] main-app");
+    }
+
+    onLoginStatusChanged(e) {
+        this.sudah_login = e.detail;
     }
 
     // Lazy-loading halaman non-esensial
@@ -184,18 +191,18 @@ class mainApp extends PolymerElement {
         }
     }
 
-  _tapLogOut() {
-      this.triggerLogout = Math.random()
-  }
+    _tapLogOut() {
+        this.triggerLogout = Math.random();
+    }
 
-  _swInstalled() {
-      console.log("SW Installed")
-  }
+    _swInstalled() {
+        console.log("SW Installed")
+    }
 
-  onMenuSelect() {
-      if (this.$.appdrawerlayout.narrow) 
-          this.$.appdrawer.close();
-  }
+    onMenuSelect() {
+        if (this.$.appdrawerlayout.narrow) 
+            this.$.appdrawer.close();
+    }
 }
 
 customElements.define('main-app', mainApp);
