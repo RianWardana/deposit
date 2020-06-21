@@ -6,14 +6,8 @@ class rekeningList extends LitElement {
     
     static get properties() {
         return {
-            data: { 
-                type: Array,
-                notify: true
-            },
-
-            saldo: {
-                type: Number
-            }
+            data: {type: Array},
+            saldo: {type: Number}
         };
     }
     
@@ -25,47 +19,42 @@ class rekeningList extends LitElement {
                 background: var(--app-primary-color);
                 color: white;
             }
-
-            .spinnerContainer {
-                display: flex;
-                justify-content: center;
-            }
         `];
     }
     
     render() {
-        const items = new Promise(resolve => {
-            if (typeof this.data == 'undefined') return;
-            let load = this.data.map(item => html`
-                <rekening-item 
-                    waktu="${item.waktu}" 
-                    nama="${item.nama}" 
-                    jumlah="${item.jumlah}" 
-                    jenis="${item.jenis}">
-                </rekening-item>
-            `)
-            resolve(load);
-        });
-
-        const spinner = html`
-            <div class="spinnerContainer">
-                <paper-spinner active></paper-spinner>
-            </div>
-        `;
-
         return html`
             <div class="narrow" id="list">
                 <paper-material id="paper-material-saldo" class="flexSpaceBetween">
                     <span>Saldo di rekening</span>
-                    <span><b>Rp${this.formatSaldo(this.saldo)}</b></span>
+                    <span><b>Rp${this._formatSaldo(this.saldo)}</b></span>
                 </paper-material>
                 
-                ${until(items, spinner)}
+                ${until(
+                    new Promise(resolve => {
+                        if (typeof this.data == 'undefined') return;
+                        let load = this.data.map(item => html`
+                            <rekening-item 
+                                waktu="${item.waktu}" 
+                                nama="${item.nama}" 
+                                jumlah="${item.jumlah}" 
+                                jenis="${item.jenis}">
+                            </rekening-item>
+                        `)
+                        resolve(load);
+                    })
+                , 
+                    html`
+                        <div class="spinnerContainer">
+                            <paper-spinner active></paper-spinner>
+                        </div>
+                    `
+                )}
             </div>
         `;
     }
 
-    formatSaldo(dataSaldo) {
+    _formatSaldo(dataSaldo) {
         if (isNaN(dataSaldo)) return 0;
         else return parseInt(dataSaldo).toLocaleString('id-ID');
     }
