@@ -30,7 +30,7 @@ export const styles = css`
         --paper-spinner-layer-3-color: #FF9800;
         --paper-spinner-layer-4-color: #1E88E5;
         position: fixed;
-        top: calc(50vh - 120px);
+        top: calc(50vh - 20px);
     }
 
     @media (min-width: 641px) {
