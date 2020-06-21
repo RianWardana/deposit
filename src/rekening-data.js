@@ -10,6 +10,10 @@ class rekeningData extends PolymerElement {
                 type: Array,
                 notify: true
             },
+            mutasiBaru: {
+                type: Object,
+                observer: '_dataTambahChanged'
+            },
             lastSaldo: {
                 type: Number,
                 notify: true
@@ -88,19 +92,19 @@ class rekeningData extends PolymerElement {
     }
 
     _dataTambahChanged() {
-        var epoch = Math.floor(new Date() / -1000);
-        var debit = parseInt(thisRekTam.dataTambahan['debit']);
-        var kredit = parseInt(thisRekTam.dataTambahan['kredit']);
-        var saldo = this.lastSaldo + (kredit - debit);
+        let epoch = Math.floor(new Date() / -1000);
+        let debit = parseInt(this.mutasiBaru.debit);
+        let kredit = parseInt(this.mutasiBaru.kredit);
+        let saldo = this.lastSaldo + (kredit - debit);
         
-        var data = {
-            nama: thisRekTam.dataTambahan['nama'],
+        let data = {
+            nama: this.mutasiBaru.nama,
             debit: debit,
             kredit: kredit,
             saldo: saldo,
         }
 
-        var kirimData = this.dbRekening.child(epoch).set(data)
+        let kirimData = this.dbRekening.child(epoch).set(data)
         kirimData.then(e => {
             console.log("Penambahan berhasil.")
         })

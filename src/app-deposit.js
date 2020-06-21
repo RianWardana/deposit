@@ -36,7 +36,7 @@ class appDeposit extends PolymerElement {
                 <app-header id="appHeader" fixed="" shadow="" slot="header">
                     <paper-tabs attr-for-selected="tab" selected="{{tab_sekarang}}" noink="">
                         <paper-tab tab="rekening">REKENING</paper-tab>
-                        <paper-tab tab="tagihan">PENGELUARAN</paper-tab>
+                        <paper-tab tab="pengeluaran">PENGELUARAN</paper-tab>
                         <paper-tab tab="tunai">AKUN-AKUN</paper-tab>
                     </paper-tabs>
                 </app-header>
@@ -47,9 +47,10 @@ class appDeposit extends PolymerElement {
                         <rekening-list data="[[dataRekening]]" saldo="[[saldo]]"></rekening-list>
                         <rekening-tambah></rekening-tambah>
                     </div>
-                    <div tab="tagihan">
+                    <div tab="pengeluaran">
                         <!-- lit-element pakai .pengeluaran={this.setPengeluaran.bind(this)} -->
                         <!-- untuk convert ke litElement, gunakan custom events (mungkin) -->
+                        <!-- litElement best practice: "properties down, events up" -->
                         <tagihan-data data-tagihan="{{data}}" total-pengeluaran="{{pengeluaranTotal}}" data-tambah="[[dataTambah]]" data-edit="[[dataEdit]]"></tagihan-data>
                         <tagihan-list data="[[data]]" total-pengeluaran="[[pengeluaranTotal]]"></tagihan-list>
                         <tagihan-tambah data-tambah="{{dataTambah}}"></tagihan-tambah>
@@ -62,7 +63,7 @@ class appDeposit extends PolymerElement {
 
     static get properties() {
         return {
-            tab_sekarang: { type: String, value: 'rekening' },
+            tab_sekarang: { type: String, value: 'pengeluaran' },
             uid: String
         };
     }

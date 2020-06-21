@@ -99,12 +99,11 @@ class rekeningTambah extends LitElement {
         
         if ((inputNama != "") && (inputJumlah != "")) { 
             this.shadowRoot.getElementById('dialog').close();
-            this.dataTambahan = {
+            thisRekDat.mutasiBaru = {
                 nama: inputNama,
                 debit: (toggleJenis ? 0 : inputJumlah),
                 kredit: (toggleJenis ? inputJumlah : 0)
             }
-            thisRekDat._dataTambahChanged();
         } else {
             this.shadowRoot.getElementById('toastKosong').open();
         }
