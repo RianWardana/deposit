@@ -11,8 +11,6 @@ class tagihanData extends PolymerElement {
                 notify: true
             },
 
-            /* Perhitungan total per kategori dipindah ke ringkasan, 
-            tapi yg disini blm didelete jaga2 berubah pikiran */
             kategoriPengeluaran: {
                 type: Array,
                 notify: true,
@@ -134,21 +132,19 @@ class tagihanData extends PolymerElement {
     }
 
     kirimDataEdit() {
-        var ini = this
-        
-        var data = {
-            nama: ini.dataEdit['nama'],
-            jumlah: parseInt(ini.dataEdit['jumlah']),
+        let data = {
+            nama: this.dataEdit['nama'],
+            jumlah: parseInt(this.dataEdit['jumlah']),
             lunas: 0
         }
 
-        if (ini.dataEdit['jumlah'] == 0) dbTagihan.child(ini.dataEdit['key']).remove()
+        if (this.dataEdit['jumlah'] == 0) dbTagihan.child(this.dataEdit['key']).remove();
         else {
-            var submission = dbTagihan.child(ini.dataEdit['key']).set(data)
+            let submission = dbTagihan.child(this.dataEdit['key']).set(data);
             submission.then(e => {
-                console.log("Edit berhasil.")
+                console.log("Edit berhasil.");
             })
-            submission.catch(e => console.log(e.message))
+            submission.catch(e => console.log(e.message));
         }  
     }
 

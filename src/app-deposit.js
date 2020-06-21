@@ -51,8 +51,7 @@ class appDeposit extends PolymerElement {
                         <tagihan-data data-tagihan="{{data}}" total-pengeluaran="{{pengeluaranTotal}}" data-tambah="[[pengeluaranBaru]]" data-edit="[[dataEdit]]"></tagihan-data>
                         <tagihan-list data="[[data]]" total-pengeluaran="[[pengeluaranTotal]]"></tagihan-list>
                         <tagihan-tambah on-pengeluaran-baru="onPengeluaranBaru" on-mutasi-baru="onMutasiBaru"></tagihan-tambah>
-                        <!-- lit-element pakai .pengeluaran={this.setPengeluaran.bind(this)} -->
-                        <tagihan-edit data-edit="{{dataEdit}}"></tagihan-edit>
+                        <tagihan-edit on-edit-pengeluaran="onEditPengeluaran"></tagihan-edit>
                     </div>
                 </iron-pages>
             </app-header-layout>
@@ -85,6 +84,10 @@ class appDeposit extends PolymerElement {
 
     onPengeluaranBaru(e) {
         this.pengeluaranBaru = e.detail;
+    }
+
+    onEditPengeluaran(e) {
+        this.dataEdit = e.detail;
     }
 }
 

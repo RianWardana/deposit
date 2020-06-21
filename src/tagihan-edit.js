@@ -1,11 +1,26 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {LitElement, html, css} from 'lit-element';
+import {styles} from './lit-styles.js';
 
-class tagihanEdit extends PolymerElement {
-  static get template() {
-    return html`
-        <style include="iron-flex iron-flex-alignment shared-styles">
+class tagihanEdit extends LitElement {
+
+    static get properties() {
+        return {
+            triggerEdit: Boolean,
+            dataEdit: Object,
+            key: String,
+            nama: String,
+            jumlah: Number
+        }
+    }
+
+    static get styles() {
+        return [styles, css`
             paper-button {
                 color: #FFAB00;
+            }
+
+            paper-button[disabled] {
+                color: #a8a8a8;
             }
             
             @media (max-height: 450px) {
@@ -15,80 +30,79 @@ class tagihanEdit extends PolymerElement {
             }
 
             paper-input[label="Nama"] { margin-right: 20px; }
-        </style>
+        `];
+    }
 
-        <paper-dialog id="dialog" on-iron-overlay-closed="_dialogClosed">
-            <h2>Edit Pengeluaran</h2>
-            <div class="horizontal layout">
-                <paper-input list="daftar-pengeluaran-edit" no-label-float="" label="Nama" value="{{nama}}" maxlength="64"></paper-input>
-                <paper-input no-label-float="" type="number" value="{{jumlah}}" auto-validate="" pattern="[0-9]*" maxlength="8">
-                    <div slot="prefix">Rp</div>
-                </paper-input>
-            </div>
-            <div class="buttons">
-                <paper-button dialog-confirm="">Batal</paper-button>
-                <paper-button id="btnHapus" on-tap="_tapHapus">Hapus</paper-button>
-                <paper-button id="btnTambah" on-tap="_tapSimpan">Simpan</paper-button>
-            </div>
-        </paper-dialog>
+    render() {
+        return html`
+            <paper-dialog id="dialog" @iron-overlay-closed="${this._dialogClosed}">
+                <h2>Edit Pengeluaran</h2>
+                <div class="flexSpaceBetween">
+                    <vaadin-combo-box id="comboBox" placeholder="Nama" @input="${this.onChangeInput}" allow-custom-value></vaadin-combo-box>
+                    <vaadin-integer-field id="inputJumlah" min="1" @input="${this.onChangeInput}">
+                        <div slot="prefix">Rp</div>
+                    </vaadin-integer-field>
+                </div>
+                <div class="buttons">
+                    <paper-button dialog-confirm>Batal</paper-button>
+                    <paper-button id="btnHapus" @click="${this._tapHapus}">Hapus</paper-button>
+                    <paper-button id="btnSimpan" @click="${this._tapSimpan}">Simpan</paper-button>
+                </div>
+            </paper-dialog>
 
-        <paper-toast id="toastKosong" text="Nama dan jumlah wajib diisi"></paper-toast>
-`;
-  }
+            <paper-toast id="toastKosong" text="Nama dan jumlah wajib diisi"></paper-toast>
+        `;
+    }
 
-  static get is() {
-      return 'tagihan-edit';
-  }
+    constructor() {
+        super(); 
+        window.thisTagEdit = this;
+    }
 
-  static get properties() {
-      return {
-          triggerEdit: {
-              type: Boolean,
-              observer: '_editTriggered'
-          },
+    // If edit button was pressed
+    updated(changedProps) {
+        if (changedProps.has('triggerEdit')) {
+            this.shadowRoot.getElementById('dialog').open();
+            this.shadowRoot.getElementById('comboBox').value = this.nama;
+            this.shadowRoot.getElementById('inputJumlah').value = this.jumlah;
+        }
+    }
 
-          dataEdit: {
-              type: Object,
-              notify: true
-          },
+    _tapHapus() {
+        this.shadowRoot.getElementById('dialog').close();
+        let event = new CustomEvent('edit-pengeluaran', {detail: {
+            key: this.key,
+            jumlah: 0
+        }});
+        this.dispatchEvent(event);
+    }
 
-          nama: String,
-          jumlah: Number
-      }
-  }
+    _tapSimpan() {
+        let inputNama = this.shadowRoot.getElementById('comboBox').value;
+        let inputJumlah = this.shadowRoot.getElementById('inputJumlah').value;
 
-  ready() {
-      super.ready(); 
-      window.thisTagEdit = this;
-  }
+        if ((inputNama != "") && (inputJumlah != "")) { 
+            this.shadowRoot.getElementById('dialog').close();
+            let event = new CustomEvent('edit-pengeluaran', {detail: {
+                key: this.key,
+                nama: inputNama,
+                jumlah: inputJumlah
+            }});
+            this.dispatchEvent(event);
+        } else {
+            this.shadowRoot.getElementById('toastKosong').open()
+        }
+    }
 
-  _editTriggered() {
-      this.$.dialog.open()
-  }
+    onChangeInput() {
+        let inputNama = this.shadowRoot.getElementById('comboBox').value;
+        let inputJumlah = this.shadowRoot.getElementById('inputJumlah').value;
 
-  _tapHapus() {
-      this.$.dialog.close();
-          this.dataEdit = {
-              key: this.key,
-              jumlah: 0
-          }
-  }
-
-  _tapSimpan() {
-      if ((this.nama != "") && (this.jumlah != "")) { 
-          this.$.dialog.close();
-          this.dataEdit = {
-              key: this.key,
-              nama: this.nama,
-              jumlah: this.jumlah
-          }
-      } else {
-          this.$.toastKosong.open()
-      }
-  }
-
-  _dialogClosed() {
-      window.onresize = null
-  }
+        if ((inputNama != "") && (inputJumlah != ""))
+            this.shadowRoot.getElementById('btnSimpan').removeAttribute('disabled');
+        else 
+            this.shadowRoot.getElementById('btnSimpan').setAttribute('disabled', true);
+    }
 }
-customElements.define(tagihanEdit.is, tagihanEdit);
+
+customElements.define('tagihan-edit', tagihanEdit);
