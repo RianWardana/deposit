@@ -1,6 +1,5 @@
 import {PolymerElement, html} from '@polymer/polymer';
 
-import './rekening-data.js';
 import './rekening-list.js';
 import './rekening-item.js';
 import './rekening-tambah.js';
@@ -10,6 +9,8 @@ import './tagihan-list.js';
 import './tagihan-item.js';
 import './tagihan-tambah.js';
 import './tagihan-edit.js';
+
+// akan convert ke LitElement saat tagihan-data digabung dengan tagihan-list
 
 class appDeposit extends PolymerElement {
     static get template() {
@@ -43,9 +44,8 @@ class appDeposit extends PolymerElement {
                 
                 <iron-pages id="iron-pages-deposit" attr-for-selected="tab" selected="[[tab_sekarang]]">
                     <div tab="rekening">
-                        <rekening-data data-rekening="{{dataRekening}}" last-saldo="{{saldo}}" mutasi-baru="[[mutasiBaru]]"></rekening-data>
-                        <rekening-list data="[[dataRekening]]" saldo="[[saldo]]"></rekening-list>
-                        <rekening-tambah on-mutasi-baru="onMutasiBaru"></rekening-tambah>
+                        <rekening-list></rekening-list>
+                        <rekening-tambah salinan-pengeluaran="[[mutasiBaru]]"></rekening-tambah>
                     </div>
                     <div tab="pengeluaran">
                         <tagihan-data data-tagihan="{{data}}" total-pengeluaran="{{pengeluaranTotal}}" data-tambah="[[pengeluaranBaru]]" data-edit="[[dataEdit]]"></tagihan-data>
@@ -78,6 +78,7 @@ class appDeposit extends PolymerElement {
         });
     }
 
+    // hanya untuk handle salin pengeluaran ke rekening
     onMutasiBaru(e) {
         this.mutasiBaru = e.detail;
     }

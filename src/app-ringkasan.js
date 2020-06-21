@@ -19,9 +19,16 @@ class appRingkasan extends LitElement {
         let yearToday = (new Date()).getFullYear();
         let monthToday = (new Date()).getMonth();
         this.yearMonthLast = new Date(yearToday, monthToday+1).toISOString().slice(0,7);
-        this.loadPengeluaran(yearToday, monthToday);
 
+        // nanti ambil sendiri dari Firebase
         this.kategoriPengeluaran = thisTagDat.kategoriPengeluaran;
+
+        auth.onAuthStateChanged(firebaseUser => {
+            if (firebaseUser) {
+                this.uid = firebaseUser.uid
+                this.loadPengeluaran(yearToday, monthToday);
+            }
+        });
     }
 
     static get styles() {
@@ -126,10 +133,8 @@ class appRingkasan extends LitElement {
         var startTime = new Date(year, month).getTime() / -1000; // pembagi negatif karena key di Firebase negatif
         var endTime = new Date(year, month+1).getTime() / -1000;
 
-        // Selanjutnya jangan minta uid dari thisRekDat, cari cara lain, firebase.js mungkin (firebase.js export uid)
-        // Lit-Element bisa load global variables, tapi ga bisa store
-        window.dbTagihan = firebase.database().ref(thisRekDat.uid + "/tagihan");
-        window.dbTagihanMonth = dbTagihan.orderByKey().startAt(endTime.toString()).endAt(startTime.toString()); // dibalik antara endTime dan startTime karena key yang negatif
+        let dbTagihan = firebase.database().ref(this.uid + "/tagihan");
+        let dbTagihanMonth = dbTagihan.orderByKey().startAt(endTime.toString()).endAt(startTime.toString()); // dibalik antara endTime dan startTime karena key yang negatif
         
         dbTagihanMonth.once('value', entries => {
             var pengeluaran = {};

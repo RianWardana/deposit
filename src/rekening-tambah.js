@@ -1,15 +1,15 @@
 import {LitElement, html, css} from 'lit-element';
 import {styles} from './lit-styles.js';
 
+import firebase from '@firebase/app';
+import '@firebase/database';
+
 class rekeningTambah extends LitElement {
     
     static get properties() {
         return {
             daftarNamaRekening: Array,
-            dataTambahan: Object,
-            nama: String,
-            jumlah: Number,
-            jenis: String,
+            salinanPengeluaran: Object
         };
     }
 
@@ -88,6 +88,15 @@ class rekeningTambah extends LitElement {
             "Alfamidi",
             "Tokopedia"
         ];
+
+        auth.onAuthStateChanged(firebaseUser => {
+            if (firebaseUser) this.uid = firebaseUser.uid
+        });
+    }
+
+    updated(changedProps) {
+        if (changedProps.has('salinanPengeluaran'))
+            this.kirimData(this.salinanPengeluaran);
     }
 
     tambah() {
@@ -97,16 +106,34 @@ class rekeningTambah extends LitElement {
         
         if ((inputNama != "") && (inputJumlah != "")) { 
             this.shadowRoot.getElementById('dialog').close();
-
-            let event = new CustomEvent('mutasi-baru', {detail: {
+            this.kirimData({
                 nama: inputNama,
                 debit: (toggleJenis ? 0 : inputJumlah),
                 kredit: (toggleJenis ? inputJumlah : 0)
-            }});
-            this.dispatchEvent(event);
+            });
         } else {
             this.shadowRoot.getElementById('toastKosong').open();
         }
+    }
+
+    kirimData(data) {    
+        let epoch = Math.floor(new Date() / -1000);
+        let debit = parseInt(data.debit);
+        let kredit = parseInt(data.kredit);
+
+        // anti-pattern, cari cara lain, jangan pakai Rekening
+        let saldo = Rekening.saldo + (kredit - debit);
+
+        let dbRekening = firebase.database().ref(this.uid + "/rekening");
+        dbRekening.child(epoch).set({
+            nama: data.nama,
+            debit: debit,
+            kredit: kredit,
+            saldo: saldo,
+        }).then(e => 
+            console.log("Penambahan mutasi rekening berhasil.")
+        ).catch(e => 
+            console.log(e.message));
     }
 
     _dialogClosed() {
