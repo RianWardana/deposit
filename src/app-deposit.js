@@ -43,13 +43,13 @@ class appDeposit extends PolymerElement {
                 
                 <iron-pages id="iron-pages-deposit" attr-for-selected="tab" selected="[[tab_sekarang]]">
                     <div tab="rekening">
-                        <!-- lit-element pakai .pengeluaran={this.setPengeluaran.bind(this)} -->
-                        <rekening-data data-rekening="{{dataRekening}}" last-saldo="{{saldo}}" data-tambah="[[mutasiRekening]]"></rekening-data>
+                        <rekening-data data-rekening="{{dataRekening}}" last-saldo="{{saldo}}"></rekening-data>
                         <rekening-list data="[[dataRekening]]" saldo="[[saldo]]"></rekening-list>
-                        <!-- untuk convert rek-tam ke l-e, gunakan custom elements (mungkin) -->
-                        <rekening-tambah data-tambah="{{mutasiRekening}}"></rekening-tambah>
+                        <rekening-tambah></rekening-tambah>
                     </div>
                     <div tab="tagihan">
+                        <!-- lit-element pakai .pengeluaran={this.setPengeluaran.bind(this)} -->
+                        <!-- untuk convert ke litElement, gunakan custom events (mungkin) -->
                         <tagihan-data data-tagihan="{{data}}" total-pengeluaran="{{pengeluaranTotal}}" data-tambah="[[dataTambah]]" data-edit="[[dataEdit]]"></tagihan-data>
                         <tagihan-list data="[[data]]" total-pengeluaran="[[pengeluaranTotal]]"></tagihan-list>
                         <tagihan-tambah data-tambah="{{dataTambah}}"></tagihan-tambah>
@@ -62,7 +62,7 @@ class appDeposit extends PolymerElement {
 
     static get properties() {
         return {
-            tab_sekarang: { type: String, value: 'tagihan' },
+            tab_sekarang: { type: String, value: 'rekening' },
             uid: String
         };
     }

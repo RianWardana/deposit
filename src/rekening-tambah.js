@@ -1,12 +1,23 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {LitElement, html, css} from 'lit-element';
+import {styles} from './lit-styles.js';
 
-class rekeningTambah extends PolymerElement {
-  static get template() {
-    return html`
-        <style include="iron-flex iron-flex-alignment shared-styles">
+class rekeningTambah extends LitElement {
+    
+    static get properties() {
+        return {
+            daftarNamaRekening: Array,
+            dataTambahan: Object,
+            nama: String,
+            jumlah: Number,
+            jenis: String,
+        };
+    }
+
+    static get styles() {
+        return [styles, css`
             #toggleContainer {
-              display: flex;
-              justify-content: space-evenly;
+                display: flex;
+                justify-content: space-evenly;
             }
             
             paper-fab {
@@ -29,142 +40,98 @@ class rekeningTambah extends PolymerElement {
                 --paper-toggle-button-checked-bar-color:  var(--paper-green-500);
                 --paper-toggle-button-checked-button-color:  var(--paper-green-500);
                 --paper-toggle-button-checked-ink-color: var(--paper-green-500);
-              }
-        </style>
+            }
+        `];
+    }
+    
+    render() {
+        customElements.whenDefined('vaadin-combo-box').then(() => {
+            this.shadowRoot.getElementById('comboBox').items = this.daftarNamaRekening;
+        });
 
-        <paper-dialog id="dialog" on-iron-overlay-closed="_dialogClosed">
-            <h2>Mutasi Rekening</h2>
-            <div class="horizontal layout">
-                <vaadin-combo-box id="comboBox" placeholder="Nama" value="{{nama}}" allow-custom-value></vaadin-combo-box>
-                <vaadin-integer-field min="1" value="{{jumlah}}">
-                  <div slot="prefix">Rp</div>
-                </vaadin-integer-field>
-            </div>
-            <div id="toggleContainer">
-                <span>Debit</span>
-                <paper-toggle-button id="toggleJenis" checked="{{jenis}}" noink></paper-toggle-button>
-                <span>Kredit</span>
-            </div>
-            <div class="buttons">
-                <paper-button dialog-confirm="">Batal</paper-button>
-                <paper-button id="btnTambah" on-tap="tambah">Tambah</paper-button>
-            </div>
-        </paper-dialog>
+        return html`
+            <paper-dialog id="dialog" @iron-overlay-closed="${this._dialogClosed}">
+                <h2>Mutasi Rekening</h2>
+                <div class="horizontal layout">
+                    <vaadin-combo-box id="comboBox" placeholder="Nama" @input="${this.onChangeInput}" allow-custom-value></vaadin-combo-box>
+                    <vaadin-integer-field id="inputJumlah" min="1" @input="${this.onChangeInput}">
+                        <div slot="prefix">Rp</div>
+                    </vaadin-integer-field>
+                </div>
+                <div id="toggleContainer">
+                    <span>Debit</span>
+                    <paper-toggle-button id="toggleJenis" noink></paper-toggle-button>
+                    <span>Kredit</span>
+                </div>
+                <div class="buttons">
+                    <paper-button dialog-confirm>Batal</paper-button>
+                    <paper-button disabled id="btnTambah" @click="${this.tambah}">Tambah</paper-button>
+                </div>
+            </paper-dialog>
 
-        <paper-fab id="fab" icon="add" on-tap="fabClick"></paper-fab>
-        <paper-toast id="toastKosong" text="Nama dan jumlah wajib diisi"></paper-toast>
-`;
-  }
+            <paper-fab id="fab" icon="add" @click="${this.onFabClick}"></paper-fab>
+            <paper-toast id="toastKosong" text="Nama dan jumlah wajib diisi"></paper-toast>
+        `;
+    }
 
-  static get is() {
-      return 'rekening-tambah';
-  }
+    constructor() {  
+        super();
+        window.thisRekTam = this;
 
-  static get properties() {
-      return {
-          daftarNamaRekening: {
-              type: Array,
-              value: [
-                  "Dana",
-                  "e-Money",
-                  "e-Toll",
-                  "Go-Pay",
-                  "OVO",
-                  "Gaji",
-                  "Transferan",
-                  "Tarik tunai",
-                  "Alfamidi",
-                  "Tokopedia"
-              ]
-          },
-          dataTambah: {
-              type: Object,
-              notify: true
-          },
-          nama: String,
-          jumlah: Number,
-          jenis: String,
+        this.daftarNamaRekening = [
+            "Dana",
+            "e-Money",
+            "e-Toll",
+            "Go-Pay",
+            "OVO",
+            "Gaji",
+            "Transferan",
+            "Tarik tunai",
+            "Alfamidi",
+            "Tokopedia"
+        ];
+    }
 
-          // animationConfig: {
-          //     value: function() {
-          //         return {
-          //             'entry': [
-          //                 {
-          //                     name: 'fade-in-animation',
-          //                     node: this.$.fab,
-          //                     timing: {duration: 300}
-          //                 }
-          //             ],
-          //             'exit': [
-          //                 {
-          //                     name: 'fade-out-animation',
-          //                     node: this.$.fab,
-          //                     timing: {duration: 300}
-          //                 }
-          //             ]
-          //         }
-          //     }
-          // }
-      };
-  }
-
-  ready() {  
-    super.ready();
-    this.addEventListener('neon-animation-finish', this._animationFinished);
-
-    customElements.whenDefined('vaadin-combo-box').then(() => {
-      this.$.comboBox.items = this.daftarNamaRekening;
-    });
-    // this.$.dialog.animationConfig = {
-    //     'entry': [
-    //         {
-    //             name: 'fade-in-animation',
-    //             node: this.$.dialog,
-    //             timing: {duration: 300}
-    //         }
-    //     ],
-    //     'exit': [
-    //         {
-    //             name: 'fade-out-animation',
-    //             node: this.$.dialog,
-    //             timing: {duration: 300}
-    //         }
-    //     ]
-    // }
-  }
-
-  tambah() {
-    if ((this.nama != "") && (this.jumlah != "")) { 
-        this.$.dialog.close();
-        this.dataTambah = {
-            nama: this.nama,
-            debit: (this.jenis ? 0 : this.jumlah),
-            kredit: (this.jenis ? this.jumlah : 0)
+    tambah() {
+        let inputNama = this.shadowRoot.getElementById('comboBox').value;
+        let inputJumlah = this.shadowRoot.getElementById('inputJumlah').value;
+        let toggleJenis = this.shadowRoot.getElementById('toggleJenis').checked;
+        
+        if ((inputNama != "") && (inputJumlah != "")) { 
+            this.shadowRoot.getElementById('dialog').close();
+            this.dataTambahan = {
+                nama: inputNama,
+                debit: (toggleJenis ? 0 : inputJumlah),
+                kredit: (toggleJenis ? inputJumlah : 0)
+            }
+            thisRekDat._dataTambahChanged();
+        } else {
+            this.shadowRoot.getElementById('toastKosong').open();
         }
-    } else {
-        this.$.toastKosong.open();
     }
-  }
 
-  _dialogClosed() {
-    window.onresize = null;
-    this.$.fab.style.display = 'block';
-    // this.playAnimation('entry');
-  }
-
-  _animationFinished() {
-    if (this.$.dialog.opened) {
-        this.$.fab.style.display = 'none'
+    _dialogClosed() {
+        this.shadowRoot.getElementById('fab').style.display = 'block';
     }
-  }
 
-  fabClick() {
-    // this.playAnimation('exit');
-    this.nama = "";
-    this.jumlah = "";
-    this.jenis = false;
-    this.$.dialog.open();
-  }
+    onFabClick() {
+        this.shadowRoot.getElementById('comboBox').value = '';
+        this.shadowRoot.getElementById('inputJumlah').value = '';
+        this.shadowRoot.getElementById('toggleJenis').checked = false;
+        this.shadowRoot.getElementById('btnTambah').setAttribute('disabled', true);
+        this.shadowRoot.getElementById('dialog').open();
+        this.shadowRoot.getElementById('fab').style.display = 'none'
+    }
+
+    onChangeInput() {
+        let inputNama = this.shadowRoot.getElementById('comboBox').value;
+        let inputJumlah = this.shadowRoot.getElementById('inputJumlah').value;
+
+        if ((inputNama != "") && (inputJumlah != ""))
+            this.shadowRoot.getElementById('btnTambah').removeAttribute('disabled');
+        else 
+            this.shadowRoot.getElementById('btnTambah').setAttribute('disabled', true);
+    }
 }
 
-customElements.define(rekeningTambah.is, rekeningTambah);
+customElements.define('rekening-tambah', rekeningTambah);

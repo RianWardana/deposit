@@ -14,10 +14,6 @@ class rekeningData extends PolymerElement {
                 type: Number,
                 notify: true
             },
-            dataTambah: {
-                type: Object,
-                observer: '_dataTambahChanged'
-            },
             waktu: String,
             nama: String,
             jumlah: String,
@@ -36,13 +32,13 @@ class rekeningData extends PolymerElement {
         // coba gunakan customElements.whenDefined('app-auth').then(() => {})
         auth.onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {
-                thisRekDat.uid = firebaseUser.uid
-                thisRekDat.loadRekening()
+                this.uid = firebaseUser.uid
+                this.loadRekening()
                 console.log("rekening-data knows if you are signed in and your UID is " + firebaseUser.uid)
             }
             else {
-                thisRekDat.dataRekening = [];
-                thisRekDat.lastSaldo = null;
+                this.dataRekening = [];
+                this.lastSaldo = null;
                 console.log("rekening-data knows if you are not signed in.");
             }
         });
@@ -64,43 +60,41 @@ class rekeningData extends PolymerElement {
             else { 
                 var keys = Object.keys(snap.val());
                 var lastKey = keys[0];
-                thisRekDat.lastSaldo = parseInt(snap.val()[lastKey].saldo);
+                this.lastSaldo = parseInt(snap.val()[lastKey].saldo);
             }
             
             // Tereksekusi untuk setiap entri di 'rekening' //
-            thisRekDat.dataRekening = [];
+            this.dataRekening = [];
             snap.forEach(snapEach => {
                 var dateObject = new Date(parseInt(snapEach.key)*(-1000));
                 var tanggal = (dateObject.getDate() < 10 ? "0" : "") + dateObject.getDate();
                 var bulan = (dateObject.getMonth() < 9 ? "0" : "") + (dateObject.getMonth() + 1);
                 var tahun = dateObject.getYear() - 100;
-                thisRekDat.waktu = tanggal + "/" + bulan + "/" + tahun;
-                thisRekDat.nama = snapEach.val()['nama'];
+                this.waktu = tanggal + "/" + bulan + "/" + tahun;
+                this.nama = snapEach.val()['nama'];
                 var debit = snapEach.val()['debit'];
                 var kredit = snapEach.val()['kredit'];
-                thisRekDat.jumlah = (debit == 0 ? kredit : debit);
-                thisRekDat.jenis = (debit == 0 ? "kredit" : "debit");
+                this.jumlah = (debit == 0 ? kredit : debit);
+                this.jenis = (debit == 0 ? "kredit" : "debit");
                 
-                thisRekDat.push('dataRekening', {
-                    waktu: thisRekDat.waktu,
-                    nama: thisRekDat.nama,
-                    jumlah: thisRekDat.jumlah,
-                    jenis: thisRekDat.jenis
+                this.push('dataRekening', {
+                    waktu: this.waktu,
+                    nama: this.nama,
+                    jumlah: this.jumlah,
+                    jenis: this.jenis
                 });
             })
         })
     }
 
     _dataTambahChanged() {
-        var ini = this;
-
         var epoch = Math.floor(new Date() / -1000);
-        var debit = parseInt(ini.dataTambah['debit']);
-        var kredit = parseInt(ini.dataTambah['kredit']);
-        var saldo = ini.lastSaldo + (kredit - debit);
+        var debit = parseInt(thisRekTam.dataTambahan['debit']);
+        var kredit = parseInt(thisRekTam.dataTambahan['kredit']);
+        var saldo = this.lastSaldo + (kredit - debit);
         
         var data = {
-            nama: ini.dataTambah['nama'],
+            nama: thisRekTam.dataTambahan['nama'],
             debit: debit,
             kredit: kredit,
             saldo: saldo,
