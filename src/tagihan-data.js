@@ -2,7 +2,6 @@ import {PolymerElement, html} from '@polymer/polymer';
 import {firebase} from './firebase.js';
 
 // akan convert ke LitElement saat kirimDataEdit dan kirimDataTambah pindah ke component masing-masing
-// untuk itu maka inisialisasi Firebase harus dipindahkan ke firebase.js
 // atau bisa juga tagihan-data digabung dengan tagihan-list
 
 class tagihanData extends PolymerElement {
@@ -30,24 +29,6 @@ class tagihanData extends PolymerElement {
                 type: Object,
                 value: {total: 0, today: 0},
                 notify: true
-            },
-
-            dataTambah: {
-                type: Object,
-                observer: 'kirimDataTambah'
-            },
-
-            dataEdit: {
-                type: Object,
-                observer: 'kirimDataEdit'
-            },
-
-            waktu: String,
-            nama: String,
-            jumlah: String,
-
-            uid: {
-                type: String
             }
         };
     }
@@ -116,41 +97,6 @@ class tagihanData extends PolymerElement {
                 total: total
             }
         });
-    }
-
-    // Bagian ini nantinya akan ada di tagihan-tambah
-    kirimDataTambah() {
-        var epoch = Math.floor(new Date() / -1000)
-        
-        var data = {
-            nama: this.dataTambah['nama'],
-            jumlah: parseInt(this.dataTambah['jumlah']),
-            lunas: 0
-        }
-
-        var submission = this.dbTagihan.child(epoch).set(data)
-        submission.then(e => {
-            console.log("Penambahan berhasil.")
-        })
-        submission.catch(e => console.log(e.message))
-    }
-
-    // Bagian ini nantinya akan ada di tagihan-edit
-    kirimDataEdit() {
-        let data = {
-            nama: this.dataEdit['nama'],
-            jumlah: parseInt(this.dataEdit['jumlah']),
-            lunas: 0
-        }
-
-        if (this.dataEdit['jumlah'] == 0) this.dbTagihan.child(this.dataEdit['key']).remove();
-        else {
-            let submission = this.dbTagihan.child(this.dataEdit['key']).set(data);
-            submission.then(e => {
-                console.log("Edit berhasil.");
-            })
-            submission.catch(e => console.log(e.message));
-        }  
     }
 
     lunasiSemua() {

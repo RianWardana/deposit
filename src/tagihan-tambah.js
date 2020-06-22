@@ -1,5 +1,6 @@
 import {LitElement, html, css} from 'lit-element';
 import {styles} from './lit-styles.js';
+import {firebase} from './firebase.js';
 
 class tagihanTambah extends LitElement {
     
@@ -65,11 +66,21 @@ class tagihanTambah extends LitElement {
         `;
     }
 
+    constructor() {
+        super();
+        firebase.auth().onAuthStateChanged(firebaseUser => {
+            if (firebaseUser) this.uid = firebaseUser.uid
+        });
+    }
+
     loadNamaPengeluaran() {
         let daftarNamaPengeluaran = [];
+
+        // anti-pattern, cari cara lain selain menggunakan thisTagDat
         thisTagDat.kategoriPengeluaran.map(费用的事情 => {
             daftarNamaPengeluaran = [...daftarNamaPengeluaran, ...费用的事情.entri];
         });
+        
         return daftarNamaPengeluaran;
     }
 
@@ -81,12 +92,10 @@ class tagihanTambah extends LitElement {
         if ((inputNama != "") && (inputJumlah != "")) { 
             this.shadowRoot.getElementById('dialog').close();
 
-            // Passing data to the parent component using CustomEvent
-            let event = new CustomEvent('pengeluaran-baru', {detail: {
-                nama: inputNama,
+            this.kirimData({
+                nama:inputNama,
                 jumlah: inputJumlah
-            }});
-            this.dispatchEvent(event);
+            });
 
             // Salin pengeluaran ke rekening //
             if (inputSalin) {
@@ -100,6 +109,20 @@ class tagihanTambah extends LitElement {
         } else {
             this.shadowRoot.getElementById('toastKosong').open()
         }
+    }
+
+    kirimData(data) {
+        let dbTagihan = firebase.database().ref(this.uid + "/tagihan");
+        let epoch = Math.floor(new Date() / -1000);
+
+        dbTagihan.child(epoch).set({
+            nama: data.nama,
+            jumlah: parseInt(data.jumlah),
+            lunas: 0
+        }).then(e => {
+            console.log("Penambahan pengeluaran berhasil.")
+        }).catch(e => 
+            console.log(e.message));
     }
 
     onDialogClosed() {

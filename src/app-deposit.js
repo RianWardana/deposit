@@ -48,9 +48,9 @@ class appDeposit extends PolymerElement {
                         <rekening-tambah salinan-pengeluaran="[[mutasiBaru]]"></rekening-tambah>
                     </div>
                     <div tab="pengeluaran">
-                        <tagihan-data data-tagihan="{{data}}" total-pengeluaran="{{pengeluaranTotal}}" data-tambah="[[pengeluaranBaru]]" data-edit="[[dataEdit]]"></tagihan-data>
+                        <tagihan-data data-tagihan="{{data}}" total-pengeluaran="{{pengeluaranTotal}}" data-edit="[[dataEdit]]"></tagihan-data>
                         <tagihan-list data="[[data]]" total-pengeluaran="[[pengeluaranTotal]]"></tagihan-list>
-                        <tagihan-tambah on-pengeluaran-baru="onPengeluaranBaru" on-mutasi-baru="onMutasiBaru"></tagihan-tambah>
+                        <tagihan-tambah on-mutasi-baru="onMutasiBaru"></tagihan-tambah>
                         <tagihan-edit on-edit-pengeluaran="onEditPengeluaran"></tagihan-edit>
                     </div>
                 </iron-pages>
@@ -81,10 +81,6 @@ class appDeposit extends PolymerElement {
     // hanya untuk handle salin pengeluaran ke rekening
     onMutasiBaru(e) {
         this.mutasiBaru = e.detail;
-    }
-
-    onPengeluaranBaru(e) {
-        this.pengeluaranBaru = e.detail;
     }
 
     onEditPengeluaran(e) {

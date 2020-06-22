@@ -1,5 +1,6 @@
 import {LitElement, html, css} from 'lit-element';
 import {styles} from './lit-styles.js';
+import {firebase} from './firebase.js';
 
 class tagihanEdit extends LitElement {
 
@@ -34,6 +35,10 @@ class tagihanEdit extends LitElement {
     }
 
     render() {
+        customElements.whenDefined('vaadin-combo-box').then(() => {
+            this.shadowRoot.getElementById('comboBox').items = this.loadNamaPengeluaran();
+        });
+        
         return html`
             <paper-dialog id="dialog" @iron-overlay-closed="${this._dialogClosed}">
                 <h2>Edit Pengeluaran</h2>
@@ -56,7 +61,13 @@ class tagihanEdit extends LitElement {
 
     constructor() {
         super(); 
+
+        // untuk tagihan-item, harus cari cara lain karena ini anti-pattern
         window.thisTagEdit = this;
+
+        firebase.auth().onAuthStateChanged(firebaseUser => {
+            if (firebaseUser) this.uid = firebaseUser.uid
+        });
     }
 
     // If edit button was pressed
@@ -68,13 +79,23 @@ class tagihanEdit extends LitElement {
         }
     }
 
+    loadNamaPengeluaran() {
+        let daftarNamaPengeluaran = [];
+
+        // anti-pattern, cari cara lain selain menggunakan thisTagDat
+        thisTagDat.kategoriPengeluaran.map(费用的事情 => {
+            daftarNamaPengeluaran = [...daftarNamaPengeluaran, ...费用的事情.entri];
+        });
+
+        return daftarNamaPengeluaran;
+    }
+
     _tapHapus() {
         this.shadowRoot.getElementById('dialog').close();
-        let event = new CustomEvent('edit-pengeluaran', {detail: {
+        this.kirimData({
             key: this.key,
             jumlah: 0
-        }});
-        this.dispatchEvent(event);
+        })
     }
 
     _tapSimpan() {
@@ -83,15 +104,34 @@ class tagihanEdit extends LitElement {
 
         if ((inputNama != "") && (inputJumlah != "")) { 
             this.shadowRoot.getElementById('dialog').close();
-            let event = new CustomEvent('edit-pengeluaran', {detail: {
+            this.kirimData({
                 key: this.key,
                 nama: inputNama,
                 jumlah: inputJumlah
-            }});
-            this.dispatchEvent(event);
+            });
         } else {
             this.shadowRoot.getElementById('toastKosong').open()
         }
+    }
+
+    kirimData(data) {
+        let dbTagihan = firebase.database().ref(this.uid + "/tagihan");
+
+        // Hapus entri jika jumlah == 0
+        if (data.jumlah == 0) {
+            dbTagihan.child(data.key).remove();
+            return;
+        }
+
+        // Set entri
+        dbTagihan.child(data.key).set({
+            nama: data.nama,
+            jumlah: parseInt(data.jumlah),
+            lunas: 0
+        }).then(e => {
+            console.log("Edit pengeluaran berhasil.");
+        }).catch(e => 
+            console.log(e.message));
     }
 
     onChangeInput() {
