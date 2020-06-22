@@ -6,10 +6,7 @@ class tagihanEdit extends LitElement {
 
     static get properties() {
         return {
-            triggerEdit: Boolean,
-            key: String,
-            nama: String,
-            jumlah: Number,
+            dataEdit: Object,
             namaPengeluaran: Array
         }
     }
@@ -64,17 +61,14 @@ class tagihanEdit extends LitElement {
                 this.loadNamaPengeluaran()
             }
         });
-
-        // untuk tagihan-item, harus cari cara lain karena ini anti-pattern
-        window.thisTagEdit = this;
     }
 
     // If edit button was pressed
     updated(changedProps) {
-        if (changedProps.has('triggerEdit')) {
+        if (changedProps.has('dataEdit')) {
             this.shadowRoot.getElementById('dialog').open();
-            this.shadowRoot.getElementById('comboBox').value = this.nama;
-            this.shadowRoot.getElementById('inputJumlah').value = this.jumlah;
+            this.shadowRoot.getElementById('comboBox').value = this.dataEdit.nama;
+            this.shadowRoot.getElementById('inputJumlah').value = this.dataEdit.jumlah;
         }
     }
 
@@ -93,7 +87,7 @@ class tagihanEdit extends LitElement {
     _tapHapus() {
         this.shadowRoot.getElementById('dialog').close();
         this.kirimData({
-            key: this.key,
+            key: this.dataEdit.key,
             jumlah: 0
         })
     }
@@ -105,7 +99,7 @@ class tagihanEdit extends LitElement {
         if ((inputNama != "") && (inputJumlah != "")) { 
             this.shadowRoot.getElementById('dialog').close();
             this.kirimData({
-                key: this.key,
+                key: this.dataEdit.key,
                 nama: inputNama,
                 jumlah: inputJumlah
             });

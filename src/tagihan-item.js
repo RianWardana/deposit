@@ -52,10 +52,18 @@ class tagihanItem extends LitElement {
     }
 
     _tapEdit(a, b, c) {
-        thisTagEdit.key = a;
-        thisTagEdit.nama = b;
-        thisTagEdit.jumlah = c;
-        thisTagEdit.triggerEdit = (thisTagEdit.triggerEdit ? false : true);
+        // This event bubbles up to app-deposit
+        let event = new CustomEvent('tagihan-edit', {
+            bubbles: true,
+            composed: true,
+            detail: {
+                key: a,
+                nama: b,
+                jumlah: c
+            },
+        });
+
+        this.dispatchEvent(event);
     }
 }
 

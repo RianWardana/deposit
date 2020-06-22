@@ -49,7 +49,7 @@ class appDeposit extends PolymerElement {
                     <div tab="pengeluaran">
                         <tagihan-list></tagihan-list>
                         <tagihan-tambah on-mutasi-baru="onMutasiBaru"></tagihan-tambah>
-                        <tagihan-edit on-edit-pengeluaran="onEditPengeluaran"></tagihan-edit>
+                        <tagihan-edit data-edit="[[dataEdit]]"></tagihan-edit>
                     </div>
                 </iron-pages>
             </app-header-layout>
@@ -66,6 +66,10 @@ class appDeposit extends PolymerElement {
     ready() {
         super.ready();
         this.setupToolbar();
+
+        this.addEventListener('tagihan-edit', e => {
+            this.dataEdit = e.detail;
+        })
     }
 
     setupToolbar() {
