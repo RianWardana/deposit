@@ -6,7 +6,8 @@ class tagihanTambah extends LitElement {
     
     static get properties() {
         return {
-            kategoriPengeluaran: Array
+            // kategoriPengeluaran: Array,
+            namaPengeluaran: Array
         };
     }
 
@@ -41,11 +42,7 @@ class tagihanTambah extends LitElement {
     }
     
     render() {
-        customElements.whenDefined('vaadin-combo-box').then(() => {
-            this.shadowRoot.getElementById('comboBox').items = this.loadNamaPengeluaran();
-        });
-
-        return html`
+         return html`
             <paper-dialog id="dialog" @iron-overlay-closed="${this.onDialogClosed}">
                 <h2>Tambah Pengeluaran</h2>
                 <div class="flexSpaceBetween">
@@ -69,30 +66,31 @@ class tagihanTambah extends LitElement {
     constructor() {
         super();
         firebase.auth().onAuthStateChanged(firebaseUser => {
-            if (firebaseUser) this.uid = firebaseUser.uid
+            if (firebaseUser) {
+                this.uid = firebaseUser.uid
+                this.loadNamaPengeluaran();
+            }
         });
 
-        this.kategoriPengeluaran = [
-            {nama: "Makan", entri: ["Makan", "Minum", "Go-Food", "GrabFood", "Sereal"]},
-            {nama: "Transportasi", entri: ["Transportasi", "e-Money", "Parkir", "Go-Jek Subs", "Grab Subs", "Go-Ride", "GrabRide", "Go-Car", "GrabCar"]},
-            {nama: "Utilities", entri: ["Listrik", "FirstMedia", "Pulsa XL"]},
-            {nama: "Higiene", entri: ["Higiene", "Sabun", "Tisu", "Laundry"]},
-            {nama: "Lainnya", entri: ["Lainnya", "Obat"]}
-        ]
-
-        // supaya kategoriPengeluaran bisa diakses component lain
-        // anti-pattern dan harus cari cara lain
-        window.TagihanTambah = this;
+        // this.kategoriPengeluaran = [
+        //     {nama: "Makan", entri: ["Makan", "Minum", "Go-Food", "GrabFood", "Sereal"]},
+        //     {nama: "Transportasi", entri: ["Transportasi", "e-Money", "Parkir", "Go-Jek Subs", "Grab Subs", "Go-Ride", "GrabRide", "Go-Car", "GrabCar"]},
+        //     {nama: "Utilities", entri: ["Listrik", "FirstMedia", "Pulsa XL"]},
+        //     {nama: "Higiene", entri: ["Higiene", "Sabun", "Tisu", "Laundry"]},
+        //     {nama: "Lainnya", entri: ["Lainnya", "Obat"]}
+        // ]
     }
 
     loadNamaPengeluaran() {
-        let daftarNamaPengeluaran = [];
+        firebase.database().ref(this.uid).child("kategoriPengeluaran").on('value', queryResult => {
+            this.namaPengeluaran = [];
+            
+            queryResult.forEach(objNamaPengeluaran => {
+                this.namaPengeluaran = [...this.namaPengeluaran, ...objNamaPengeluaran.val().entri];
+            });
 
-        this.kategoriPengeluaran.map(费用的事情 => {
-            daftarNamaPengeluaran = [...daftarNamaPengeluaran, ...费用的事情.entri];
+            this.shadowRoot.getElementById('comboBox').items = this.namaPengeluaran;
         });
-        
-        return daftarNamaPengeluaran;
     }
 
     tambah() {
@@ -149,6 +147,11 @@ class tagihanTambah extends LitElement {
         this.shadowRoot.getElementById('fab').style.display = 'none';
         this.shadowRoot.getElementById('btnTambah').setAttribute('disabled', true);
     }
+
+    // onFabClick() {
+    //     let db = firebase.database().ref(this.uid).child("kategoriPengeluaran");
+    //     db.set(this.kategoriPengeluaran);
+    // }
 
     onChangeInput() {
         let inputNama = this.shadowRoot.getElementById('comboBox').value;

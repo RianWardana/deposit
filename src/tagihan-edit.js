@@ -7,10 +7,10 @@ class tagihanEdit extends LitElement {
     static get properties() {
         return {
             triggerEdit: Boolean,
-            dataEdit: Object,
             key: String,
             nama: String,
-            jumlah: Number
+            jumlah: Number,
+            namaPengeluaran: Array
         }
     }
 
@@ -35,10 +35,6 @@ class tagihanEdit extends LitElement {
     }
 
     render() {
-        customElements.whenDefined('vaadin-combo-box').then(() => {
-            this.shadowRoot.getElementById('comboBox').items = this.loadNamaPengeluaran();
-        });
-        
         return html`
             <paper-dialog id="dialog" @iron-overlay-closed="${this._dialogClosed}">
                 <h2>Edit Pengeluaran</h2>
@@ -62,12 +58,15 @@ class tagihanEdit extends LitElement {
     constructor() {
         super(); 
 
+        firebase.auth().onAuthStateChanged(firebaseUser => {
+            if (firebaseUser) {
+                this.uid = firebaseUser.uid
+                this.loadNamaPengeluaran()
+            }
+        });
+
         // untuk tagihan-item, harus cari cara lain karena ini anti-pattern
         window.thisTagEdit = this;
-
-        firebase.auth().onAuthStateChanged(firebaseUser => {
-            if (firebaseUser) this.uid = firebaseUser.uid
-        });
     }
 
     // If edit button was pressed
@@ -80,14 +79,15 @@ class tagihanEdit extends LitElement {
     }
 
     loadNamaPengeluaran() {
-        let daftarNamaPengeluaran = [];
+        firebase.database().ref(this.uid).child("kategoriPengeluaran").on('value', queryResult => {
+            this.namaPengeluaran = [];
+            
+            queryResult.forEach(objNamaPengeluaran => {
+                this.namaPengeluaran = [...this.namaPengeluaran, ...objNamaPengeluaran.val().entri];
+            });
 
-        // anti-pattern, cari cara lain selain menggunakan TagihanTambah
-        TagihanTambah.kategoriPengeluaran.map(费用的事情 => {
-            daftarNamaPengeluaran = [...daftarNamaPengeluaran, ...费用的事情.entri];
+            this.shadowRoot.getElementById('comboBox').items = this.namaPengeluaran;
         });
-
-        return daftarNamaPengeluaran;
     }
 
     _tapHapus() {

@@ -6,10 +6,10 @@ class appRingkasan extends LitElement {
     
     static get properties() {
         return {
-            pengeluaran: {type: Object},
-            total: {type: Number},
-            totalPerKategori: {type: Object},
-            kategoriPengeluaran: {type: Array}
+            pengeluaran: Object,
+            total: Number,
+            totalPerKategori: Object,
+            kategoriPengeluaran: Array
         }
     }
 
@@ -19,12 +19,10 @@ class appRingkasan extends LitElement {
         let monthToday = (new Date()).getMonth();
         this.yearMonthLast = new Date(yearToday, monthToday+1).toISOString().slice(0,7);
 
-        // nanti ambil sendiri dari Firebase
-        this.kategoriPengeluaran = TagihanTambah.kategoriPengeluaran;
-
         firebase.auth().onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {
                 this.uid = firebaseUser.uid
+                this.loadKategoriPengeluaran();
                 this.loadPengeluaran(yearToday, monthToday);
             }
         });
@@ -128,21 +126,31 @@ class appRingkasan extends LitElement {
         return 'Rp' + parseInt(jumlah).toLocaleString('id-ID')
     }
 
+    loadKategoriPengeluaran() {
+        firebase.database().ref(this.uid).child("kategoriPengeluaran").on('value', queryResult => {
+            this.kategoriPengeluaran = [];
+            
+            queryResult.forEach(objNamaPengeluaran => {
+                this.kategoriPengeluaran = [...this.kategoriPengeluaran, objNamaPengeluaran.val()];
+            });
+        });
+    }
+
     loadPengeluaran(year, month) {
-        var startTime = new Date(year, month).getTime() / -1000; // pembagi negatif karena key di Firebase negatif
-        var endTime = new Date(year, month+1).getTime() / -1000;
+        let startTime = new Date(year, month).getTime() / -1000; // pembagi negatif karena key di Firebase negatif
+        let endTime = new Date(year, month+1).getTime() / -1000;
 
         let dbTagihan = firebase.database().ref(this.uid + "/tagihan");
         let dbTagihanMonth = dbTagihan.orderByKey().startAt(endTime.toString()).endAt(startTime.toString()); // dibalik antara endTime dan startTime karena key yang negatif
         
         dbTagihanMonth.once('value', entries => {
-            var pengeluaran = {};
-            var total = 0;
-            var totalPerKategori = {};
+            let pengeluaran = {};
+            let total = 0;
+            let totalPerKategori = {};
 
             entries.forEach(entry => {
-                var nama = entry.val()['nama'];
-                var jumlah = entry.val()['jumlah'];
+                let nama = entry.val()['nama'];
+                let jumlah = entry.val()['jumlah'];
 
                 if (pengeluaran[nama] > 0) pengeluaran[nama] += jumlah;
                 else pengeluaran[nama] = jumlah;
