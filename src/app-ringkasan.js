@@ -20,7 +20,7 @@ class appRingkasan extends LitElement {
         this.yearMonthLast = new Date(yearToday, monthToday+1).toISOString().slice(0,7);
 
         // nanti ambil sendiri dari Firebase
-        this.kategoriPengeluaran = thisTagDat.kategoriPengeluaran;
+        this.kategoriPengeluaran = TagihanTambah.kategoriPengeluaran;
 
         firebase.auth().onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {

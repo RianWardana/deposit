@@ -6,7 +6,7 @@ class tagihanTambah extends LitElement {
     
     static get properties() {
         return {
-
+            kategoriPengeluaran: Array
         };
     }
 
@@ -71,13 +71,24 @@ class tagihanTambah extends LitElement {
         firebase.auth().onAuthStateChanged(firebaseUser => {
             if (firebaseUser) this.uid = firebaseUser.uid
         });
+
+        this.kategoriPengeluaran = [
+            {nama: "Makan", entri: ["Makan", "Minum", "Go-Food", "GrabFood", "Sereal"]},
+            {nama: "Transportasi", entri: ["Transportasi", "e-Money", "Parkir", "Go-Jek Subs", "Grab Subs", "Go-Ride", "GrabRide", "Go-Car", "GrabCar"]},
+            {nama: "Utilities", entri: ["Listrik", "FirstMedia", "Pulsa XL"]},
+            {nama: "Higiene", entri: ["Higiene", "Sabun", "Tisu", "Laundry"]},
+            {nama: "Lainnya", entri: ["Lainnya", "Obat"]}
+        ]
+
+        // supaya kategoriPengeluaran bisa diakses component lain
+        // anti-pattern dan harus cari cara lain
+        window.TagihanTambah = this;
     }
 
     loadNamaPengeluaran() {
         let daftarNamaPengeluaran = [];
 
-        // anti-pattern, cari cara lain selain menggunakan thisTagDat
-        thisTagDat.kategoriPengeluaran.map(费用的事情 => {
+        this.kategoriPengeluaran.map(费用的事情 => {
             daftarNamaPengeluaran = [...daftarNamaPengeluaran, ...费用的事情.entri];
         });
         

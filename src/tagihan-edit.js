@@ -82,8 +82,8 @@ class tagihanEdit extends LitElement {
     loadNamaPengeluaran() {
         let daftarNamaPengeluaran = [];
 
-        // anti-pattern, cari cara lain selain menggunakan thisTagDat
-        thisTagDat.kategoriPengeluaran.map(费用的事情 => {
+        // anti-pattern, cari cara lain selain menggunakan TagihanTambah
+        TagihanTambah.kategoriPengeluaran.map(费用的事情 => {
             daftarNamaPengeluaran = [...daftarNamaPengeluaran, ...费用的事情.entri];
         });
 

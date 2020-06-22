@@ -4,7 +4,6 @@ import './rekening-list.js';
 import './rekening-item.js';
 import './rekening-tambah.js';
 
-import './tagihan-data.js';
 import './tagihan-list.js';
 import './tagihan-item.js';
 import './tagihan-tambah.js';
@@ -48,8 +47,7 @@ class appDeposit extends PolymerElement {
                         <rekening-tambah salinan-pengeluaran="[[mutasiBaru]]"></rekening-tambah>
                     </div>
                     <div tab="pengeluaran">
-                        <tagihan-data data-tagihan="{{data}}" total-pengeluaran="{{pengeluaranTotal}}" data-edit="[[dataEdit]]"></tagihan-data>
-                        <tagihan-list data="[[data]]" total-pengeluaran="[[pengeluaranTotal]]"></tagihan-list>
+                        <tagihan-list></tagihan-list>
                         <tagihan-tambah on-mutasi-baru="onMutasiBaru"></tagihan-tambah>
                         <tagihan-edit on-edit-pengeluaran="onEditPengeluaran"></tagihan-edit>
                     </div>
@@ -81,10 +79,6 @@ class appDeposit extends PolymerElement {
     // hanya untuk handle salin pengeluaran ke rekening
     onMutasiBaru(e) {
         this.mutasiBaru = e.detail;
-    }
-
-    onEditPengeluaran(e) {
-        this.dataEdit = e.detail;
     }
 }
 
