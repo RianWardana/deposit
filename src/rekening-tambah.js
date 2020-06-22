@@ -1,8 +1,6 @@
 import {LitElement, html, css} from 'lit-element';
 import {styles} from './lit-styles.js';
-
-import firebase from '@firebase/app';
-import '@firebase/database';
+import {firebase} from './firebase.js';
 
 class rekeningTambah extends LitElement {
     
@@ -89,7 +87,7 @@ class rekeningTambah extends LitElement {
             "Tokopedia"
         ];
 
-        auth.onAuthStateChanged(firebaseUser => {
+        firebase.auth().onAuthStateChanged(firebaseUser => {
             if (firebaseUser) this.uid = firebaseUser.uid
         });
     }

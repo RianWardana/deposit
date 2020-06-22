@@ -1,6 +1,6 @@
 import {LitElement, html, css} from 'lit-element';
-import firebase from '@firebase/app';
-import '@firebase/auth';
+import {firebase} from './firebase.js';
+
 /* 
 16 Juni 2020
 Tidak bisa menggunakan FirebaseUI karena masalah Polymer 3 di ES6 import
@@ -49,19 +49,6 @@ class appAuth extends LitElement {
 
     constructor() {
         super();
-
-        var config = {
-            apiKey: "AIzaSyCAmpmMEFT9nbMaTjI4YDqAa1H1zufc9r0",
-            authDomain: "deposit-ce46e.firebaseapp.com",
-            databaseURL: "https://deposit-ce46e.firebaseio.com",
-            storageBucket: "deposit-ce46e.appspot.com",
-            messagingSenderId: "713372742623"
-        }; 
-
-        firebase.initializeApp(config);
-        
-        window.auth = firebase.auth();
-
         firebase.auth().onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {
                 var event = new CustomEvent('login-status-changed', {detail: 1});

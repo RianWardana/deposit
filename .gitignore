@@ -95,3 +95,4 @@ dist
 
 .firebase
 .firebase/hosting.YnVpbGRcZGVmYXVsdA.cache
+src/configs.js

@@ -1,9 +1,7 @@
 import {LitElement, html, css} from 'lit-element';
 import {styles} from './lit-styles.js';
 import {until} from 'lit-html/directives/until.js';
-
-import firebase from '@firebase/app';
-import '@firebase/database';
+import {firebase} from './firebase.js';
 
 class rekeningList extends LitElement {
     
@@ -61,7 +59,7 @@ class rekeningList extends LitElement {
         super();
         window.Rekening = this;
 
-        auth.onAuthStateChanged(firebaseUser => {
+        firebase.auth().onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {
                 this.uid = firebaseUser.uid
                 this.loadRekening();

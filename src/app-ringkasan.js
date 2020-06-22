@@ -1,7 +1,6 @@
 import {LitElement, html, css} from 'lit-element';
 import {styles} from './lit-styles.js';
-import firebase from '@firebase/app';
-import '@firebase/database';
+import {firebase} from './firebase.js';
 
 class appRingkasan extends LitElement {
     
@@ -23,7 +22,7 @@ class appRingkasan extends LitElement {
         // nanti ambil sendiri dari Firebase
         this.kategoriPengeluaran = thisTagDat.kategoriPengeluaran;
 
-        auth.onAuthStateChanged(firebaseUser => {
+        firebase.auth().onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {
                 this.uid = firebaseUser.uid
                 this.loadPengeluaran(yearToday, monthToday);

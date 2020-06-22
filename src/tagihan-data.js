@@ -1,6 +1,9 @@
 import {PolymerElement, html} from '@polymer/polymer';
-import firebase from '@firebase/app';
-import '@firebase/database';
+import {firebase} from './firebase.js';
+
+// akan convert ke LitElement saat kirimDataEdit dan kirimDataTambah pindah ke component masing-masing
+// untuk itu maka inisialisasi Firebase harus dipindahkan ke firebase.js
+// atau bisa juga tagihan-data digabung dengan tagihan-list
 
 class tagihanData extends PolymerElement {
 
@@ -53,7 +56,7 @@ class tagihanData extends PolymerElement {
         super.ready();
         window.thisTagDat = this;
 
-        auth.onAuthStateChanged(firebaseUser => {
+        firebase.auth().onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {
                 this.uid = firebaseUser.uid
                 this.loadTagihan()
@@ -67,8 +70,8 @@ class tagihanData extends PolymerElement {
     loadTagihan() {
         console.log('loadTagihan')
 
-        window.dbTagihan = firebase.database().ref(this.uid + "/tagihan")
-        this.dbTagihanLimited = dbTagihan.orderByChild('lunas').equalTo(0)
+        this.dbTagihan = firebase.database().ref(this.uid + "/tagihan")
+        this.dbTagihanLimited = this.dbTagihan.orderByChild('lunas').equalTo(0)
 
         var dateObjectToday = new Date()
         var tanggalToday = (dateObjectToday.getDate() < 10 ? "0" : "") + dateObjectToday.getDate();
@@ -115,6 +118,7 @@ class tagihanData extends PolymerElement {
         });
     }
 
+    // Bagian ini nantinya akan ada di tagihan-tambah
     kirimDataTambah() {
         var epoch = Math.floor(new Date() / -1000)
         
@@ -124,13 +128,14 @@ class tagihanData extends PolymerElement {
             lunas: 0
         }
 
-        var submission = dbTagihan.child(epoch).set(data)
+        var submission = this.dbTagihan.child(epoch).set(data)
         submission.then(e => {
             console.log("Penambahan berhasil.")
         })
         submission.catch(e => console.log(e.message))
     }
 
+    // Bagian ini nantinya akan ada di tagihan-edit
     kirimDataEdit() {
         let data = {
             nama: this.dataEdit['nama'],
@@ -138,9 +143,9 @@ class tagihanData extends PolymerElement {
             lunas: 0
         }
 
-        if (this.dataEdit['jumlah'] == 0) dbTagihan.child(this.dataEdit['key']).remove();
+        if (this.dataEdit['jumlah'] == 0) this.dbTagihan.child(this.dataEdit['key']).remove();
         else {
-            let submission = dbTagihan.child(this.dataEdit['key']).set(data);
+            let submission = this.dbTagihan.child(this.dataEdit['key']).set(data);
             submission.then(e => {
                 console.log("Edit berhasil.");
             })
@@ -151,7 +156,7 @@ class tagihanData extends PolymerElement {
     lunasiSemua() {
         this.dataTagihan.forEach(tagihan => {
             console.log(tagihan.key)
-            dbTagihan.child(tagihan.key).update({lunas: 1})
+            this.dbTagihan.child(tagihan.key).update({lunas: 1})
         })
     }
 }
