@@ -11,13 +11,13 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@master
-      - name: Install dependencies
-        run: npm install
       - name: Create configs file
         uses: finnp/create-file-action@1.0.0
         env:
           FILE_NAME: "src/configs.js"
-          FILE_DATA64: "export {{apiKey: 'AIzaSyCAmpmMEFT9nbMaTjI4YDqAa1H1zufc9r0',authDomain: 'deposit-ce46e.firebaseapp.com',databaseURL: 'https://deposit-ce46e.firebaseio.com',storageBucket: 'deposit-ce46e.appspot.com',messagingSenderId: '713372742623'}}"
+          FILE_DATA64: "const firebaseConfig = {apiKey: 'AIzaSyCAmpmMEFT9nbMaTjI4YDqAa1H1zufc9r0',authDomain: 'deposit-ce46e.firebaseapp.com',databaseURL: 'https://deposit-ce46e.firebaseio.com',storageBucket: 'deposit-ce46e.appspot.com',messagingSenderId: '713372742623'};export {firebaseConfig};"
+      - name: Install dependencies
+        run: npm install
       - name: Build for production
         run: npm run build
       - name: Archive production artifact
