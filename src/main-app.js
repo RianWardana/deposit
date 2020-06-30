@@ -32,12 +32,13 @@ import '@polymer/paper-tabs';
 import '@polymer/paper-toast';
 import '@polymer/paper-toggle-button';
 import '@vaadin/vaadin-combo-box/theme/material/vaadin-combo-box.js';
-import '@vaadin/vaadin-text-field/theme/material/vaadin-integer-field.js';
-// <link rel="import" href="../bower_components/paper-styles/typography.html">     
+import '@vaadin/vaadin-text-field/theme/material/vaadin-integer-field.js';    
 
 import './shared-styles.js';
 import './app-auth.js';
 import './app-deposit.js';
+
+// saat semua sudah convert ke LitElement, ganti bundler ke Parcel karena polymer-cli lama deploy-nya di GitHub Action
 
 class mainApp extends PolymerElement {
     static get template() {
@@ -164,7 +165,6 @@ class mainApp extends PolymerElement {
 
     // Lazy-loading halaman non-esensial
     // Pakai until(content,<spinner>) lebih keren, nanti ya pas pakai LitElement
-    // Pakai halaman_sekarang.hasChanged()
     _halamanChanged() {
         if (this.halaman_sekarang == 'Ringkasan') {
             if (!this.isRingkasanLoaded) {

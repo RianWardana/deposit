@@ -9,7 +9,7 @@ import './tagihan-item.js';
 import './tagihan-tambah.js';
 import './tagihan-edit.js';
 
-// akan convert ke LitElement saat tagihan-data digabung dengan tagihan-list
+// akan convert ke LitElement saat sudah pasti bahwa paper-tab bekerja
 
 class appDeposit extends PolymerElement {
     static get template() {
@@ -34,6 +34,7 @@ class appDeposit extends PolymerElement {
 
             <app-header-layout>
                 <app-header id="appHeader" fixed="" shadow="" slot="header">
+                    <!-- ganti dengan mwc-tab-bar -->
                     <paper-tabs attr-for-selected="tab" selected="{{tab_sekarang}}" noink="">
                         <paper-tab tab="rekening">REKENING</paper-tab>
                         <paper-tab tab="pengeluaran">PENGELUARAN</paper-tab>

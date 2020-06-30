@@ -1,10 +1,6 @@
 import {LitElement, html, css} from 'lit-element';
 import {styles} from './lit-styles.js';
 
-//打算用这个页面对试试一下Lit-Element
-//但是Lit-Element没有两个街道的关系
-//需要用Redux如果想有两个街道的关系
-
 class rekeningItem extends LitElement {
     
     static get properties() {
