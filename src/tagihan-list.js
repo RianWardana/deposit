@@ -175,10 +175,10 @@ class tagihanList extends LitElement {
 
     lunasiSemua() {
         this.shadowRoot.getElementById('toastLunas').close();
-        // this.data.forEach(pengeluaran => {
-        //     console.log(pengeluaran.key);
-        //     this.dbTagihan.child(pengeluaran.key).update({lunas: 1});
-        // })
+        this.data.forEach(pengeluaran => {
+            console.log(pengeluaran.key);
+            this.dbTagihan.child(pengeluaran.key).update({lunas: 1});
+        })
     }
 
     formatTotalTagihan(total) {
