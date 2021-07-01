@@ -70,7 +70,8 @@ class tagihanList extends LitElement {
                     <paper-ripple recenters></paper-ripple>
                     <div class="flexSpaceBetween">
                         <span>Batas pengeluaran harian</span>
-                        <span><b>Rp${this.formatBatas(this.totalPengeluaran.total)}</b></span>
+                        <span><b id="batas-pengeluaran">${this.formatBatas(this.totalPengeluaran.total)}</b></span>
+                        <!-- <span><b id="batas-pengeluaran">Rp0</b></span> -->
                     </div>
                 </paper-material>
 
@@ -123,12 +124,13 @@ class tagihanList extends LitElement {
     loadPengeluaran() {
         console.log('loadPengeluaran')
 
-        this.dbTagihan = firebase.database().ref(this.uid + "/tagihan");
-        let dbTagihanLimited = this.dbTagihan.orderByChild('lunas').equalTo(0);
-
         var dateObjectToday = new Date();
-        var tanggalToday = (dateObjectToday.getDate() < 10 ? "0" : "") + dateObjectToday.getDate();
-        var bulanToday = (dateObjectToday.getMonth() < 9 ? "0" : "") + (dateObjectToday.getMonth() + 1);
+        var tanggalToday = (dateObjectToday.getDate() < 10 ? "0" : "") + dateObjectToday.getDate()
+        var bulanToday = (dateObjectToday.getMonth() < 9 ? "0" : "") + (dateObjectToday.getMonth() + 1)
+        var startTime = (new Date(dateObjectToday.getFullYear(), dateObjectToday.getMonth(), 1)).getTime() / -1000
+
+        this.dbTagihan = firebase.database().ref(this.uid + "/tagihan")
+        let dbTagihanLimited = this.dbTagihan.orderByKey().endAt(startTime.toString())
 
         // Tereksekusi setiap ada perubahaan di database 'tagihan' //
         dbTagihanLimited.on('value', dataPengeluaran => {
@@ -147,8 +149,8 @@ class tagihanList extends LitElement {
                 var jumlah = pengeluaran.val()['jumlah'];
 
                 // Jika terdapat pengeluaran bulan sebelumnya
-                if (bulan != bulanToday)
-                return;
+                // if (bulan != bulanToday)
+                // return;
 
                 // Hitung total pengeluaran
                 total += jumlah
@@ -187,11 +189,19 @@ class tagihanList extends LitElement {
     }
 
     formatBatas(total) {
-        var dateObject = new Date();
-        var tanggal = dateObject.getDate();
-        var hariTerakhir = new Date(dateObject.getFullYear(), dateObject.getMonth()+1, 0).getDate();
-        var selisihHari = (hariTerakhir-tanggal < 1 ? 1 : hariTerakhir-tanggal);
-        return parseFloat(((2250000-total) / selisihHari).toFixed(0)).toLocaleString('id-ID');
+        this.dbBatasPengeluaran = firebase.database().ref(this.uid + "/batasPengeluaran")
+        this.dbBatasPengeluaran.on('value', dataBatas => {
+            let batas = dataBatas.val()
+            console.log(batas)
+
+            let dateObject = new Date()
+            let tanggal = dateObject.getDate()
+            let hariTerakhir = new Date(dateObject.getFullYear(), dateObject.getMonth()+1, 0).getDate()
+            let selisihHari = (hariTerakhir-tanggal < 1 ? 1 : hariTerakhir-tanggal)
+
+            let batasDOM = this.shadowRoot.getElementById('batas-pengeluaran')
+            batasDOM.innerHTML = 'Rp' + parseFloat(((batas-total) / selisihHari).toFixed(0)).toLocaleString('id-ID')
+        })
     }
 
     onClick() {
