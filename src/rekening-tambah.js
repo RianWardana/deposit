@@ -6,8 +6,9 @@ class rekeningTambah extends LitElement {
     
     static get properties() {
         return {
-            daftarNamaRekening: Array,
-            salinanPengeluaran: Object
+            // daftarNamaRekening: Array,
+            salinanPengeluaran: Object,
+            // jenisMutasi: Object
         };
     }
 
@@ -44,7 +45,7 @@ class rekeningTambah extends LitElement {
     
     render() {
         customElements.whenDefined('vaadin-combo-box').then(() => {
-            this.shadowRoot.getElementById('comboBox').items = this.daftarNamaRekening;
+            this.shadowRoot.getElementById('comboBox').addEventListener("change", this.onChangeComboBox.bind(this));
         });
 
         return html`
@@ -74,21 +75,24 @@ class rekeningTambah extends LitElement {
 
     constructor() {  
         super();
-        this.daftarNamaRekening = [
-            "Dana",
-            "e-Money",
-            "e-Toll",
-            "Go-Pay",
-            "OVO",
-            "Gaji",
-            "Transferan",
-            "Tarik tunai",
-            "Alfamidi",
-            "Tokopedia"
-        ];
 
         firebase.auth().onAuthStateChanged(firebaseUser => {
             if (firebaseUser) this.uid = firebaseUser.uid
+            this.loadNamaMutasi();
+        });
+    }
+
+    loadNamaMutasi() {
+        firebase.database().ref(this.uid).child("namaMutasi").on('value', queryResult => {
+            let namaMutasi = [];
+            this.jenisMutasi = {};
+            
+            queryResult.forEach(objNamaMutasi => {
+                namaMutasi = [...namaMutasi, objNamaMutasi.val().nama];
+                this.jenisMutasi[objNamaMutasi.val().nama] = objNamaMutasi.val().jenis
+            });
+
+            this.shadowRoot.getElementById('comboBox').items = namaMutasi;
         });
     }
 
@@ -147,10 +151,19 @@ class rekeningTambah extends LitElement {
         this.shadowRoot.getElementById('fab').style.display = 'none'
     }
 
+    onChangeComboBox() {
+        // Otomatis mengubah toggle Kredit/Debit dari Nama Mutasi
+        if (this.jenisMutasi[this.shadowRoot.getElementById('comboBox').value] == "kredit")
+            this.shadowRoot.getElementById('toggleJenis').checked = true;
+        else
+            this.shadowRoot.getElementById('toggleJenis').checked = false;
+    }
+
     onChangeInput() {
         let inputNama = this.shadowRoot.getElementById('comboBox').value;
         let inputJumlah = this.shadowRoot.getElementById('inputJumlah').value;
 
+        // btnTambah disabled kalau Nama dan/atau Jumlah kosong
         if ((inputNama != "") && (inputJumlah != ""))
             this.shadowRoot.getElementById('btnTambah').removeAttribute('disabled');
         else 
