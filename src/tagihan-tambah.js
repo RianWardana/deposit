@@ -71,14 +71,6 @@ class tagihanTambah extends LitElement {
                 this.loadKategoriPengeluaran();
             }
         });
-
-        // this.kategoriPengeluaran = [
-        //     {nama: "Makan", entri: ["Makan", "Minum", "Go-Food", "GrabFood", "Sereal"]},
-        //     {nama: "Transportasi", entri: ["Transportasi", "e-Money", "Parkir", "Go-Jek Subs", "Grab Subs", "Go-Ride", "GrabRide", "Go-Car", "GrabCar"]},
-        //     {nama: "Utilities", entri: ["Listrik", "FirstMedia", "Pulsa XL"]},
-        //     {nama: "Higiene", entri: ["Higiene", "Sabun", "Tisu", "Laundry"]},
-        //     {nama: "Lainnya", entri: ["Lainnya", "Obat"]}
-        // ]
     }
 
     loadKategoriPengeluaran() {
@@ -89,7 +81,7 @@ class tagihanTambah extends LitElement {
                 this.namaPengeluaran = [...this.namaPengeluaran, ...objNamaPengeluaran.val().entri];
             });
 
-            this.shadowRoot.getElementById('comboBox').items = this.namaPengeluaran;
+            this.shadowRoot.getElementById('comboBox').items = this.namaPengeluaran.sort();
         });
     }
 
