@@ -126,6 +126,8 @@ class appRingkasan extends LitElement {
         return 'Rp' + parseInt(jumlah).toLocaleString('id-ID')
     }
 
+    // ini sudah ada di tagihan-tambah, harus cari cara bagaimana supaya di sini tidak dilakukan lagi
+    // atau tidak apa-apa ya? karena di tagihan-edit juga ada dan sepertinya tidak memberatkan
     loadKategoriPengeluaran() {
         firebase.database().ref(this.uid).child("kategoriPengeluaran").on('value', queryResult => {
             this.kategoriPengeluaran = [];

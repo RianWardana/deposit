@@ -68,7 +68,7 @@ class tagihanTambah extends LitElement {
         firebase.auth().onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {
                 this.uid = firebaseUser.uid
-                this.loadNamaPengeluaran();
+                this.loadKategoriPengeluaran();
             }
         });
 
@@ -81,7 +81,7 @@ class tagihanTambah extends LitElement {
         // ]
     }
 
-    loadNamaPengeluaran() {
+    loadKategoriPengeluaran() {
         firebase.database().ref(this.uid).child("kategoriPengeluaran").on('value', queryResult => {
             this.namaPengeluaran = [];
             

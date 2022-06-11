@@ -192,7 +192,6 @@ class tagihanList extends LitElement {
         this.dbBatasPengeluaran = firebase.database().ref(this.uid + "/batasPengeluaran")
         this.dbBatasPengeluaran.on('value', dataBatas => {
             let batas = dataBatas.val()
-            console.log(batas)
 
             let dateObject = new Date()
             let tanggal = dateObject.getDate()

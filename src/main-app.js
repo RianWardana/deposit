@@ -31,6 +31,8 @@ import '@polymer/paper-spinner/paper-spinner';
 import '@polymer/paper-tabs';      
 import '@polymer/paper-toast';
 import '@polymer/paper-toggle-button';
+// import '@material/mwc-tab-bar';
+// import '@material/mwc-tab';
 import '@vaadin/vaadin-combo-box/theme/material/vaadin-combo-box.js';
 import '@vaadin/vaadin-text-field/theme/material/vaadin-integer-field.js';    
 
@@ -102,6 +104,7 @@ class mainApp extends PolymerElement {
                         <iron-selector attr-for-selected="halaman" selected="{{halaman_sekarang}}" on-iron-select="onMenuSelect"> <!-- saat sudah berhasil login dia tidak mau ke halaman "Deposit". Variabel {{halaman_sekarang}} iseng2 saya ganti asal. Eh bisa. saya ngga ngerti kenapa -->
                             <paper-item halaman="Deposit"><iron-icon icon="list"></iron-icon>Deposit</paper-item>
                             <paper-item halaman="Ringkasan"><iron-icon icon="timeline"></iron-icon>Ringkasan</paper-item>
+                            <paper-item halaman="Dompet"><iron-icon icon="account-balance-wallet"></iron-icon>Dompet/Rekening</paper-item>
                             <paper-item halaman="Pengaturan"><iron-icon icon="image:tune"></iron-icon>Pengaturan</paper-item> <!-- icon "settings-ethernet" juga bagus -->
                             <hr>
                             <paper-item id="logout" on-tap="_tapLogOut"><iron-icon icon="exit-to-app"></iron-icon>Log out</paper-item>
@@ -118,13 +121,21 @@ class mainApp extends PolymerElement {
 
                         <iron-pages attr-for-selected="halaman" selected="{{halaman_sekarang}}">
                             <app-deposit halaman="Deposit"></app-deposit>
+                            
                             <div halaman="Ringkasan" id="spinnerRingkasan" class="horizontal layout center-justified">
                                 <paper-spinner id="spinner" active=""></paper-spinner>
                             </div>
                             <app-ringkasan halaman="Ringkasan"></app-ringkasan>
+
+                            <div halaman="Dompet" id="spinnerDompet" class="horizontal layout center-justified">
+                                <paper-spinner id="spinner" active=""></paper-spinner>
+                            </div>
+                            <app-dompet halaman="Dompet"></app-dompet>
+                            
                             <div halaman="Pengaturan" id="spinnerPengaturan" class="horizontal layout center-justified">
                                 <paper-spinner id="spinner" active=""></paper-spinner>
                             </div>
+                            <app-pengaturan halaman="Pengaturan"></app-pengaturan>
                         </iron-pages>
                 
                         <div style="height: 120px"></div>
@@ -174,6 +185,18 @@ class mainApp extends PolymerElement {
                     this.$.spinnerRingkasan.remove();
                 }).catch((reason) => {
                     console.log("app-ringkasan failed to load.", reason);
+                });
+            }
+        }
+
+        else if (this.halaman_sekarang == 'Dompet') {
+            if (!this.isDompetLoaded) {
+                import('./app-dompet.js').then(() => {
+                    console.log("[LOADED] app-dompet");
+                    this.isDompetLoaded = true;
+                    this.$.spinnerDompet.remove();
+                }).catch((reason) => {
+                    console.log("app-dompet failed to load.", reason);
                 });
             }
         }

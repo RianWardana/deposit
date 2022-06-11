@@ -12,9 +12,10 @@
   "author": "Rian Wardana",
   "license": "MIT",
   "dependencies": {
-    "@firebase/app": "^0.5.5",
+    "@firebase/app": "^0.6.28",
     "@firebase/auth": "^0.13.6",
-    "@firebase/database": "^0.5.22",
+    "@firebase/database": "^0.10.8",
+    "@material/mwc-tab-bar": "^0.22.1",
     "@polymer/app-layout": "^3.0.0",
     "@polymer/iron-flex-layout": "^3.0.0",
     "@polymer/iron-icon": "^3.0.0",
