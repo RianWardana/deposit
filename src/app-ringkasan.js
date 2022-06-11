@@ -169,10 +169,19 @@ class appRingkasan extends LitElement {
                     }
                 }
             });
-            
-            this.pengeluaran = pengeluaran;
+
             this.total = total;
-            this.totalPerKategori = totalPerKategori;
+
+            // Pengeluaran diurut descending
+            this.pengeluaran = Object.fromEntries(
+                Object.entries(pengeluaran).sort(([,a],[,b]) => b-a)
+            );
+
+            // Total per kategori diurut descending
+            this.totalPerKategori = Object.fromEntries(
+                Object.entries(totalPerKategori).sort(([,a],[,b]) => b-a)
+            );
+
         });   
     }
 }
