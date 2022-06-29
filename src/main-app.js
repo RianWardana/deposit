@@ -133,12 +133,12 @@ class mainApp extends PolymerElement {
                             <!-- <div halaman="Dompet" id="spinnerDompet" class="horizontal layout center-justified">
                                 <paper-spinner id="spinner" active=""></paper-spinner>
                             </div>
-                            <app-dompet halaman="Dompet"></app-dompet>
+                            <app-dompet halaman="Dompet"></app-dompet> -->
                             
                             <div halaman="Pengaturan" id="spinnerPengaturan" class="horizontal layout center-justified">
                                 <paper-spinner id="spinner" active=""></paper-spinner>
                             </div>
-                            <app-pengaturan halaman="Pengaturan"></app-pengaturan> -->
+                            <app-pengaturan halaman="Pengaturan"></app-pengaturan>
                         </iron-pages>
                 
                         <div style="height: 120px"></div>
@@ -203,7 +203,7 @@ class mainApp extends PolymerElement {
         /*
         Isu 11 Juni 2022: file:///home/runner/work/deposit/deposit/src/main-app.js(194,17) error [could-not-load] - Unable to load import: Not found: /home/runner/work/deposit/deposit/src/app-dompet.js
         Terjadi saat build otomatis oleh Github Actions
-        Solusi sementara: disable Dompet dan Pengaturan dulu
+        Solusi sementara: disable Dompet dulu
         */
 
         // else if (this.halaman_sekarang == 'Dompet') {
@@ -218,17 +218,17 @@ class mainApp extends PolymerElement {
         //     }
         // }
 
-        // else if (this.halaman_sekarang == 'Pengaturan') {
-        //     if (!this.isPengaturanLoaded) {
-        //         import('./app-pengaturan.js').then(() => {
-        //             console.log("[LOADED] app-pengaturan");
-        //             this.isPengaturanLoaded = true;
-        //             this.$.spinnerPengaturan.remove();
-        //         }).catch((reason) => {
-        //             console.log("app-pengaturan failed to load.", reason);
-        //         });
-        //     }
-        // }
+        else if (this.halaman_sekarang == 'Pengaturan') {
+            if (!this.isPengaturanLoaded) {
+                import('./app-pengaturan.js').then(() => {
+                    console.log("[LOADED] app-pengaturan");
+                    this.isPengaturanLoaded = true;
+                    this.$.spinnerPengaturan.remove();
+                }).catch((reason) => {
+                    console.log("app-pengaturan failed to load.", reason);
+                });
+            }
+        }
     }
 
     _tapLogOut() {
