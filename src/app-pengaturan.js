@@ -66,7 +66,7 @@ class appPengaturan extends LitElement {
             // })
         }
 
-        _tapSimpan() {
+        _tapSimpan() { 
             let batasBaru = this.shadowRoot.getElementById('inputBatas').value;
     
             if ((batasBaru > 1) && (batasBaru != this.batas)) { 
