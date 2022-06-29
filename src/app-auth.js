@@ -18,7 +18,6 @@ class appAuth extends LitElement {
         return html`
             <style>
                 :host {
-                    height: 100vh;
                     margin-top: 20vh;
                     display: flex;
                     justify-content: center;

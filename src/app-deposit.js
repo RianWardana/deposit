@@ -65,6 +65,7 @@ class appDeposit extends PolymerElement {
     }
 
     ready() {
+        console.log("[LOADED] app-deposit");
         super.ready();
         this.setupToolbar();
 

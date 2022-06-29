@@ -38,7 +38,6 @@ import '@vaadin/vaadin-text-field/theme/material/vaadin-integer-field.js';
 
 import './shared-styles.js';
 import './app-auth.js';
-import './app-deposit.js';
 
 // saat semua sudah convert ke LitElement, ganti bundler ke Parcel karena polymer-cli lama deploy-nya di GitHub Action
 
@@ -97,6 +96,10 @@ class mainApp extends PolymerElement {
                     on-login-status-changed="onLoginStatusChanged"
                     logout-request="{{triggerLogout}}">
                 </app-auth>
+
+                <div id="spinnerDeposit" class="horizontal layout center-justified">
+                    <paper-spinner id="spinner" active=""></paper-spinner>
+                </div>
 
                 <app-drawer-layout id="appdrawerlayout" fullbleed="">
                     <app-drawer id="appdrawer" slot="drawer">
@@ -172,6 +175,14 @@ class mainApp extends PolymerElement {
 
     onLoginStatusChanged(e) {
         this.sudah_login = e.detail;
+
+        if (e.detail == 1) {
+            import('./app-deposit.js').then(() => {
+                this.sudah_login = 2
+            }).catch((reason) => {
+                console.log("app-deposit failed to load.", reason);
+            });
+        }
     }
 
     // Lazy-loading halaman non-esensial
