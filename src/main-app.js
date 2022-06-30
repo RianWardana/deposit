@@ -1,6 +1,10 @@
 /* <link rel="import" href="../bower_components/platinum-sw/platinum-sw-register.html"> */
 /* <link rel="import" href="../bower_components/platinum-sw/platinum-sw-cache.html"> */
 
+// To-do: 
+// 1. Ganti file ini dan app-deposit ke LitElement
+// 2. Ubah material polymer menjadi vaadin atau @material
+
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/app-layout/app-drawer/app-drawer';
 import '@polymer/app-layout/app-drawer-layout/app-drawer-layout';
@@ -31,10 +35,10 @@ import '@polymer/paper-spinner/paper-spinner';
 import '@polymer/paper-tabs';      
 import '@polymer/paper-toast';
 import '@polymer/paper-toggle-button';
-// import '@material/mwc-tab-bar';
-// import '@material/mwc-tab';
-import '@vaadin/vaadin-combo-box/theme/material/vaadin-combo-box.js';
-import '@vaadin/vaadin-text-field/theme/material/vaadin-integer-field.js';    
+
+// import '@vaadin/tabs/theme/material/vaadin-tabs.js';
+import '@vaadin/combo-box/theme/material/vaadin-combo-box.js';
+import '@vaadin/integer-field/theme/material/vaadin-integer-field.js';   
 
 import './shared-styles.js';
 import './app-auth.js';

@@ -31,7 +31,16 @@ class rekeningList extends LitElement {
                     <span><b>Rp${this._formatSaldo(this.saldo)}</b></span>
                 </paper-material>
                 
-                ${until(
+                ${this.data.map((item) => html`
+                    <rekening-item 
+                        waktu="${item.waktu}" 
+                        nama="${item.nama}" 
+                        jumlah="${item.jumlah}" 
+                        jenis="${item.jenis}">
+                    </rekening-item>
+                `)}
+
+                <!-- ${until(
                     new Promise(resolve => {
                         if (typeof this.data == 'undefined') return;
                         let load = this.data.map(item => html`
@@ -50,7 +59,7 @@ class rekeningList extends LitElement {
                             <paper-spinner active></paper-spinner>
                         </div>
                     `
-                )}
+                )} -->
             </div>
         `;
     }

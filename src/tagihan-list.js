@@ -76,7 +76,16 @@ class tagihanList extends LitElement {
                 </paper-material>
 
                 <!-- DAFTAR PENGELUARAN -->
-                ${until(
+                ${this.data.map((item) => html`
+                    <tagihan-item 
+                        key="${item.key}"
+                        waktu="${item.waktu}" 
+                        nama="${item.nama}" 
+                        jumlah="${item.jumlah}">
+                    </tagihan-item>
+                `)}
+
+                <!-- ${until(
                     new Promise(resolve => {
                         if (typeof this.data == 'undefined') return;
                         let pengeluaran = this.data.map(item => html`
@@ -91,6 +100,7 @@ class tagihanList extends LitElement {
                         let button = html`
                             <paper-button id="buttonArsipkan" raised @click="${this.onClick}">Arsipkan Pengeluaran</paper-button>
                         `;
+
                         resolve(html`${pengeluaran} ${button}`);
                     })
                 , 
@@ -99,7 +109,7 @@ class tagihanList extends LitElement {
                             <paper-spinner active></paper-spinner>
                         </div>
                     `
-                )}
+                )} -->
             </div>
             
             <paper-toast id="toastLunas" duration="5000" text="Entri pengeluaran akan diarsipkan.">

@@ -1,9 +1,6 @@
 import {LitElement, html, css} from 'lit-element';
 import {styles} from './lit-styles.js';
 import {firebase} from './firebase.js';
-// import '@material/mwc-tab-bar';
-// import '@material/mwc-tab';
-
 
 class appPengaturan extends LitElement {
     static get properties() {
@@ -34,6 +31,7 @@ class appPengaturan extends LitElement {
     render() {
         return html`
             <app-header-layout>
+       
                 <div class="narrow" style="margin-top: 30px">
                     <paper-material>
                         <div class="flexSpaceBetween">
@@ -80,7 +78,6 @@ class appPengaturan extends LitElement {
                 console.log('kuntet')
             }
         }
-
 
 }
 
