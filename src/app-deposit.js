@@ -1,4 +1,5 @@
-import {PolymerElement, html} from '@polymer/polymer';
+import {LitElement, html, css} from 'lit-element';
+import {styles} from './lit-styles.js';
 
 import './rekening-list.js';
 import './rekening-item.js';
@@ -9,65 +10,79 @@ import './tagihan-item.js';
 import './tagihan-tambah.js';
 import './tagihan-edit.js';
 
-// akan convert ke LitElement saat sudah pasti bahwa paper-tab bekerja
+class appDeposit extends LitElement {
+    static get properties() {
+        return {
+            tab_sekarang: String,
+            uid: String,
+            tabs: Array,
+            dataEdit: Object,
+            mutasiBaru: Object
+        }
+    }
 
-class appDeposit extends PolymerElement {
-    static get template() {
+    static get styles() {
+        return [styles, css`
+            :host {
+                display: block;
+            }
+
+            vaadin-tab {
+                text-decoration: none;
+                font-weight: normal;
+                color: #fff;
+            }
+
+            vaadin-tab:focus {
+                text-decoration: none;
+                font-weight: normal;
+                color: #fff;
+            }
+
+            vaadin-tab[selected] {
+                box-shadow: inset 0 -2px 0 0 #fff;
+            }
+
+            app-header {
+                background-color: var(--app-primary-color);
+                color: #fff;
+            }
+        `];
+    }
+
+    render() {
         return html`
-            <style>
-                :host {
-                    display: block;
-                    --paper-tabs-selection-bar-color: #83ADCF; /*200*/
-                    --paper-tab-ink: #043F71;
-                }
-
-                paper-tab:focus {
-                    text-decoration: none;
-                    font-weight: normal;
-                }
-
-                app-header {
-                    background-color: var(--app-primary-color);
-                    color: #fff;
-                }
-            </style>
-
             <app-header-layout>
-                <app-header id="appHeader" fixed="" shadow="" slot="header">
-                    <!-- ganti dengan mwc-tab-bar -->
-                    <paper-tabs attr-for-selected="tab" selected="{{tab_sekarang}}" noink="">
-                        <paper-tab tab="rekening">REKENING</paper-tab>
-                        <paper-tab tab="pengeluaran">PENGELUARAN</paper-tab>
-                        <paper-tab tab="tunai">AKUN-AKUN</paper-tab>
-                    </paper-tabs>
+                <app-header id="app-header" fixed="" shadow="" slot="header">
+                    <vaadin-tabs theme="equal-width-tabs" @selected-changed="${this.selectedChanged}">
+                        <vaadin-tab>Pengeluaran</vaadin-tab>    
+                        <vaadin-tab>Rekening</vaadin-tab>
+                    </vaadin-tabs>
                 </app-header>
                 
-                <iron-pages id="iron-pages-deposit" attr-for-selected="tab" selected="[[tab_sekarang]]">
-                    <div tab="rekening">
-                        <rekening-list></rekening-list>
-                        <rekening-tambah salinan-pengeluaran="[[mutasiBaru]]"></rekening-tambah>
-                    </div>
-                    <div tab="pengeluaran">
-                        <tagihan-list></tagihan-list>
-                        <tagihan-tambah on-mutasi-baru="onMutasiBaru"></tagihan-tambah>
-                        <tagihan-edit data-edit="[[dataEdit]]"></tagihan-edit>
-                    </div>
-                </iron-pages>
+                <div id="pengeluaran">
+                    <tagihan-list></tagihan-list>
+                    <tagihan-tambah @mutasi-baru="${this.onMutasiBaru}"></tagihan-tambah>
+                    <tagihan-edit .dataEdit="${this.dataEdit}"></tagihan-edit>
+                </div>
+
+                <div id="rekening">
+                    <rekening-list></rekening-list>
+                    <rekening-tambah .salinanPengeluaran="${this.mutasiBaru}"></rekening-tambah>
+                </div>
+
             </app-header-layout>
         `;
     }
 
-    static get properties() {
-        return {
-            tab_sekarang: { type: String, value: 'pengeluaran' },
-            uid: String
-        };
+    constructor() {
+        super();
+        console.log("[LOADED] app-deposit");
+        this.tabs = ['pengeluaran', 'rekening']
     }
 
-    ready() {
-        console.log("[LOADED] app-deposit");
-        super.ready();
-        this.setupToolbar();
+    firstUpdated() {
+        this.setupToolbar(); 
 
         this.addEventListener('tagihan-edit', e => {
             this.dataEdit = e.detail;
@@ -75,11 +90,23 @@ class appDeposit extends PolymerElement {
     }
 
     setupToolbar() {
-        this.$.appHeader.style.top = '64px';
+        this.shadowRoot.getElementById('app-header').style.top = '64px'
         window.that = this;
         window.addEventListener('scroll', function() {
-            that.$.appHeader.style.top = (window.pageYOffset <= 64 ? (64 - window.pageYOffset) : 0) + 'px';
+            that.shadowRoot.getElementById('app-header').style.top = (window.pageYOffset <= 64 ? (64 - window.pageYOffset) : 0) + 'px';
         });
+    }
+
+    selectedChanged(e) {
+        let selected = e.detail.value;
+
+        // Hide semua page
+        this.tabs.map(tab => {
+            this.shadowRoot.getElementById(tab).style.display = 'none'
+        })
+
+        // Hanya show page yang dipilih
+        this.shadowRoot.getElementById(this.tabs[selected]).style.display = 'block'
     }
 
     // hanya untuk handle salin pengeluaran ke rekening

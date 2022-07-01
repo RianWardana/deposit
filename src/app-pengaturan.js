@@ -22,9 +22,7 @@ class appPengaturan extends LitElement {
 
     static get styles() {
         return [styles, css`
-            #inputBatas {
-                
-            }
+            
         `];
     }
 
@@ -47,37 +45,37 @@ class appPengaturan extends LitElement {
         `;
     }
 
-        loadBatas() {
+    loadBatas() {
+        let dbBatasPengeluaran = firebase.database().ref(this.uid + "/batasPengeluaran")
+
+        dbBatasPengeluaran.on('value', dataBatas => {
+            this.batas = dataBatas.val()
+        })
+
+        // firebase.database().ref(this.uid).child("dompet").on('value', queryResult => {
+        //     this.dompet = [];
+
+        //     queryResult.forEach(namaDompet => {
+        //         this.dompet = [...this.dompet, namaDompet.val()];
+        //         console.log(this.dompet)
+        //     })
+        // })
+    }
+
+    _tapSimpan() { 
+        let batasBaru = this.shadowRoot.getElementById('inputBatas').value;
+
+        if ((batasBaru > 1) && (batasBaru != this.batas)) { 
             let dbBatasPengeluaran = firebase.database().ref(this.uid + "/batasPengeluaran")
 
-            dbBatasPengeluaran.on('value', dataBatas => {
-                this.batas = dataBatas.val()
-            })
+            dbBatasPengeluaran.set(batasBaru).then(e => 
+                console.log("Edit batas pengeluaran berhasil.")
+            ).catch(e => console.log(e.message) );
 
-            // firebase.database().ref(this.uid).child("dompet").on('value', queryResult => {
-            //     this.dompet = [];
-
-            //     queryResult.forEach(namaDompet => {
-            //         this.dompet = [...this.dompet, namaDompet.val()];
-            //         console.log(this.dompet)
-            //     })
-            // })
+        } else {
+            console.log('kuntet')
         }
-
-        _tapSimpan() { 
-            let batasBaru = this.shadowRoot.getElementById('inputBatas').value;
-    
-            if ((batasBaru > 1) && (batasBaru != this.batas)) { 
-                let dbBatasPengeluaran = firebase.database().ref(this.uid + "/batasPengeluaran")
-
-                dbBatasPengeluaran.set(batasBaru).then(e => 
-                    console.log("Edit batas pengeluaran berhasil.")
-                ).catch(e => console.log(e.message) );
-
-            } else {
-                console.log('kuntet')
-            }
-        }
+    }
 
 }
 

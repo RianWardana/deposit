@@ -36,7 +36,7 @@ import '@polymer/paper-tabs';
 import '@polymer/paper-toast';
 import '@polymer/paper-toggle-button';
 
-// import '@vaadin/tabs/theme/material/vaadin-tabs.js';
+import '@vaadin/tabs/theme/material/vaadin-tabs.js';
 import '@vaadin/combo-box/theme/material/vaadin-combo-box.js';
 import '@vaadin/integer-field/theme/material/vaadin-integer-field.js';   
 
