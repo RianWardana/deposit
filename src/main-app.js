@@ -2,7 +2,7 @@
 /* <link rel="import" href="../bower_components/platinum-sw/platinum-sw-cache.html"> */
 
 // To-do: 
-// 1. Ganti file ini dan app-deposit ke LitElement
+// 1. Ganti file ini ke LitElement
 // 2. Ubah material polymer menjadi vaadin atau @material
 
 import {PolymerElement, html} from '@polymer/polymer';
