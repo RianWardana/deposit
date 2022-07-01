@@ -16,6 +16,13 @@ export const styles = css`
         margin: 20px;
     }
 
+    paper-fab {
+        background-color: #4CAF50;
+        position: fixed;
+        right: 5%;
+        bottom: 5%;
+    }
+
     paper-material {
         background: white;
         border-radius: 2px;
