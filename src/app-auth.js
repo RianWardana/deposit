@@ -52,12 +52,46 @@ class appAuth extends LitElement {
             if (firebaseUser) {
                 var event = new CustomEvent('login-status-changed', {detail: 1});
                 this.shadowRoot.getElementById('toast').close();
+                this.uid = firebaseUser.uid;
+                this.checkUserData();
             }
             else {
                 var event = new CustomEvent('login-status-changed', {detail: 0});
             }
             this.dispatchEvent(event);
         })
+    }
+
+    checkUserData() {
+        let refKategoriPengeluaran = firebase.database().ref(this.uid + "/kategoriPengeluaran")
+        let refNamaMutasi = firebase.database().ref(this.uid + "/namaMutasi")
+
+        refKategoriPengeluaran.get().then(data => {
+            if (!data.exists()) {
+                refKategoriPengeluaran.set({
+                    0: {nama: 'Makan', entri: ['Makan','Minum']},
+                    1: {nama: 'Transportasi', entri: ['Bensin','Parkir']},
+                    99: {nama: 'Lainnya', entri: ['Lainnya']}
+                }).then(e => {
+                    console.log("Penambahan kategori pengeluaran berhasil.")
+                }).catch(e => 
+                    console.log(e.message));
+            }
+        })
+
+        refNamaMutasi.get().then(data => {
+            if (!data.exists()) {
+                refNamaMutasi.set({
+                    0: {jenis: 'kredit', nama: 'Saldo Awal'}
+                }).then(e => {
+                    console.log("Penambahan nama mutasi berhasil.")
+                }).catch(e => 
+                    console.log(e.message));
+            }
+        })
+
+
+        
     }
 
     // If there is a logout request from the parent component
