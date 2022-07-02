@@ -2,8 +2,8 @@ import {LitElement, html, css} from 'lit-element';
 import {styles} from './lit-styles.js';
 import {firebase} from './firebase.js';
 
-import {MDCChipSet} from '@material/chips';
-// const chipset = new MDCChipSet(document.querySelector('.mdc-evolution-chip-set'));
+import '@material/mwc-textfield/mwc-textfield.js';
+import '@material/mwc-textarea/mwc-textarea.js';
 
 class appPengaturan extends LitElement {
     static get properties() {
@@ -27,13 +27,15 @@ class appPengaturan extends LitElement {
 
     static get styles() {
         return [styles, css`
-            paper-button {
-                color: #3f3f3f;
-                background: #ebebeb;
-                padding: 0 16px 0;
-                font-weight: 500;
-                margin: 0;
-                height: 36px
+            mwc-textfield {
+                margin-top: 16px;
+                width: 100%;
+            }
+
+            mwc-textarea {
+                margin-top: 16px;
+                height: 150px;
+                width: 100%;
             }
 
             paper-fab {
@@ -41,7 +43,7 @@ class appPengaturan extends LitElement {
             }
 
             paper-material {
-                padding: 16px
+                padding: 16px;
             }
 
             vaadin-integer-field {
@@ -62,7 +64,7 @@ class appPengaturan extends LitElement {
                                 <div slot="prefix">Rp</div>
                             </vaadin-integer-field>
                         </div>
-                        <paper-button id="btnSimpan" @click="${this._tapSimpan}">Simpan</paper-button>
+                        <mwc-button id="btnSimpan" @click="${this._tapSimpan}">Simpan</mwc-button>
                     </paper-material>
                 
                     ${this.kategoriPengeluaran.map(item => {
@@ -71,13 +73,14 @@ class appPengaturan extends LitElement {
                                 <div>${item.nama}</div>
                                 <div>
                                     ${item.entri.map(item2 => { return html `
-                                        <span>${item2}</span>
+                                        <li>${item2}</li>
                                     ` })}
                                 </div>
-                                <span class="mdc-evolution-chip__text-label">Chip two</span>
-                                <paper-button @click="${
-                                    e => this._tapEdit(this.key, this.nama, this.jumlah)
-                                }">Edit</paper-button>
+
+                                <mwc-button @click="${
+                                    () => this._tapEdit(item.key, item.nama, item.entri)
+                                }">Edit</mwc-button>
+
                             </paper-material>
                         `
                     })}
@@ -85,8 +88,25 @@ class appPengaturan extends LitElement {
                 </div>
             </app-header-layout>
 
+            <mwc-dialog id="dialog" heading="Yups">
+                <div>
+                    <mwc-textfield id="inputKategori" outlined label="Nama Kategori"></mwc-textfield>
+                </div>
+                <div>
+                    <mwc-textarea id="inputEntri" outlined label="Pengeluaran dalam Kategori Ini"></mwc-textarea>
+                </div>
+                <mwc-button slot="primaryAction" dialogAction="discard">Simpan</mwc-button>
+
+                <mwc-button slot="secondaryAction" dialogAction="cancel">Batal</mwc-button>
+                <mwc-button slot="secondaryAction" dialogAction="cancel">Hapus</mwc-button>
+            </mwc-dialog>
+
             <paper-fab id="fab" icon="add" @click="${this.onFabClick}"></paper-fab>
         `;
+    }
+
+    firstUpdated() {
+        
     }
 
     loadBatas() {
@@ -145,6 +165,16 @@ class appPengaturan extends LitElement {
         } else {
             console.log('kuntet')
         }
+    }
+
+    _tapEdit(a,b,c) {
+        console.log(`${a}: ${b}`)
+        let entriString = c.toString().replace(/ *, */g, '\n');
+
+        this.shadowRoot.getElementById('dialog').show()
+        this.shadowRoot.getElementById('dialog').heading = 'Edit Kategori Pengeluaran'
+        this.shadowRoot.getElementById('inputKategori').value = b
+        this.shadowRoot.getElementById('inputEntri').value = entriString
     }
 
 }

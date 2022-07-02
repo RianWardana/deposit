@@ -13,11 +13,11 @@ class tagihanEdit extends LitElement {
 
     static get styles() {
         return [styles, css`
-            paper-button {
+            mwc-button {
                 color: #FFAB00;
             }
 
-            paper-button[disabled] {
+            mwc-button[disabled] {
                 color: #a8a8a8;
             }
             
@@ -42,9 +42,9 @@ class tagihanEdit extends LitElement {
                     </vaadin-integer-field>
                 </div>
                 <div class="buttons">
-                    <paper-button dialog-confirm>Batal</paper-button>
-                    <paper-button id="btnHapus" @click="${this._tapHapus}">Hapus</paper-button>
-                    <paper-button id="btnSimpan" @click="${this._tapSimpan}">Simpan</paper-button>
+                    <mwc-button dialog-confirm>Batal</mwc-button>
+                    <mwc-button id="btnHapus" @click="${this._tapHapus}">Hapus</mwc-button>
+                    <mwc-button id="btnSimpan" @click="${this._tapSimpan}">Simpan</mwc-button>
                 </div>
             </paper-dialog>
 

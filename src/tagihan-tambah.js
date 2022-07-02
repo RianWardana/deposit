@@ -13,11 +13,11 @@ class tagihanTambah extends LitElement {
 
     static get styles() {
         return [styles, css`
-            paper-button {
+            mwc-button {
                 color: #FFAB00;
             }
 
-            paper-button[disabled] {
+            mwc-button[disabled] {
                 color: #a8a8a8;
             }
 
@@ -28,9 +28,6 @@ class tagihanTambah extends LitElement {
 
             paper-fab {
                 background-color: #4CAF50;
-                position: fixed;
-                right: 5%;
-                bottom: 5%;
             }
 
             @media (max-height: 450px) {
@@ -53,8 +50,8 @@ class tagihanTambah extends LitElement {
                 </div>
                 <paper-checkbox id="inputSalin">Salin ke rekening</paper-checkbox>
                 <div class="buttons">
-                    <paper-button dialog-confirm>Batal</paper-button>
-                    <paper-button id="btnTambah" disabled @click="${this.tambah}">Tambah</paper-button>
+                    <mwc-button dialog-confirm>Batal</mwc-button>
+                    <mwc-button id="btnTambah" disabled @click="${this.tambah}">Tambah</mwc-button>
                 </div>
             </paper-dialog>
 
@@ -139,11 +136,6 @@ class tagihanTambah extends LitElement {
         this.shadowRoot.getElementById('fab').style.display = 'none';
         this.shadowRoot.getElementById('btnTambah').setAttribute('disabled', true);
     }
-
-    // onFabClick() {
-    //     let db = firebase.database().ref(this.uid).child("kategoriPengeluaran");
-    //     db.set(this.kategoriPengeluaran);
-    // }
 
     onChangeInput() {
         let inputNama = this.shadowRoot.getElementById('comboBox').value;

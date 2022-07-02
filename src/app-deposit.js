@@ -1,6 +1,18 @@
 import {LitElement, html, css} from 'lit-element';
 import {styles} from './lit-styles.js';
 
+import '@material/mwc-dialog/mwc-dialog.js';
+
+import '@polymer/paper-checkbox';  
+import '@polymer/paper-dialog';    
+import '@polymer/paper-fab';
+import '@polymer/paper-item';
+import '@polymer/paper-tabs'; 
+
+import '@vaadin/tabs/theme/material/vaadin-tabs.js';
+import '@vaadin/combo-box/theme/material/vaadin-combo-box.js';
+import '@vaadin/integer-field/theme/material/vaadin-integer-field.js';   
+
 import './rekening-list.js';
 import './rekening-item.js';
 import './rekening-tambah.js';

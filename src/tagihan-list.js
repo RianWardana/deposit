@@ -32,7 +32,7 @@ class tagihanList extends LitElement {
                 transition: max-height 0.5s ease-out;
             }
 
-            paper-button {
+            mwc-button {
                 color: white;
                 background: #5cb860;
                 padding: 10px 20px;
@@ -98,7 +98,7 @@ class tagihanList extends LitElement {
                         `);
 
                         let button = html`
-                            <paper-button id="buttonArsipkan" raised @click="${this.onClick}">Arsipkan Pengeluaran</paper-button>
+                            <mwc-button id="buttonArsipkan" raised @click="${this.onClick}">Arsipkan Pengeluaran</mwc-button>
                         `;
 
                         resolve(html`${pengeluaran} ${button}`);

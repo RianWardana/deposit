@@ -27,7 +27,7 @@ class appAuth extends LitElement {
                     width: 280px;
                 }
 
-                paper-button {
+                mwc-button {
                     background-color: #1E88E5;
                     color: white;
                     margin: 10px 0 10px;
@@ -37,8 +37,8 @@ class appAuth extends LitElement {
 
             <div id="container" class="vertical layout">
                 <iron-image style="width:280px; height:80px;" sizing="cover" src="./img/auth.png"></iron-image>
-                <paper-button raised="" @click="${this._tapLoginGoogle}">Sign in with Google</paper-button>
-                <paper-button raised="" @click="${this._tapLoginMicrosoft}">Sign in with Microsoft</paper-button>
+                <mwc-button raised="" @click="${this._tapLoginGoogle}">Sign in with Google</mwc-button>
+                <mwc-button raised="" @click="${this._tapLoginMicrosoft}">Sign in with Microsoft</mwc-button>
                 <span>Your privacy is very important to us. This app will not share your personal information.</span>
             </div>
 

@@ -21,9 +21,6 @@ class rekeningTambah extends LitElement {
             
             paper-fab {
                 background-color: var(--app-primary-color);
-                position: fixed;
-                right: 5%;
-                bottom: 5%;
             }
 
             @media (max-height: 450px) {
@@ -63,8 +60,8 @@ class rekeningTambah extends LitElement {
                     <span>Kredit</span>
                 </div>
                 <div class="buttons">
-                    <paper-button dialog-confirm>Batal</paper-button>
-                    <paper-button disabled id="btnTambah" @click="${this.tambah}">Tambah</paper-button>
+                    <mwc-button dialog-confirm>Batal</mwc-button>
+                    <mwc-button disabled id="btnTambah" @click="${this.tambah}">Tambah</mwc-button>
                 </div>
             </paper-dialog>
 

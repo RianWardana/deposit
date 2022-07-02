@@ -2,8 +2,9 @@
 /* <link rel="import" href="../bower_components/platinum-sw/platinum-sw-cache.html"> */
 
 // To-do: 
-// 1. Ganti file ini ke LitElement
-// 2. Ubah material polymer menjadi vaadin atau @material
+// 1. Ubah material polymer menjadi vaadin atau mwc
+// 2. Ganti file ini ke LitElement
+// 3. Ganti bundler ke Parcel karena polymer-cli lama deploy-nya di GitHub Action
 
 import {PolymerElement, html} from '@polymer/polymer';
 import '@polymer/app-layout/app-drawer/app-drawer';
@@ -23,27 +24,16 @@ import '@polymer/iron-selector/iron-selector';
 
 import '@polymer/neon-animation/neon-animated-pages';
 
-import '@polymer/paper-button';    
-import '@polymer/paper-checkbox';  
-import '@polymer/paper-dialog';    
-import '@polymer/paper-fab';       
+import '@material/mwc-button/mwc-button.js';  
 import '@polymer/paper-icon-button';
 import '@polymer/paper-input/paper-input';
-import '@polymer/paper-item';
 import '@polymer/paper-material';  
 import '@polymer/paper-spinner/paper-spinner'; 
-import '@polymer/paper-tabs';      
 import '@polymer/paper-toast';
 import '@polymer/paper-toggle-button';
 
-import '@vaadin/tabs/theme/material/vaadin-tabs.js';
-import '@vaadin/combo-box/theme/material/vaadin-combo-box.js';
-import '@vaadin/integer-field/theme/material/vaadin-integer-field.js';   
-
 import './shared-styles.js';
 import './app-auth.js';
-
-// saat semua sudah convert ke LitElement, ganti bundler ke Parcel karena polymer-cli lama deploy-nya di GitHub Action
 
 class mainApp extends PolymerElement {
     static get template() {
@@ -53,6 +43,7 @@ class mainApp extends PolymerElement {
                     display: block;
                     --app-primary-color: #1E88E5; /*500 065A9F*/
                     --app-secondary-color: black;
+                    --mdc-theme-primary: #1E88E5;
                 }
 
                 app-drawer-layout:not([narrow]) [drawer-toggle] {
