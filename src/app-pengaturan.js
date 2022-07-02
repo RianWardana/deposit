@@ -27,6 +27,14 @@ class appPengaturan extends LitElement {
 
     static get styles() {
         return [styles, css`
+            h2 {
+                margin: 0 8px 0;
+            }
+
+            p {
+                margin: 8px
+            }
+
             mwc-textfield {
                 margin-top: 16px;
                 width: 100%;
@@ -58,8 +66,8 @@ class appPengaturan extends LitElement {
             <app-header-layout>
                 <div class="narrow" style="margin-top: 30px">
                     <paper-material>
-                        <div>Batas Pengeluaran</div>
-                        <div class="">
+                        <h2>Batas Pengeluaran</h2>
+                        <div style="margin-left: 8px">
                             <vaadin-integer-field id="inputBatas" min="1" @input="${this.onChangeInput}" value="${this.batas}">
                                 <div slot="prefix">Rp</div>
                             </vaadin-integer-field>
@@ -67,15 +75,19 @@ class appPengaturan extends LitElement {
                         <mwc-button id="btnSimpan" @click="${this._tapSimpan}">Simpan</mwc-button>
                     </paper-material>
                 
+                    <hr style="margin: 32px 0px 32px">
+                    <h3>Kategori Pengeluaran</h3>
+
                     ${this.kategoriPengeluaran.map(item => {
                         return html `
                             <paper-material>
-                                <div>${item.nama}</div>
-                                <div>
-                                    ${item.entri.map(item2 => { return html `
-                                        <li>${item2}</li>
-                                    ` })}
-                                </div>
+                                <h2>${item.nama}</h2>
+                                <p>
+                                    ${item.entri.map((item2,index) => { 
+                                        let koma = (index == 0 ? '' : ', ')
+                                        return html `${koma}${item2}` 
+                                    })}
+                                </p>
 
                                 <mwc-button @click="${
                                     () => this._tapEdit(item.key, item.nama, item.entri)
@@ -88,7 +100,7 @@ class appPengaturan extends LitElement {
                 </div>
             </app-header-layout>
 
-            <mwc-dialog id="dialog" heading="Yups">
+            <mwc-dialog id="dialog" @closed="${this._dialogClosed}">
                 <div>
                     <mwc-textfield id="inputKategori" outlined label="Nama Kategori"></mwc-textfield>
                 </div>
@@ -101,7 +113,7 @@ class appPengaturan extends LitElement {
                 <mwc-button slot="secondaryAction" dialogAction="cancel">Hapus</mwc-button>
             </mwc-dialog>
 
-            <paper-fab id="fab" icon="add" @click="${this.onFabClick}"></paper-fab>
+            <paper-fab id="fab" icon="add" @click="${this._tapAdd}"></paper-fab>
         `;
     }
 
@@ -175,6 +187,19 @@ class appPengaturan extends LitElement {
         this.shadowRoot.getElementById('dialog').heading = 'Edit Kategori Pengeluaran'
         this.shadowRoot.getElementById('inputKategori').value = b
         this.shadowRoot.getElementById('inputEntri').value = entriString
+    }
+
+    _tapAdd() {
+        this.shadowRoot.getElementById('dialog').show()
+        this.shadowRoot.getElementById('dialog').heading = 'Tambah Kategori Pengeluaran'
+        this.shadowRoot.getElementById('inputKategori').value = ''
+        this.shadowRoot.getElementById('inputEntri').value = ''
+
+        this.shadowRoot.getElementById('fab').style.display = 'none';
+    }
+
+    _dialogClosed() {
+        this.shadowRoot.getElementById('fab').style.display = 'block';
     }
 
 }
