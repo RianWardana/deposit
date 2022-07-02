@@ -115,8 +115,7 @@ class tagihanTambah extends LitElement {
 
         dbTagihan.child(epoch).set({
             nama: data.nama,
-            jumlah: parseInt(data.jumlah),
-            lunas: 0
+            jumlah: parseInt(data.jumlah)
         }).then(e => {
             console.log("Penambahan pengeluaran berhasil.")
         }).catch(e => 

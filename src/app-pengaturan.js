@@ -15,7 +15,6 @@ class appPengaturan extends LitElement {
 
     constructor() {
         super()
-        this.batas = 5000000
         firebase.auth().onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {
                 this.uid = firebaseUser.uid
@@ -110,7 +109,7 @@ class appPengaturan extends LitElement {
                 <mwc-button slot="primaryAction" dialogAction="discard">Simpan</mwc-button>
 
                 <mwc-button slot="secondaryAction" dialogAction="cancel">Batal</mwc-button>
-                <mwc-button slot="secondaryAction" dialogAction="cancel">Hapus</mwc-button>
+                <mwc-button id="btnHapus" slot="secondaryAction" dialogAction="cancel">Hapus</mwc-button>
             </mwc-dialog>
 
             <paper-fab id="fab" icon="add" @click="${this._tapAdd}"></paper-fab>
@@ -159,8 +158,6 @@ class appPengaturan extends LitElement {
             this.kategoriPengeluaran = this.kategoriPengeluaran.sort((a,b) => {
                 return ( (a.nama.toLowerCase() > b. nama.toLowerCase()) || (a.nama == 'Lainnya') ) ? 1 : -1
             })
-
-            console.log(this.kategoriPengeluaran)
         });
     }
 
@@ -180,13 +177,20 @@ class appPengaturan extends LitElement {
     }
 
     _tapEdit(a,b,c) {
-        console.log(`${a}: ${b}`)
         let entriString = c.toString().replace(/ *, */g, '\n');
 
         this.shadowRoot.getElementById('dialog').show()
         this.shadowRoot.getElementById('dialog').heading = 'Edit Kategori Pengeluaran'
         this.shadowRoot.getElementById('inputKategori').value = b
         this.shadowRoot.getElementById('inputEntri').value = entriString
+        this.shadowRoot.getElementById('inputKategori').removeAttribute('disabled')
+        this.shadowRoot.getElementById('btnHapus').removeAttribute('disabled')
+
+        // Kategori 'Lainnya' tidak dapat diedit atau dihapus
+        if (a == 99) {
+            this.shadowRoot.getElementById('inputKategori').setAttribute('disabled', true)
+            this.shadowRoot.getElementById('btnHapus').setAttribute('disabled', true)
+        }
     }
 
     _tapAdd() {

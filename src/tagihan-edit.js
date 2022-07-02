@@ -120,8 +120,7 @@ class tagihanEdit extends LitElement {
         // Set entri
         dbTagihan.child(data.key).set({
             nama: data.nama,
-            jumlah: parseInt(data.jumlah),
-            lunas: 0
+            jumlah: parseInt(data.jumlah)
         }).then(e => {
             console.log("Edit pengeluaran berhasil.");
         }).catch(e => 
