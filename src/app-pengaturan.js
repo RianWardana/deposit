@@ -9,7 +9,8 @@ class appPengaturan extends LitElement {
     static get properties() {
         return {
             batas: Number,
-            kategoriPengeluaran: Array
+            kategoriPengeluaran: Array,
+            keyEdit: Number
         }
     }
 
@@ -71,7 +72,7 @@ class appPengaturan extends LitElement {
                                 <div slot="prefix">Rp</div>
                             </vaadin-integer-field>
                         </div>
-                        <mwc-button id="btnSimpan" @click="${this._tapSimpan}">Simpan</mwc-button>
+                        <mwc-button id="btnSimpan" @click="${this._tapSimpanBatas}">Simpan</mwc-button>
                     </paper-material>
                 
                     <hr style="margin: 32px 0px 32px">
@@ -106,13 +107,13 @@ class appPengaturan extends LitElement {
                 <div>
                     <mwc-textarea id="inputEntri" outlined label="Pengeluaran dalam Kategori Ini"></mwc-textarea>
                 </div>
-                <mwc-button slot="primaryAction" dialogAction="discard">Simpan</mwc-button>
-
+                <mwc-button slot="primaryAction" @click="${this._tapSimpan}">Simpan</mwc-button>
                 <mwc-button slot="secondaryAction" dialogAction="cancel">Batal</mwc-button>
                 <mwc-button id="btnHapus" slot="secondaryAction" dialogAction="cancel">Hapus</mwc-button>
             </mwc-dialog>
 
             <paper-fab id="fab" icon="add" @click="${this._tapAdd}"></paper-fab>
+            <paper-toast id="toastKosong" text="Isian wajib diisi"></paper-toast>
         `;
     }
 
@@ -161,7 +162,7 @@ class appPengaturan extends LitElement {
         });
     }
 
-    _tapSimpan() { 
+    _tapSimpanBatas() { 
         let batasBaru = this.shadowRoot.getElementById('inputBatas').value;
 
         if ((batasBaru > 1) && (batasBaru != this.batas)) { 
@@ -177,6 +178,7 @@ class appPengaturan extends LitElement {
     }
 
     _tapEdit(a,b,c) {
+        this.keyEdit = a
         let entriString = c.toString().replace(/ *, */g, '\n');
 
         this.shadowRoot.getElementById('dialog').show()
@@ -194,12 +196,43 @@ class appPengaturan extends LitElement {
     }
 
     _tapAdd() {
+        let allKeys = this.kategoriPengeluaran.map(kategori => parseInt(kategori.key))
+        this.keyEdit = 101
+
+        // Cari angka key yang tersedia
+        for(let i = 0; i < 100; i++) {
+            if (!allKeys.includes(i)) {
+                this.keyEdit = i;
+                break;
+            }
+        }
+
         this.shadowRoot.getElementById('dialog').show()
         this.shadowRoot.getElementById('dialog').heading = 'Tambah Kategori Pengeluaran'
         this.shadowRoot.getElementById('inputKategori').value = ''
         this.shadowRoot.getElementById('inputEntri').value = ''
 
         this.shadowRoot.getElementById('fab').style.display = 'none';
+    }
+
+    _tapSimpan() {
+        let nama = this.shadowRoot.getElementById('inputKategori').value;
+        let entri = this.shadowRoot.getElementById('inputEntri').value.split('\n').filter(n => n);
+
+        if ((nama != "") && (entri != "")) { 
+            this.shadowRoot.getElementById('dialog').close();
+            this.kirimData({nama, entri});
+        } else {
+            this.shadowRoot.getElementById('toastKosong').open()
+        }
+    }
+
+    kirimData(data) {
+        firebase.database().ref(this.uid).child("kategoriPengeluaran").child(this.keyEdit).set(data)
+        .then(e => {
+            console.log("Edit berhasil.")
+        }).catch(e => 
+            console.log(e.message));
     }
 
     _dialogClosed() {
