@@ -109,7 +109,7 @@ class appPengaturan extends LitElement {
                 </div>
                 <mwc-button slot="primaryAction" @click="${this._tapSimpan}">Simpan</mwc-button>
                 <mwc-button slot="secondaryAction" dialogAction="cancel">Batal</mwc-button>
-                <mwc-button id="btnHapus" slot="secondaryAction" dialogAction="cancel">Hapus</mwc-button>
+                <mwc-button id="btnHapus" slot="secondaryAction" @click="${this._tapHapus}">Hapus</mwc-button>
             </mwc-dialog>
 
             <paper-fab id="fab" icon="add" @click="${this._tapAdd}"></paper-fab>
@@ -211,8 +211,15 @@ class appPengaturan extends LitElement {
         this.shadowRoot.getElementById('dialog').heading = 'Tambah Kategori Pengeluaran'
         this.shadowRoot.getElementById('inputKategori').value = ''
         this.shadowRoot.getElementById('inputEntri').value = ''
+        this.shadowRoot.getElementById('inputKategori').removeAttribute('disabled')
 
         this.shadowRoot.getElementById('fab').style.display = 'none';
+        this.shadowRoot.getElementById('btnHapus').setAttribute('disabled', true)
+    }
+
+    _tapHapus() {
+        this.shadowRoot.getElementById('dialog').close()
+        firebase.database().ref(this.uid).child("kategoriPengeluaran").child(this.keyEdit).remove()
     }
 
     _tapSimpan() {
