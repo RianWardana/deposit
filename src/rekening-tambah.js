@@ -6,9 +6,7 @@ class rekeningTambah extends LitElement {
     
     static get properties() {
         return {
-            // daftarNamaRekening: Array,
-            salinanPengeluaran: Object,
-            // jenisMutasi: Object
+            salinanPengeluaran: Object
         };
     }
 
@@ -46,7 +44,7 @@ class rekeningTambah extends LitElement {
         });
 
         return html`
-            <paper-dialog id="dialog" @iron-overlay-closed="${this._dialogClosed}">
+            <paper-dialog id="dialog" @iron-overlay-closed="${this._dialogClosed}" heading="Mutasi Rekening">
                 <h2>Mutasi Rekening</h2>
                 <div class="flexSpaceBetween">
                     <vaadin-combo-box id="comboBox" placeholder="Nama" @input="${this.onChangeInput}" allow-custom-value></vaadin-combo-box>
@@ -60,8 +58,8 @@ class rekeningTambah extends LitElement {
                     <span>Kredit</span>
                 </div>
                 <div class="buttons">
-                    <mwc-button dialog-confirm>Batal</mwc-button>
-                    <mwc-button disabled id="btnTambah" @click="${this.tambah}">Tambah</mwc-button>
+                    <mwc-button dialog-confirm slot="secondaryAction" dialogAction="cancel">Batal</mwc-button>
+                    <mwc-button slot="primaryAction" disabled id="btnTambah" @click="${this.tambah}">Tambah</mwc-button>
                 </div>
             </paper-dialog>
 

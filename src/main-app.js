@@ -1,12 +1,10 @@
-/* <link rel="import" href="../bower_components/platinum-sw/platinum-sw-register.html"> */
-/* <link rel="import" href="../bower_components/platinum-sw/platinum-sw-cache.html"> */
-
 // To-do: 
 // 1. Ubah material polymer menjadi vaadin atau mwc
-// 2. Ganti file ini ke LitElement
-// 3. Ganti bundler ke Parcel karena polymer-cli lama deploy-nya di GitHub Action
+// 2. Ganti bundler ke Parcel karena polymer-cli lama deploy-nya di GitHub Action
 
-import {PolymerElement, html} from '@polymer/polymer';
+import {LitElement, html, css} from 'lit-element';
+import {styles} from './lit-styles.js';
+
 import '@polymer/app-layout/app-drawer/app-drawer';
 import '@polymer/app-layout/app-drawer-layout/app-drawer-layout';
 import '@polymer/app-layout/app-header/app-header';
@@ -18,188 +16,196 @@ import '@polymer/iron-icon';
 import '@polymer/iron-icons';
 import '@polymer/iron-icons/image-icons.js';
 import '@polymer/iron-image';
-import '@polymer/iron-pages';
-import '@polymer/iron-selector/iron-selector';
-// <link rel="import" href="../bower_components/iron-overlay-behavior/iron-overlay-behavior.html">
 
-import '@polymer/neon-animation/neon-animated-pages';
+import '@material/mwc-button/mwc-button.js';
+import '@material/mwc-icon/mwc-icon.js';
+import '@material/mwc-list/mwc-list.js';
+import '@material/mwc-list/mwc-list-item.js';
 
-import '@material/mwc-button/mwc-button.js';  
 import '@polymer/paper-icon-button';
-import '@polymer/paper-input/paper-input';
 import '@polymer/paper-material';  
 import '@polymer/paper-spinner/paper-spinner'; 
 import '@polymer/paper-toast';
 import '@polymer/paper-toggle-button';
 
-import './shared-styles.js';
 import './app-auth.js';
 
-class mainApp extends PolymerElement {
-    static get template() {
+class mainApp extends LitElement {
+    static get styles() {
+        return [styles, css`
+            :host {
+                display: block;
+                --app-primary-color: #1E88E5; /*500 065A9F*/
+                --app-secondary-color: black;
+                --mdc-theme-primary: #1E88E5;
+            }
+
+            app-drawer-layout:not([narrow]) [drawer-toggle] {
+                display: none;
+            }
+
+            app-header {
+                background-color: var(--app-primary-color);
+                color: #fff;
+            }
+
+            div#pages > * {
+                position: absolute;
+                width: 100%;
+            }
+
+            iron-icon {
+                margin-right: 12px;
+            }
+
+            mwc-list-item, mwc-icon {
+                color: var(--app-primary-color);
+                font-weight: 500;
+            }
+
+            iron-selector > paper-item.iron-selected {
+                background: #e3ecf6;
+                color: var(--app-primary-color);
+            }
+
+            mwc-list-item#logout, mwc-list-item#logout > mwc-icon {
+                color: #c0392b;
+                font-weight: 500;
+            }
+        `]
+    }
+
+    render() {
         return html`
-            <style include="iron-flex iron-flex-alignment shared-styles">
-                :host {
-                    display: block;
-                    --app-primary-color: #1E88E5; /*500 065A9F*/
-                    --app-secondary-color: black;
-                    --mdc-theme-primary: #1E88E5;
-                }
-
-                app-drawer-layout:not([narrow]) [drawer-toggle] {
-                    display: none;
-                }
-
-                app-header {
-                    background-color: var(--app-primary-color);
-                    color: #fff;
-                }
-
-                hr {
-                    border: 0;
-                    height: 1px;
-                    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
-                }
-
-                iron-icon {
-                    margin-right: 12px;
-                }
-
-                iron-selector > paper-item {
-                    color: var(--app-primary-color);
-                    font-weight: 500;
-                    text-decoration: none;
-                    outline-style:none;
-                    box-shadow:none;
-                    border-color:transparent;
-                }
-
-                iron-selector > paper-item.iron-selected {
-                    background: #e3ecf6;
-                    color: var(--app-primary-color);
-                }
-
-                iron-selector > paper-item#logout {
-                    color: #c0392b;
-                    font-weight: 500;
-                }
-            </style>
-
             <!-- litElement best practice: "properties down, events up" -->
-            <neon-animated-pages selected="[[sudah_login]]">
+            <div id="container">
                 <app-auth 
-                    on-login-status-changed="onLoginStatusChanged"
-                    logout-request="{{triggerLogout}}">
+                    @login-status-changed="${this.onLoginStatusChanged}"
+                    .logoutRequest="${this.triggerLogout}">
                 </app-auth>
 
-                <div id="spinnerDeposit" class="horizontal layout center-justified">
+                <div id="spinnerDeposit" class="spinnerContainer">
                     <paper-spinner id="spinner" active=""></paper-spinner>
                 </div>
 
                 <app-drawer-layout id="appdrawerlayout" fullbleed="">
                     <app-drawer id="appdrawer" slot="drawer">
                         <iron-image style="width:256px; height:225px;" sizing="cover" src="./img/drawer.png"></iron-image>
-                        <iron-selector attr-for-selected="halaman" selected="{{halaman_sekarang}}" on-iron-select="onMenuSelect"> <!-- saat sudah berhasil login dia tidak mau ke halaman "Deposit". Variabel {{halaman_sekarang}} iseng2 saya ganti asal. Eh bisa. saya ngga ngerti kenapa -->
-                            <paper-item halaman="Deposit"><iron-icon icon="list"></iron-icon>Deposit</paper-item>
-                            <paper-item halaman="Ringkasan"><iron-icon icon="timeline"></iron-icon>Ringkasan</paper-item>
-                            <paper-item halaman="Dompet"><iron-icon icon="account-balance-wallet"></iron-icon>Dompet/Rekening</paper-item>
-                            <paper-item halaman="Pengaturan"><iron-icon icon="image:tune"></iron-icon>Pengaturan</paper-item> <!-- icon "settings-ethernet" juga bagus -->
+                        <mwc-list id="menuList" activatable @selected="${this._menuSelected}">
+                            <mwc-list-item selected activated graphic="icon">
+                                <slot>Deposit</slot>
+                                <mwc-icon slot="graphic">format_list_bulleted</mwc-icon>
+                            </mwc-list-item>
+                            <mwc-list-item graphic="icon">
+                                <slot>Ringkasan</slot>
+                                <mwc-icon slot="graphic">insights</mwc-icon>
+                            </mwc-list-item>
+                            <mwc-list-item graphic="icon">
+                                <slot>Pengaturan</slot>
+                                <mwc-icon slot="graphic">tune</mwc-icon>
+                            </mwc-list-item>
                             <hr>
-                            <paper-item id="logout" on-tap="_tapLogOut"><iron-icon icon="exit-to-app"></iron-icon>Log out</paper-item>
-                        </iron-selector>
+                            <mwc-list-item id="logout" graphic="icon" @click="${this._tapLogOut}">
+                                <slot>Log Out</slot>
+                                <mwc-icon slot="graphic">logout</mwc-icon>
+                            </mwc-list-item>
+                        </mwc-list>
                     </app-drawer>
                 
                     <app-header-layout>
                         <app-header slot="header">
                             <app-toolbar>
                                 <paper-icon-button icon="menu" drawer-toggle=""></paper-icon-button>
-                                <div main-title="" style="margin-left: 10px">{{halaman_sekarang}}</div>
+                                <div main-title="" style="margin-left: 10px">${this.halaman_sekarang}</div>
                             </app-toolbar>
                         </app-header>
 
-                        <iron-pages attr-for-selected="halaman" selected="{{halaman_sekarang}}">
-                            <app-deposit halaman="Deposit"></app-deposit>
+                        <div id="pages">
+                            <app-deposit></app-deposit>
                             
-                            <div halaman="Ringkasan" id="spinnerRingkasan" class="horizontal layout center-justified">
-                                <paper-spinner id="spinner" active=""></paper-spinner>
+                            <div>
+                                <div id="spinnerRingkasan" class="horizontal layout center-justified">
+                                    <paper-spinner id="spinner" active=""></paper-spinner>
+                                </div>
+                                <app-ringkasan></app-ringkasan>
                             </div>
-                            <app-ringkasan halaman="Ringkasan"></app-ringkasan>
-
+                                
                             <!-- <div halaman="Dompet" id="spinnerDompet" class="horizontal layout center-justified">
                                 <paper-spinner id="spinner" active=""></paper-spinner>
                             </div>
                             <app-dompet halaman="Dompet"></app-dompet> -->
                             
-                            <div halaman="Pengaturan" id="spinnerPengaturan" class="horizontal layout center-justified">
-                                <paper-spinner id="spinner" active=""></paper-spinner>
+                            <div>
+                                <div id="spinnerPengaturan" class="horizontal layout center-justified">
+                                    <paper-spinner id="spinner" active=""></paper-spinner>
+                                </div>
+                                <app-pengaturan></app-pengaturan>
                             </div>
-                            <app-pengaturan halaman="Pengaturan"></app-pengaturan>
-                        </iron-pages>
+                        </div>
                 
                         <div style="height: 120px"></div>
                     </app-header-layout>
                 </app-drawer-layout>
-            </neon-animated-pages>
-
-            <platinum-sw-register auto-register="" clients-claim="" skip-waiting="" on-service-worker-installed="_swInstalled">
-                <platinum-sw-cache default-cache-strategy="networkFirst">
-                </platinum-sw-cache>
-            </platinum-sw-register>
-        `;
+            </div>
+        `
     }
 
     static get properties() {
         return {
-            halaman_sekarang: { 
-                type: String, 
-                value: 'Deposit',
-                observer: '_halamanChanged'
-            },
-            
-            triggerLogout: {
-                type: Number
-            }
+            halaman_sekarang: String,
+            triggerLogout: Number
         };
     }
 
-    ready() {
-        super.ready();
-        window.thisMainApp = this;
+    constructor() {
+        super();
+        // window.thisMainApp = this;
         console.log("[READY] main-app");
     }
 
-    onLoginStatusChanged(e) {
-        this.sudah_login = e.detail;
-
-        if (e.detail == 1) {
-            import('./app-deposit.js').then(() => {
-                this.sudah_login = 2
-            }).catch((reason) => {
-                console.log("app-deposit failed to load.", reason);
-            });
-        }
+    firstUpdated() {
+        this.updateContainerPage(1);
     }
 
-    // Lazy-loading halaman non-esensial
-    // Pakai until(content,<spinner>) lebih keren, nanti ya pas pakai LitElement
-    _halamanChanged() {
-        if (this.halaman_sekarang == 'Ringkasan') {
+    updateContainerPage(selectedPage) {
+        let container = this.shadowRoot.getElementById('container')
+        Array.from(container.children).forEach(child => child.style.display = 'none') 
+        container.children[selectedPage].style.display = 'grid'
+    }
+
+    updateMainPage(selectedPage) {
+        let menuList = this.shadowRoot.getElementById('menuList')
+        let pageTitle = menuList.children[selectedPage].children[0].innerHTML
+        this.halaman_sekarang = pageTitle
+        let pages = this.shadowRoot.getElementById('pages')
+        Array.from(pages.children).forEach(child => child.style.visibility = 'hidden') 
+        pages.children[selectedPage].style.visibility = 'visible'
+
+        // Lazy-loading halaman non-esensial
+        // Apakah bisa pakai until(content,<spinner>)?
+        if (pageTitle == 'Ringkasan') {
             if (!this.isRingkasanLoaded) {
                 import('./app-ringkasan.js').then(() => {
                     console.log("[LOADED] app-ringkasan");
                     this.isRingkasanLoaded = true;
-                    this.$.spinnerRingkasan.remove();
+                    this.shadowRoot.getElementById('spinnerRingkasan').style.display = 'none';
                 }).catch((reason) => {
                     console.log("app-ringkasan failed to load.", reason);
                 });
             }
         }
 
-        /*
-        Isu 11 Juni 2022: file:///home/runner/work/deposit/deposit/src/main-app.js(194,17) error [could-not-load] - Unable to load import: Not found: /home/runner/work/deposit/deposit/src/app-dompet.js
-        Terjadi saat build otomatis oleh Github Actions
-        Solusi sementara: disable Dompet dulu
-        */
+        else if (pageTitle == 'Pengaturan') {
+            if (!this.isPengaturanLoaded) {
+                import('./app-pengaturan.js').then(() => {
+                    console.log("[LOADED] app-pengaturan");
+                    this.isPengaturanLoaded = true;
+                    this.shadowRoot.getElementById('spinnerPengaturan').style.display = 'none';
+                }).catch((reason) => {
+                    console.log("app-pengaturan failed to load.", reason);
+                });
+            }
+        }
 
         // else if (this.halaman_sekarang == 'Dompet') {
         //     if (!this.isDompetLoaded) {
@@ -212,17 +218,17 @@ class mainApp extends PolymerElement {
         //         });
         //     }
         // }
+    }
 
-        else if (this.halaman_sekarang == 'Pengaturan') {
-            if (!this.isPengaturanLoaded) {
-                import('./app-pengaturan.js').then(() => {
-                    console.log("[LOADED] app-pengaturan");
-                    this.isPengaturanLoaded = true;
-                    this.$.spinnerPengaturan.remove();
-                }).catch((reason) => {
-                    console.log("app-pengaturan failed to load.", reason);
-                });
-            }
+    onLoginStatusChanged(e) {
+        this.updateContainerPage(e.detail)
+
+        if (e.detail == 1) {
+            import('./app-deposit.js').then(() => {
+                this.updateContainerPage(2)
+            }).catch((reason) => {
+                console.log("app-deposit failed to load.", reason);
+            });
         }
     }
 
@@ -230,13 +236,12 @@ class mainApp extends PolymerElement {
         this.triggerLogout = Math.random();
     }
 
-    _swInstalled() {
-        console.log("SW Installed")
-    }
+    _menuSelected(e) {
+        let index = e.detail.index
+        this.updateMainPage(index)
 
-    onMenuSelect() {
-        if (this.$.appdrawerlayout.narrow) 
-            this.$.appdrawer.close();
+        if (this.shadowRoot.getElementById('appdrawerlayout').narrow) 
+            this.shadowRoot.getElementById('appdrawer').close();
     }
 }
 

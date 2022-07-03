@@ -12,6 +12,12 @@ export const styles = css`
         justify-content: center;
     }
 
+    hr {
+        border: 0;
+        height: 1px;
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+    }
+
     paper-dialog {
         margin: 20px;
     }
@@ -38,6 +44,7 @@ export const styles = css`
         --paper-spinner-layer-4-color: #1E88E5;
         position: fixed;
         top: calc(50vh - 20px);
+        left: calc(50vw - 20px);
     }
 
     @media (min-width: 641px) {

@@ -6,7 +6,6 @@ import '@material/mwc-dialog/mwc-dialog.js';
 import '@polymer/paper-checkbox';  
 import '@polymer/paper-dialog';    
 import '@polymer/paper-fab';
-import '@polymer/paper-item';
 import '@polymer/paper-tabs'; 
 
 import '@vaadin/tabs/theme/material/vaadin-tabs.js';
