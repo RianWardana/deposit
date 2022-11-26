@@ -18,7 +18,7 @@ class tagihanItem extends LitElement {
     render() {
         return html`
             <paper-material>
-                <paper-ripple recenters=""></paper-ripple>
+                <!-- <paper-ripple recenters=""></paper-ripple> -->
                 <div class="content">
                     <div class="flexSpaceBetween">
                         <span>${this.nama}</span> 

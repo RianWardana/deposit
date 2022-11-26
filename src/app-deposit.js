@@ -2,11 +2,13 @@ import {LitElement, html, css} from 'lit-element';
 import {styles} from './lit-styles.js';
 
 import '@material/mwc-dialog/mwc-dialog.js';
+import '@material/mwc-fab/mwc-fab.js';
+import '@material/mwc-icon-button/mwc-icon-button.js';
+import '@material/mwc-list/mwc-list.js';
+import '@material/mwc-list/mwc-list-item.js';
 
 import '@polymer/paper-checkbox';  
-import '@polymer/paper-dialog';    
-import '@polymer/paper-fab';
-import '@polymer/paper-tabs'; 
+import '@polymer/paper-dialog';
 
 import '@vaadin/tabs/theme/material/vaadin-tabs.js';
 import '@vaadin/combo-box/theme/material/vaadin-combo-box.js';

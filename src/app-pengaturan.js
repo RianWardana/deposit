@@ -1,3 +1,9 @@
+/*
+To do:
+1. Jangan biarkan user create kategori: lainnya, Lainnya
+2. Jangan biarkan user create kategori yang sudah ada, case-insensitive
+*/
+
 import {LitElement, html, css} from 'lit-element';
 import {styles} from './lit-styles.js';
 import {firebase} from './firebase.js';
@@ -46,8 +52,8 @@ class appPengaturan extends LitElement {
                 width: 100%;
             }
 
-            paper-fab {
-                background-color: var(--app-primary-color);
+            mwc-fab {
+                --mdc-theme-secondary: var(--app-primary-color);
             }
 
             paper-material {
@@ -112,8 +118,8 @@ class appPengaturan extends LitElement {
                 <mwc-button id="btnHapus" slot="secondaryAction" @click="${this._tapHapus}">Hapus</mwc-button>
             </mwc-dialog>
 
-            <paper-fab id="fab" icon="add" @click="${this._tapAdd}"></paper-fab>
-            <paper-toast id="toastKosong" text="Isian wajib diisi"></paper-toast>
+            <mwc-fab id="fab" icon="add" @click="${this._tapAdd}"></mwc-fab>
+            <paper-toast id="toastInvalid" text="Ada isian kosong atau isian invalid"></paper-toast>
         `;
     }
 
@@ -226,12 +232,16 @@ class appPengaturan extends LitElement {
         let nama = this.shadowRoot.getElementById('inputKategori').value;
         let entri = this.shadowRoot.getElementById('inputEntri').value.split('\n').filter(n => n);
 
-        if ((nama != "") && (entri != "")) { 
+        // Cek apakah Nama Kategori sudah ada sebelumnya
+        let namaDobel = this.kategoriPengeluaran.find(kategori => kategori.nama.toLowerCase() == nama.toLowerCase())
+
+        if ( (nama == "") || (entri == "") || (namaDobel) ) {
+            this.shadowRoot.getElementById('toastInvalid').open()
+        } else {
             this.shadowRoot.getElementById('dialog').close();
             this.kirimData({nama, entri});
-        } else {
-            this.shadowRoot.getElementById('toastKosong').open()
         }
+
     }
 
     kirimData(data) {

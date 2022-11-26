@@ -17,8 +17,8 @@ class rekeningTambah extends LitElement {
                 justify-content: space-evenly;
             }
             
-            paper-fab {
-                background-color: var(--app-primary-color);
+            mwc-fab {
+                --mdc-theme-secondary: var(--app-primary-color);
             }
 
             @media (max-height: 450px) {
@@ -63,7 +63,7 @@ class rekeningTambah extends LitElement {
                 </div>
             </paper-dialog>
 
-            <paper-fab id="fab" icon="add" @click="${this.onFabClick}"></paper-fab>
+            <mwc-fab id="fab" icon="add" @click="${this.onFabClick}"></mwc-fab>
             <paper-toast id="toastKosong" text="Nama dan jumlah wajib diisi"></paper-toast>
         `;
     }

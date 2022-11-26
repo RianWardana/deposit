@@ -1,0 +1,8 @@
+material-web vs material-components-web, yang pakai web components adalah material-web
+https://stackoverflow.com/questions/57752189/material-web-components-vs-material-components-web
+
+Menggunakan material-components-web untuk Lit
+https://stackoverflow.com/questions/56637038/using-a-material-web-component-inside-a-litelement
+
+Carbon vs material-web
+https://stackoverflow.com/questions/59679870/ui-templating-library-built-in-litelement

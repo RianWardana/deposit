@@ -12,17 +12,11 @@ import '@polymer/app-layout/app-header-layout/app-header-layout';
 import '@polymer/app-layout/app-toolbar/app-toolbar';
 
 import '@polymer/iron-flex-layout/iron-flex-layout-classes';
-import '@polymer/iron-icon';
-import '@polymer/iron-icons';
-import '@polymer/iron-icons/image-icons.js';
 import '@polymer/iron-image';
 
 import '@material/mwc-button/mwc-button.js';
 import '@material/mwc-icon/mwc-icon.js';
-import '@material/mwc-list/mwc-list.js';
-import '@material/mwc-list/mwc-list-item.js';
 
-import '@polymer/paper-icon-button';
 import '@polymer/paper-material';  
 import '@polymer/paper-spinner/paper-spinner'; 
 import '@polymer/paper-toast';
@@ -54,9 +48,9 @@ class mainApp extends LitElement {
                 width: 100%;
             }
 
-            iron-icon {
+            /* iron-icon {
                 margin-right: 12px;
-            }
+            } */
 
             mwc-list-item, mwc-icon {
                 color: var(--app-primary-color);
@@ -115,7 +109,7 @@ class mainApp extends LitElement {
                     <app-header-layout>
                         <app-header slot="header">
                             <app-toolbar>
-                                <paper-icon-button icon="menu" drawer-toggle=""></paper-icon-button>
+                                <mwc-icon-button icon="menu" drawer-toggle=""></mwc-icon-button>
                                 <div main-title="" style="margin-left: 10px">${this.halaman_sekarang}</div>
                             </app-toolbar>
                         </app-header>

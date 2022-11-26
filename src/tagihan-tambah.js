@@ -26,8 +26,8 @@ class tagihanTambah extends LitElement {
                 --paper-checkbox-checked-ink-color: #4CAF50;
             }
 
-            paper-fab {
-                background-color: #4CAF50;
+            mwc-fab {
+                --mdc-theme-secondary: #4CAF50;
             }
 
             @media (max-height: 450px) {
@@ -55,7 +55,7 @@ class tagihanTambah extends LitElement {
                 </div>
             </paper-dialog>
 
-            <paper-fab id="fab" icon="add" @click="${this.onFabClick}"></paper-fab>
+            <mwc-fab id="fab" icon="add" @click="${this.onFabClick}"></mwc-fab>
             <paper-toast id="toastKosong" text="Nama dan jumlah wajib diisi"></paper-toast>
         `;
     }

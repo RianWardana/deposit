@@ -31,7 +31,7 @@ class rekeningItem extends LitElement {
     render() {
         return html`  
             <paper-material>
-                <paper-ripple recenters=""></paper-ripple>
+                <!-- <paper-ripple recenters=""></paper-ripple> -->
                 <div class="banner ${this.jenis}"></div>
                 <div class="content">
                     <div class="flexSpaceBetween">
