@@ -1,7 +1,6 @@
 /*
 To do:
-1. Jangan biarkan user create kategori: lainnya, Lainnya
-2. Jangan biarkan user create kategori yang sudah ada, case-insensitive
+
 */
 
 import {LitElement, html, css} from 'lit-element';

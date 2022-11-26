@@ -59,6 +59,7 @@ class appDeposit extends LitElement {
             app-header {
                 background-color: var(--app-primary-color);
                 color: #fff;
+                position: sticky;
             }
         `];
     }
@@ -72,6 +73,8 @@ class appDeposit extends LitElement {
                         <vaadin-tab>Rekening</vaadin-tab>
                     </vaadin-tabs>
                 </app-header>
+
+                <!-- To do: ada padding-top 48px, hilang setelah klik halaman lain dulu -->
                 
                 <div id="pengeluaran">
                     <tagihan-list></tagihan-list>

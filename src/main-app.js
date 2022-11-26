@@ -167,13 +167,25 @@ class mainApp extends LitElement {
         container.children[selectedPage].style.display = 'grid'
     }
 
+    _menuSelected(e) {
+        let index = e.detail.index
+        this.updateMainPage(index)
+
+        if (this.shadowRoot.getElementById('appdrawerlayout').narrow) 
+            this.shadowRoot.getElementById('appdrawer').close();
+    }
+
     updateMainPage(selectedPage) {
         let menuList = this.shadowRoot.getElementById('menuList')
         let pageTitle = menuList.children[selectedPage].children[0].innerHTML
         this.halaman_sekarang = pageTitle
         let pages = this.shadowRoot.getElementById('pages')
-        Array.from(pages.children).forEach(child => child.style.visibility = 'hidden') 
-        pages.children[selectedPage].style.visibility = 'visible'
+
+        // To-do: kalau pakai display: none scrollnya tidak luber tapi app-header 
+        // di app-deposit hilang setiap import page baru (lazy load).
+        // Kalau window berubah size, penyakit hilang
+        Array.from(pages.children).forEach(child => child.style.display = 'none') 
+        pages.children[selectedPage].style.display = 'block'
 
         // Lazy-loading halaman non-esensial
         // Apakah bisa pakai until(content,<spinner>)?
@@ -230,13 +242,7 @@ class mainApp extends LitElement {
         this.triggerLogout = Math.random();
     }
 
-    _menuSelected(e) {
-        let index = e.detail.index
-        this.updateMainPage(index)
-
-        if (this.shadowRoot.getElementById('appdrawerlayout').narrow) 
-            this.shadowRoot.getElementById('appdrawer').close();
-    }
+    
 }
 
 customElements.define('main-app', mainApp);
