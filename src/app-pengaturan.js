@@ -15,7 +15,8 @@ class appPengaturan extends LitElement {
         return {
             batas: Number,
             kategoriPengeluaran: Array,
-            keyEdit: Number
+            keyEdit: Number,
+            isEntriBaru: Boolean
         }
     }
 
@@ -183,6 +184,7 @@ class appPengaturan extends LitElement {
     }
 
     _tapEdit(a,b,c) {
+        this.isEntriBaru = false //dipakai untuk _tapSimpan()
         this.keyEdit = a
         let entriString = c.toString().replace(/ *, */g, '\n');
 
@@ -201,6 +203,7 @@ class appPengaturan extends LitElement {
     }
 
     _tapAdd() {
+        this.isEntriBaru = true //dipakai untuk _tapSimpan()
         let allKeys = this.kategoriPengeluaran.map(kategori => parseInt(kategori.key))
         this.keyEdit = 101
 
@@ -231,16 +234,16 @@ class appPengaturan extends LitElement {
         let nama = this.shadowRoot.getElementById('inputKategori').value;
         let entri = this.shadowRoot.getElementById('inputEntri').value.split('\n').filter(n => n);
 
-        // Cek apakah Nama Kategori sudah ada sebelumnya
+        // Jika kategori baru, cek apakah Nama Kategori sudah ada sebelumnya
+        let entriBaru = this.isEntriBaru
         let namaDobel = this.kategoriPengeluaran.find(kategori => kategori.nama.toLowerCase() == nama.toLowerCase())
 
-        if ( (nama == "") || (entri == "") || (namaDobel) ) {
+        if ( (nama == "") || (entri == "") || (entriBaru && namaDobel) ) {
             this.shadowRoot.getElementById('toastInvalid').open()
         } else {
             this.shadowRoot.getElementById('dialog').close();
             this.kirimData({nama, entri});
         }
-
     }
 
     kirimData(data) {
