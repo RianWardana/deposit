@@ -62,36 +62,34 @@ class appAuth extends LitElement {
         })
     }
 
+    // Cek apakah ini user baru (tidak ada data), dan tambah data default kalau user baru
     checkUserData() {
-        let refKategoriPengeluaran = firebase.database().ref(this.uid + "/kategoriPengeluaran")
-        let refNamaMutasi = firebase.database().ref(this.uid + "/namaMutasi")
+        let defaultData = {
+            batasPengeluaran: 5000000,
 
-        refKategoriPengeluaran.get().then(data => {
-            if (!data.exists()) {
-                refKategoriPengeluaran.set({
-                    0: {nama: 'Makan', entri: ['Makan','Minum']},
-                    1: {nama: 'Transportasi', entri: ['Bensin','Parkir']},
-                    99: {nama: 'Lainnya', entri: ['Lainnya']}
-                }).then(e => {
-                    console.log("Penambahan kategori pengeluaran berhasil.")
-                }).catch(e => 
-                    console.log(e.message));
-            }
-        })
-
-        refNamaMutasi.get().then(data => {
-            if (!data.exists()) {
-                refNamaMutasi.set({
-                    0: {jenis: 'kredit', nama: 'Saldo Awal'}
-                }).then(e => {
-                    console.log("Penambahan nama mutasi berhasil.")
-                }).catch(e => 
-                    console.log(e.message));
-            }
-        })
-
-
+            dompet: {
+                0: {nama: 'Tunai', saldo: 0}
+            },
+            
+            kategoriPengeluaran: {
+                0: {nama: 'Makan', entri: ['Makan','Minum']},
+                1: {nama: 'Transportasi', entri: ['Bensin','Parkir']},
+                99: {nama: 'Lainnya', entri: ['Lainnya']}
+            },
         
+            namaMutasi: {
+                0: {jenis: 'kredit', nama: 'Saldo awal'},
+                1: {jenis: 'debit', nama: 'Tarik tunai'}
+            }
+        }
+
+        for (let [key, value] of Object.entries(defaultData)) {
+            let ref = firebase.database().ref(this.uid + `/${key}`)
+            ref.get().then(data => {
+                if (!data.exists()) ref.set(value)
+                // ref.set(value).then().catch(e => console.log(e.mesage))
+            })
+        }
     }
 
     // If there is a logout request from the parent component

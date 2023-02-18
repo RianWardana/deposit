@@ -44,8 +44,8 @@ class rekeningTambah extends LitElement {
         });
 
         return html`
-            <paper-dialog id="dialog" @iron-overlay-closed="${this._dialogClosed}" heading="Mutasi Rekening">
-                <h2>Mutasi Rekening</h2>
+            <paper-dialog id="dialog" @iron-overlay-closed="${this._dialogClosed}" heading="Mutasi Non-Pengeluaran">
+                <h2>Mutasi Non-Pengeluaran</h2>
                 <div class="flexSpaceBetween">
                     <vaadin-combo-box id="comboBox" placeholder="Nama" @input="${this.onChangeInput}" allow-custom-value></vaadin-combo-box>
                     <vaadin-integer-field id="inputJumlah" min="1" @input="${this.onChangeInput}">
@@ -101,7 +101,7 @@ class rekeningTambah extends LitElement {
         let inputJumlah = this.shadowRoot.getElementById('inputJumlah').value;
         let toggleJenis = this.shadowRoot.getElementById('toggleJenis').checked;
         
-        if ((inputNama != "") && (inputJumlah != "")) { 
+        if ((inputNama != "") && (inputJumlah > 0)) { 
             this.shadowRoot.getElementById('dialog').close();
             this.kirimData({
                 nama: inputNama,
@@ -119,17 +119,23 @@ class rekeningTambah extends LitElement {
         let kredit = parseInt(data.kredit);
 
         // anti-pattern, cari cara lain, jangan pakai Rekening
-        let saldo = Rekening.saldo + (kredit - debit);
+        // let saldo = Rekening.saldo + (kredit - debit);
 
-        let dbRekening = firebase.database().ref(this.uid + "/rekening");
+        // Update saldo di Dompet
+        let updatedSaldo = this.dataDompet[this.keyDompet].saldo + (kredit-debit);
+        firebase.database().ref(`${this.uid}/dompet/${this.keyDompet}/saldo`).set(updatedSaldo);
+
+        let dbRekening = firebase.database().ref(this.uid + "/tagihan");
         dbRekening.child(epoch).set({
             nama: data.nama,
+            sumber: this.keyDompet,
             debit: debit,
             kredit: kredit,
-            saldo: saldo,
-        }).then(e => 
-            console.log("Penambahan mutasi rekening berhasil.")
-        ).catch(e => 
+            saldo: updatedSaldo,
+            jumlah: 0
+        }).then(e => {
+            console.log("Penambahan mutasi rekening berhasil.");
+        }).catch(e => 
             console.log(e.message));
     }
 

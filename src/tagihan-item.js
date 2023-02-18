@@ -26,11 +26,12 @@ class tagihanItem extends LitElement {
                     </div>
                     <div class="flexSpaceBetween">
                         <span>${this.waktu}</span> 
-                        <a href="#">
+                        <!-- <a href="#">
                             <span role="button" @click="${
                                 e => this._tapEdit(this.key, this.nama, this.jumlah)
                             }">Edit</span>
-                        </a>
+                        </a> -->
+                        <span style="color: #ccc">${this.sumber}</span> 
                     </div>
                 </div>
             </paper-material>
@@ -42,7 +43,8 @@ class tagihanItem extends LitElement {
             key: String,
             waktu: String,
             nama: String,
-            jumlah: Number
+            jumlah: Number,
+            sumber: String
         }
     }
 
@@ -51,7 +53,7 @@ class tagihanItem extends LitElement {
         return "Rp" + dataJumlahInt.toLocaleString('id-ID');
     }
 
-    _tapEdit(a, b, c) {
+    _tapEdit(a, b, c, d, e) {
         // This event bubbles up to app-deposit
         let event = new CustomEvent('tagihan-edit', {
             bubbles: true,
@@ -59,7 +61,9 @@ class tagihanItem extends LitElement {
             detail: {
                 key: a,
                 nama: b,
-                jumlah: c
+                jumlah: c,
+                sumber: d,
+                saldo: e
             },
         });
 

@@ -7,8 +7,10 @@ class tagihanList extends LitElement {
     
     static get properties() {
         return {
-            data: Object,
-            totalPengeluaran: Object
+            data: Array,
+            totalPengeluaran: Object,
+            dataMutasi: Array,
+            dataDompet: Array
         };
     }
 
@@ -46,9 +48,11 @@ class tagihanList extends LitElement {
     }
     
     render() {
-        if (typeof this.data == 'undefined') {
-            this.totalPengeluaran = {total: 0, today: 0};
-        }
+        // Ga berfungsi dan ga ada gunanya
+        // if (typeof this.data == 'undefined') {
+        //     this.totalPengeluaran = {total: 0, today: 0};
+        //     this.dataMutasi = []
+        // }
 
         return html`
             <div class="narrow" id="list">
@@ -81,7 +85,8 @@ class tagihanList extends LitElement {
                         key="${item.key}"
                         waktu="${item.waktu}" 
                         nama="${item.nama}" 
-                        jumlah="${item.jumlah}">
+                        jumlah="${item.jumlah}"
+                        sumber="${this.dataDompet[item.sumber].nama}">
                     </tagihan-item>
                 `)}
 
@@ -112,9 +117,9 @@ class tagihanList extends LitElement {
                 )} -->
             </div>
             
-            <paper-toast id="toastLunas" duration="5000" text="Entri pengeluaran akan diarsipkan.">
+            <!-- <paper-toast id="toastLunas" duration="5000" text="Entri pengeluaran akan diarsipkan.">
                 <span role="button" @click="${this.lunasiSemua}">Lanjut</span>
-            </paper-toast>
+            </paper-toast> -->
         `;
     }
 
@@ -123,14 +128,34 @@ class tagihanList extends LitElement {
         firebase.auth().onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {
                 this.uid = firebaseUser.uid;
-                this.loadPengeluaran();
-            }
-            else {
-                this.data = [];
+                this.data = []
+                
+                this.totalPengeluaran = {
+                    today: 0,
+                    total: 0
+                };
+                // this.loadPengeluaran();
             }
         });
     }
 
+    updated(changedProps) {
+        if (changedProps.has('dataMutasi')) {
+            let tanggalToday = ((new Date()).getDate() < 10 ? "0" : "") + (new Date()).getDate()
+            
+            let pengeluaran = this.dataMutasi.filter(item => item.jumlah > 0)
+            let pengeluaranToday = pengeluaran.filter(item => item.waktu.substring(0,2) == tanggalToday)
+
+            let total = pengeluaran.reduce((sum, item) => sum + parseInt(item.jumlah), 0)
+            let totalToday = pengeluaranToday.reduce((sum, item) => sum + parseInt(item.jumlah), 0)
+
+            this.data = pengeluaran
+            this.totalPengeluaran.total = total
+            this.totalPengeluaran.today = totalToday
+        }
+    }
+
+    /*
     loadPengeluaran() {
         console.log('loadPengeluaran')
 
@@ -154,13 +179,11 @@ class tagihanList extends LitElement {
                 var tanggal = (dateObject.getDate() < 10 ? "0" : "") + dateObject.getDate();
                 var bulan = (dateObject.getMonth() < 9 ? "0" : "") + (dateObject.getMonth() + 1);
                 var tahun = dateObject.getYear() - 100;
-                var waktu = tanggal + "/" + bulan + "/" + tahun;
-                var nama = pengeluaran.val()['nama'];
-                var jumlah = pengeluaran.val()['jumlah'];
+                let jumlah = pengeluaran.val()['jumlah'];
+                // kalau sumber sama saldo ga ada, musti bikin exit clause
 
                 // Jika terdapat pengeluaran bulan sebelumnya
-                // if (bulan != bulanToday)
-                // return;
+                if (jumlah < 1) return;
 
                 // Hitung total pengeluaran
                 total += jumlah
@@ -172,9 +195,11 @@ class tagihanList extends LitElement {
                 // Because this.push('data', {}) does not work
                 this.data = [...this.data, {
                     key: pengeluaran.key,
-                    waktu: waktu,
-                    nama: nama,
-                    jumlah: jumlah
+                    waktu: tanggal + "/" + bulan + "/" + tahun,
+                    nama: pengeluaran.val()['nama'],
+                    jumlah: jumlah,
+                    sumber: pengeluaran.val()['sumber'],
+                    saldo: pengeluaran.val()['saldo']
                 }];
             });
 
@@ -192,6 +217,7 @@ class tagihanList extends LitElement {
             this.dbTagihan.child(pengeluaran.key).update({lunas: 1});
         })
     }
+    */
 
     formatTotalTagihan(total) {
         if (isNaN(total)) return 0;

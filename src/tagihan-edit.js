@@ -88,7 +88,9 @@ class tagihanEdit extends LitElement {
         this.shadowRoot.getElementById('dialog').close();
         this.kirimData({
             key: this.dataEdit.key,
-            jumlah: 0
+            jumlah: 0,
+            dompet: this.dataEdit.sumber,
+            saldo: parseInt(this.dataEdit.saldo) + parseInt(this.dataEdit.jumlah)
         })
     }
 
@@ -110,10 +112,12 @@ class tagihanEdit extends LitElement {
 
     kirimData(data) {
         let dbTagihan = firebase.database().ref(this.uid + "/tagihan");
+        let refDompet = firebase.database().ref(`${this.uid}/dompet/${data.dompet}`)
 
         // Hapus entri jika jumlah == 0
         if (data.jumlah == 0) {
             dbTagihan.child(data.key).remove();
+            refDompet.child('saldo').set(data.saldo);
             return;
         }
 

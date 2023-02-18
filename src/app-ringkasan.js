@@ -154,6 +154,9 @@ class appRingkasan extends LitElement {
                 let nama = entry.val()['nama'];
                 let jumlah = entry.val()['jumlah'];
 
+                // Jika tidak ada jumlah (berarti mutasi non-pengeluaran)
+                if (jumlah < 1) return;
+
                 if (pengeluaran[nama] > 0) pengeluaran[nama] += jumlah;
                 else pengeluaran[nama] = jumlah;
 

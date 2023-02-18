@@ -7,8 +7,8 @@ class rekeningItem extends LitElement {
         return {
             waktu: String,
             nama: String,
-            jenis: String,
-            jumlah: Number
+            kredit: Number,
+            debit: Number
         };
     }
     
@@ -32,11 +32,11 @@ class rekeningItem extends LitElement {
         return html`  
             <paper-material>
                 <!-- <paper-ripple recenters=""></paper-ripple> -->
-                <div class="banner ${this.jenis}"></div>
+                <div class="banner ${(this.kredit > 0 ? 'kredit' : 'debit')}"></div>
                 <div class="content">
                     <div class="flexSpaceBetween">
                         <span>${this.nama}</span>
-                        <span>${this.formatJumlah(this.jenis, this.jumlah)}</span>
+                        <span>${this.formatJumlah(this.debit, this.kredit)}</span>
                     </div>
                     <span>${this.waktu}</span>
                 </div>
@@ -44,9 +44,9 @@ class rekeningItem extends LitElement {
         `;
     }
 
-    formatJumlah(dataJenis, dataJumlah) {
-        var dataJumlahInt = parseInt(dataJumlah);
-        return (dataJenis == 'kredit' ? '+ Rp' : '- Rp') + dataJumlahInt.toLocaleString('id-ID');
+    formatJumlah(debit, kredit) {
+        let dataJumlahInt = parseInt(debit) + parseInt(kredit);
+        return (kredit > 0 ? '+ Rp' : '- Rp') + dataJumlahInt.toLocaleString('id-ID');
     }
 }
 

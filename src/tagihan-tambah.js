@@ -48,7 +48,8 @@ class tagihanTambah extends LitElement {
                         <div slot="prefix">Rp</div>
                     </vaadin-integer-field>
                 </div>
-                <paper-checkbox id="inputSalin">Salin ke rekening</paper-checkbox>
+                <vaadin-combo-box id="comboDompet" placeholder="Sumber Dana" @input="${this.onChangeInput}"></vaadin-combo-box>
+                <!-- <paper-checkbox id="inputSalin">Salin ke rekening</paper-checkbox> -->
                 <div class="buttons">
                     <mwc-button dialog-confirm>Batal</mwc-button>
                     <mwc-button id="btnTambah" disabled @click="${this.tambah}">Tambah</mwc-button>
@@ -65,12 +66,12 @@ class tagihanTambah extends LitElement {
         firebase.auth().onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {
                 this.uid = firebaseUser.uid
-                this.loadKategoriPengeluaran();
+                this.loadComboBox();
             }
         });
     }
 
-    loadKategoriPengeluaran() {
+    loadComboBox() {
         firebase.database().ref(this.uid).child("kategoriPengeluaran").on('value', queryResult => {
             this.namaPengeluaran = [];
             
@@ -80,30 +81,58 @@ class tagihanTambah extends LitElement {
 
             this.shadowRoot.getElementById('comboBox').items = this.namaPengeluaran.sort();
         });
+
+        firebase.database().ref(this.uid).child("dompet").on('value', queryResult => {
+            this.dompet = [];
+            this.namaDompet = [];
+            
+            queryResult.forEach(objDompet => {
+                this.dompet = [...this.dompet, {key: objDompet.key, nama: objDompet.val().nama, saldo: objDompet.val().saldo}];
+                this.namaDompet = [...this.namaDompet, objDompet.val().nama];
+            });
+            
+            this.shadowRoot.getElementById('comboDompet').items = this.namaDompet.sort();
+            this.shadowRoot.getElementById('comboDompet').value = 'Tunai';
+        });
     }
 
     tambah() {
         let inputNama = this.shadowRoot.getElementById('comboBox').value;
         let inputJumlah = this.shadowRoot.getElementById('inputJumlah').value;
-        let inputSalin = this.shadowRoot.getElementById('inputSalin').checked;
+        let inputDompet = this.shadowRoot.getElementById('comboDompet').value;
+        // let inputSalin = this.shadowRoot.getElementById('inputSalin').checked;
 
-        if ((inputNama != "") && (inputJumlah != "")) { 
+        if ((inputNama != "") && (inputJumlah != "") && (inputDompet != "")) { 
             this.shadowRoot.getElementById('dialog').close();
+
+            let objDompet = this.dompet.find(item => item.nama == inputDompet)
+            let keyDompet = objDompet.key
+            let saldoDompet = objDompet.saldo
+            let saldo = saldoDompet - inputJumlah
 
             this.kirimData({
                 nama:inputNama,
-                jumlah: inputJumlah
+                debit: parseInt(inputJumlah),
+                kredit: 0,
+                jumlah: parseInt(inputJumlah),
+                sumber: keyDompet,
+                saldo: parseInt(saldo)
             });
 
+            this.updateSaldoDompet({
+                key: keyDompet,
+                saldo: parseInt(saldo)
+            })
+
             // Salin pengeluaran ke rekening //
-            if (inputSalin) {
-                let event = new CustomEvent('mutasi-baru', {detail: {
-                    nama: inputNama,
-                    debit: inputJumlah,
-                    kredit: 0
-                }});
-                this.dispatchEvent(event);
-            }
+            // if (inputSalin) {
+            //     let event = new CustomEvent('mutasi-baru', {detail: {
+            //         nama: inputNama,
+            //         debit: inputJumlah,
+            //         kredit: 0
+            //     }});
+            //     this.dispatchEvent(event);
+            // }
         } else {
             this.shadowRoot.getElementById('toastKosong').open()
         }
@@ -113,13 +142,17 @@ class tagihanTambah extends LitElement {
         let dbTagihan = firebase.database().ref(this.uid + "/tagihan");
         let epoch = Math.floor(new Date() / -1000);
 
-        dbTagihan.child(epoch).set({
-            nama: data.nama,
-            jumlah: parseInt(data.jumlah)
-        }).then(e => {
+        dbTagihan.child(epoch).set(data).then(e => {
             console.log("Penambahan pengeluaran berhasil.")
         }).catch(e => 
             console.log(e.message));
+    }
+
+    updateSaldoDompet(data) {
+        let ref = firebase.database().ref(`${this.uid}/dompet/${data.key}/saldo`);
+        ref.set(data.saldo).then(() => console.log('Saldo dompet updated.')).catch(e => {
+            console.log(e.message)
+        });
     }
 
     onDialogClosed() {
@@ -130,7 +163,7 @@ class tagihanTambah extends LitElement {
     onFabClick() {
         this.shadowRoot.getElementById('comboBox').value = '';
         this.shadowRoot.getElementById('inputJumlah').value = '';
-        this.shadowRoot.getElementById('inputSalin').checked = false;
+        // this.shadowRoot.getElementById('inputSalin').checked = false;
         this.shadowRoot.getElementById('dialog').open();
         this.shadowRoot.getElementById('fab').style.display = 'none';
         this.shadowRoot.getElementById('btnTambah').setAttribute('disabled', true);
