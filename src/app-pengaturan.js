@@ -1,6 +1,7 @@
 /*
 To do:
-
+- Nama mutasi kredit
+- Nama mutasi debit
 */
 
 import {LitElement, html, css} from 'lit-element';
@@ -94,11 +95,12 @@ class appPengaturan extends LitElement {
                                         return html `${koma}${item2}` 
                                     })}
                                 </p>
-
-                                <mwc-button @click="${
-                                    () => this._tapEdit(item.key, item.nama, item.entri)
-                                }">Edit</mwc-button>
-
+                                <!-- gimana caranya tombol edit ada di end? -->
+                                <div class="flexEnd"></div> 
+                                    <mwc-button @click="${
+                                        () => this._tapEdit(item.key, item.nama, item.entri)
+                                    }">Edit</mwc-button>
+                                </div>
                             </paper-material>
                         `
                     })}
@@ -163,7 +165,7 @@ class appPengaturan extends LitElement {
 
             // Mengurutkan berdasar nama kategori
             this.kategoriPengeluaran = this.kategoriPengeluaran.sort((a,b) => {
-                return ( (a.nama.toLowerCase() > b. nama.toLowerCase()) || (a.nama == 'Lainnya') ) ? 1 : -1
+                return ( (a.nama.toLowerCase() > b.nama.toLowerCase()) || (a.nama == 'Lainnya') ) ? 1 : -1
             })
         });
     }

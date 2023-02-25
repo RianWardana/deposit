@@ -1,3 +1,8 @@
+/*
+To do:
+- Tab dompet diurutkan berdasarkan nama
+*/
+
 import {LitElement, html, css} from 'lit-element';
 import {styles} from './lit-styles.js';
 import {firebase} from './firebase.js';
@@ -8,7 +13,7 @@ import '@material/mwc-icon-button/mwc-icon-button.js';
 import '@material/mwc-list/mwc-list.js';
 import '@material/mwc-list/mwc-list-item.js';
 
-import '@polymer/paper-checkbox';  
+// import '@polymer/paper-checkbox'; //sudah tidak pakai checkbox sejak tidak ada fitur salin ke Rekening 
 import '@polymer/paper-dialog';
 
 import '@vaadin/tabs/theme/material/vaadin-tabs.js';
@@ -159,6 +164,11 @@ class appDeposit extends LitElement {
 
             // Ini kalau dihapus error, tidak tahu kenapa, padahal tidak dipakai
             this.tabs = ['pengeluaran', 'rekening', ...this.dompet.map(item => item.nama)]
+
+            // Mengurutkan berdasar nama --> belum bisa dilakukan karena konten mengikuti urutan, dan asumsinya key=urutan tampil
+            // this.dompet = this.dompet.sort((a,b) => {
+            //     return ( (a.nama.toLowerCase() > b.nama.toLowerCase()) || (a.nama == 'Tunai') ) ? 1 : -1
+            // })
         });
     }
 

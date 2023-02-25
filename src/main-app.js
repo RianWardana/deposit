@@ -88,11 +88,16 @@ class mainApp extends LitElement {
                         <mwc-list id="menuList" activatable @selected="${this._menuSelected}">
                             <mwc-list-item selected activated graphic="icon">
                                 <slot>Deposit</slot>
+                                <!-- https://fonts.google.com/icons?selected=Material+Icons -->
                                 <mwc-icon slot="graphic">format_list_bulleted</mwc-icon>
                             </mwc-list-item>
                             <mwc-list-item graphic="icon">
                                 <slot>Ringkasan</slot>
                                 <mwc-icon slot="graphic">insights</mwc-icon>
+                            </mwc-list-item>
+                            <mwc-list-item graphic="icon">
+                                <slot>Dompet</slot>
+                                <mwc-icon slot="graphic">account_balance_wallet</mwc-icon>
                             </mwc-list-item>
                             <mwc-list-item graphic="icon">
                                 <slot>Pengaturan</slot>
@@ -115,20 +120,26 @@ class mainApp extends LitElement {
                         </app-header>
 
                         <div id="pages">
+                            <!-- Halaman Deposit -->
                             <app-deposit></app-deposit>
                             
+                            <!-- Halaman Ringkasan -->
                             <div>
                                 <div id="spinnerRingkasan" class="horizontal layout center-justified">
                                     <paper-spinner id="spinner" active=""></paper-spinner>
                                 </div>
                                 <app-ringkasan></app-ringkasan>
                             </div>
-                                
-                            <!-- <div halaman="Dompet" id="spinnerDompet" class="horizontal layout center-justified">
-                                <paper-spinner id="spinner" active=""></paper-spinner>
+
+                            <!-- Halaman Dompet -->
+                            <div>
+                                <div id="spinnerDompet" class="horizontal layout center-justified">
+                                    <paper-spinner id="spinner" active=""></paper-spinner>
+                                </div>
+                                <app-dompet></app-dompet>
                             </div>
-                            <app-dompet halaman="Dompet"></app-dompet> -->
                             
+                            <!-- Halaman Pengaturan -->
                             <div>
                                 <div id="spinnerPengaturan" class="horizontal layout center-justified">
                                     <paper-spinner id="spinner" active=""></paper-spinner>
@@ -201,6 +212,18 @@ class mainApp extends LitElement {
             }
         }
 
+        else if (this.halaman_sekarang == 'Dompet') {
+            if (!this.isDompetLoaded) {
+                import('./app-dompet.js').then(() => {
+                    console.log("[LOADED] app-dompet");
+                    this.isDompetLoaded = true;
+                    this.shadowRoot.getElementById('spinnerDompet').style.display = 'none';
+                }).catch((reason) => {
+                    console.log("app-dompet failed to load.", reason);
+                });
+            }
+        }
+
         else if (pageTitle == 'Pengaturan') {
             if (!this.isPengaturanLoaded) {
                 import('./app-pengaturan.js').then(() => {
@@ -212,18 +235,6 @@ class mainApp extends LitElement {
                 });
             }
         }
-
-        // else if (this.halaman_sekarang == 'Dompet') {
-        //     if (!this.isDompetLoaded) {
-        //         import('./app-dompet.js').then(() => {
-        //             console.log("[LOADED] app-dompet");
-        //             this.isDompetLoaded = true;
-        //             this.$.spinnerDompet.remove();
-        //         }).catch((reason) => {
-        //             console.log("app-dompet failed to load.", reason);
-        //         });
-        //     }
-        // }
     }
 
     onLoginStatusChanged(e) {

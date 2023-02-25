@@ -7,6 +7,11 @@ export const styles = css`
         justify-content: space-between;
     }
 
+    .flexEnd {
+        display: flex;
+        justify-content: end;
+    }
+
     .spinnerContainer {
         display: flex;
         justify-content: center;

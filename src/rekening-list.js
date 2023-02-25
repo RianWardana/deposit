@@ -105,6 +105,7 @@ class rekeningList extends LitElement {
 
     _formatSaldo(dataSaldo) {
         if (isNaN(dataSaldo)) return 0;
+        // else if (parseInt(dataSaldo) < 0) return 0
         else return parseInt(dataSaldo).toLocaleString('id-ID');
     }
 }
