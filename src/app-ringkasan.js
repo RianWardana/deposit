@@ -2,6 +2,8 @@ import {LitElement, html, css} from 'lit-element';
 import {styles} from './lit-styles.js';
 import {firebase} from './firebase.js';
 
+import { Chart, registerables } from 'chart.js';
+
 class appRingkasan extends LitElement {
     
     static get properties() {
@@ -49,6 +51,23 @@ class appRingkasan extends LitElement {
                 padding: 5px;
                 width: 100%;
             }
+
+            canvas {
+                max-height: 400px;
+            }
+
+            h3 {
+                margin: 0 0 10px;
+            }
+
+            h4 {
+                margin: 0 0 10px;
+                color: #FFAB00;
+            }
+
+            paper-material {
+                padding: 16px;
+            }
         `];
     }
 
@@ -68,21 +87,16 @@ class appRingkasan extends LitElement {
 
                 <div class="narrow" id="containerRingkasan">
                     
-                    <!-- DAFTAR PENGELUARAN -->
+                    <!-- TOTAL PENGELUARAN -->
                     <paper-material>
-                        ${this._toArray(this.pengeluaran).map(item => {
-                            return html`
-                                <div class="flexSpaceBetween">
-                                    <span>${item.nama}</span>
-                                    <span>${this._formatJumlah(item.jumlah)}</span>
-                                </div>
-                            `;
-                        })}
+                        <h4>Total Pengeluaran</h4>
+                        <h3>${this._formatJumlah(this.total)}</h3>
+                        <canvas id="chart1"></canvas>
                     </paper-material>
 
                     <!-- TOTAL KATEGORI PENGELUARAN -->
                     <paper-material>
-                        <!-- <base-chart id="chart" type="doughnut" .data="${this.totalPerKategori}" .optionsa="{chartOptions}"></base-chart> -->
+                        <h4>Pengeluaran per Kategori</h4>
                         ${this._toArray(this.totalPerKategori).map(item => {
                             return html`
                                 <div class="flexSpaceBetween">
@@ -93,22 +107,41 @@ class appRingkasan extends LitElement {
                         })}
                     </paper-material>
 
-                    <!-- TOTAL PENGELUARAN -->
+                    <!-- DAFTAR PENGELUARAN -->
                     <paper-material>
+                        <h4>Pengeluaran</h4>
+                        ${this._toArray(this.pengeluaran).map(item => {
+                            return html`
+                                <div class="flexSpaceBetween">
+                                    <span>${item.nama}</span>
+                                    <span>${this._formatJumlah(item.jumlah)}</span>
+                                </div>
+                            `;
+                        })}
+                    </paper-material>
+
+                    <!-- TOTAL PENGELUARAN -->
+                    <!-- <paper-material>
                         <div class="flexSpaceBetween">
                             <span>Total pengeluaran</span>
                             <span>${this._formatJumlah(this.total)}</span>
                         </div>
-                    </paper-material>
+                    </paper-material> -->
                 </div>
             </app-header-layout>
         `;
+    }
+
+    firstUpdated() {
+        Chart.register(...registerables)
+        // this.loadChart1()
     }
 
     onChangedDate(e) {
         var year = (e.target.value).slice(0,4);
         var month = (e.target.value).slice(5,7);
         this.loadPengeluaran(year, month-1);
+        this.chart1.destroy()
     }
 
     _toArray(obj) {
@@ -185,7 +218,71 @@ class appRingkasan extends LitElement {
                 Object.entries(totalPerKategori).sort(([,a],[,b]) => b-a)
             );
 
-        });   
+            this.loadChart1();
+        });
+    }
+
+    loadChart1() {
+        let index = 0
+        let maxQtyKategori = 4
+
+        let labels = []
+        let data = []
+        let jumlahSisanya = 0
+        
+        this._toArray(this.totalPerKategori).forEach(kategori => {
+            if (index < maxQtyKategori) {
+                labels.push(kategori.nama)
+                data.push(kategori.jumlah)
+            } else {
+                jumlahSisanya += kategori.jumlah
+            }
+            index++
+        })
+
+        let colors = [
+            'rgba(243, 156, 18, 1.0)',
+            'rgba(52, 152, 219, 1.0)',
+            'rgba(46, 204, 113, 1.0)',
+            'rgba(26, 188, 156, 1.0)',
+            'rgba(149, 165, 166, 1.0)'
+        ]
+
+        const ctx = this.shadowRoot.getElementById('chart1').getContext('2d');
+
+        this.chart1 = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [...labels, 'Kategori Lain'],
+                datasets: [
+                {
+                    label: 'Rp',
+                    data: [...data, jumlahSisanya],
+                    backgroundColor: colors,
+                },
+                ],
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            } 
+        });
+
+        // this.chart1.data.labels = []
+        // this.chart1.data.datasets = []
+        // let index = 0
+
+        // this._toArray(this.totalPerKategori).forEach(kategori => {
+        //     this.chart1.data.labels.push(kategori.nama)
+        //     this.chart1.data.datasets.data.push(kategori.jumlah)
+        //     this.chart1.data.datasets.backgroundColor.push(colors[index])
+        //     index++
+        // })
+
+        // this.chart1.update()
     }
 }
 

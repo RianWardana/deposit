@@ -1,7 +1,6 @@
 /*
 To do:
-- Nama mutasi kredit
-- Nama mutasi debit
+- Hide/show saldo
 */
 
 import {LitElement, html, css} from 'lit-element';
@@ -65,8 +64,8 @@ class appDompet extends LitElement {
 
     render() {
         customElements.whenDefined('mwc-fab').then(() => {
-            this.shadowRoot.getElementById('fabShow').addEventListener("mousedown", this._showSaldo.bind(this));
-            this.shadowRoot.getElementById('fabShow').addEventListener("mouseup", this._hideSaldo.bind(this));
+            this.shadowRoot.getElementById('fabShow').addEventListener("touchstart", this._showSaldo.bind(this));
+            this.shadowRoot.getElementById('fabShow').addEventListener("touchend", this._hideSaldo.bind(this));
         });
 
         return html`

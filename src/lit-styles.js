@@ -39,7 +39,7 @@ export const styles = css`
         border-radius: 2px;
         height: 100%;
         margin-bottom: 16px;
-        padding: 16px 0 16px 0;
+        padding: 16px;
     }
 
     paper-spinner {
