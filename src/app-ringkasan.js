@@ -21,6 +21,9 @@ class appRingkasan extends LitElement {
         let monthToday = (new Date()).getMonth();
         this.yearMonthLast = new Date(yearToday, monthToday+1).toISOString().slice(0,7);
 
+        this.totalPerKategori = {}
+        this.totalPerKategori[0] = {}
+
         firebase.auth().onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {
                 this.uid = firebaseUser.uid
@@ -91,13 +94,14 @@ class appRingkasan extends LitElement {
                     <paper-material>
                         <h4>Total Pengeluaran</h4>
                         <h3>${this._formatJumlah(this.total)}</h3>
-                        <canvas id="chart1"></canvas>
+                        <canvas id="chart2"></canvas>
                     </paper-material>
 
                     <!-- TOTAL KATEGORI PENGELUARAN -->
                     <paper-material>
                         <h4>Pengeluaran per Kategori</h4>
-                        ${this._toArray(this.totalPerKategori).map(item => {
+                        <canvas id="chart1"></canvas>
+                        ${this._toArray(this.totalPerKategori[0]).map(item => {
                             return html`
                                 <div class="flexSpaceBetween">
                                     <span>${item.nama}</span>
@@ -119,14 +123,6 @@ class appRingkasan extends LitElement {
                             `;
                         })}
                     </paper-material>
-
-                    <!-- TOTAL PENGELUARAN -->
-                    <!-- <paper-material>
-                        <div class="flexSpaceBetween">
-                            <span>Total pengeluaran</span>
-                            <span>${this._formatJumlah(this.total)}</span>
-                        </div>
-                    </paper-material> -->
                 </div>
             </app-header-layout>
         `;
@@ -134,7 +130,6 @@ class appRingkasan extends LitElement {
 
     firstUpdated() {
         Chart.register(...registerables)
-        // this.loadChart1()
     }
 
     onChangedDate(e) {
@@ -142,6 +137,7 @@ class appRingkasan extends LitElement {
         var month = (e.target.value).slice(5,7);
         this.loadPengeluaran(year, month-1);
         this.chart1.destroy()
+        this.chart2.destroy()
     }
 
     _toArray(obj) {
@@ -172,7 +168,10 @@ class appRingkasan extends LitElement {
     }
 
     loadPengeluaran(year, month) {
-        let startTime = new Date(year, month).getTime() / -1000; // pembagi negatif karena key di Firebase negatif
+        // Akan load data dari beberapa bulan sebelumnya
+        let berapaBulanSebelum = 2
+
+        let startTime = new Date(year, month - berapaBulanSebelum).getTime() / -1000; // pembagi negatif karena key di Firebase negatif
         let endTime = new Date(year, month+1).getTime() / -1000;
 
         let dbTagihan = firebase.database().ref(this.uid + "/tagihan");
@@ -183,6 +182,10 @@ class appRingkasan extends LitElement {
             let total = 0;
             let totalPerKategori = {};
 
+            for(let i = 0; i <= berapaBulanSebelum; i++) {
+                totalPerKategori[i] = {}
+            }
+            
             entries.forEach(entry => {
                 let nama = entry.val()['nama'];
                 let jumlah = entry.val()['jumlah'];
@@ -190,17 +193,30 @@ class appRingkasan extends LitElement {
                 // Jika tidak ada jumlah (berarti mutasi non-pengeluaran)
                 if (jumlah < 1) return;
 
-                if (pengeluaran[nama] > 0) pengeluaran[nama] += jumlah;
-                else pengeluaran[nama] = jumlah;
+                // Menghasilkan selisih bulan entry dengan bulan saat ini (bulan yang dipilih user)
+                const inputDate = new Date(year, month);
+                const entryDate = new Date( parseInt(entry.key) * -1000 );
+                let inputYear = inputDate.getFullYear();
+                let inputMonth = inputDate.getMonth();
+                let entryYear = entryDate.getFullYear();
+                let entryMonth = entryDate.getMonth();
+                let monthDifference = (inputYear - entryYear) * 12 + (inputMonth - entryMonth);
 
-                // Hitung total pengeluaran
-                total += jumlah;
+                // Hanya hitung total dan total per item untuk entry di bulan yang dipilih user
+                if (monthDifference == 0) {
+                    // Hitung total per item
+                    if (pengeluaran[nama] > 0) pengeluaran[nama] += jumlah;
+                    else pengeluaran[nama] = jumlah;
+
+                    // Hitung total pengeluaran
+                    total += jumlah;
+                }
 
                 // Hitung total pengeluaran per kategori
                 for (let kategori of this.kategoriPengeluaran) {
                     if ( (kategori.entri.includes(nama)) || (kategori.nama == 'Lainnya') ) { // user tidak boleh bisa membuat kategori bernama "Lainnya"
-                        let a = totalPerKategori[kategori.nama];
-                        totalPerKategori[kategori.nama] = (isNaN(a) ? jumlah : a + jumlah);
+                        let a = totalPerKategori[monthDifference][kategori.nama];
+                        totalPerKategori[monthDifference][kategori.nama] = (isNaN(a) ? jumlah : a + jumlah);
                         break;
                     }
                 }
@@ -213,12 +229,15 @@ class appRingkasan extends LitElement {
                 Object.entries(pengeluaran).sort(([,a],[,b]) => b-a)
             );
 
-            // Total per kategori diurut descending
-            this.totalPerKategori = Object.fromEntries(
-                Object.entries(totalPerKategori).sort(([,a],[,b]) => b-a)
-            );
+            // Total per kategori (beberapa bulan sebelum sampai bulan yang dipilih user) diurut descending
+            for (let i = 0; i <= berapaBulanSebelum; i++) {
+                this.totalPerKategori[i] = Object.fromEntries(
+                    Object.entries(totalPerKategori[i]).sort(([,a],[,b]) => b-a)
+                );
+            }
 
             this.loadChart1();
+            this.loadChart2(year, month, berapaBulanSebelum);
         });
     }
 
@@ -230,7 +249,7 @@ class appRingkasan extends LitElement {
         let data = []
         let jumlahSisanya = 0
         
-        this._toArray(this.totalPerKategori).forEach(kategori => {
+        this._toArray(this.totalPerKategori[0]).forEach(kategori => {
             if (index < maxQtyKategori) {
                 labels.push(kategori.nama)
                 data.push(kategori.jumlah)
@@ -284,6 +303,76 @@ class appRingkasan extends LitElement {
 
         // this.chart1.update()
     }
+
+    loadChart2(year, month, berapaBulanSebelum) {
+        let maxQtyKategori = 4
+        let chartLabels = this.getPreviousMonths(year, month, berapaBulanSebelum)
+        let chartData = []
+
+        let colors = [
+            'rgba(243, 156, 18, 1.0)',
+            'rgba(52, 152, 219, 1.0)',
+            'rgba(46, 204, 113, 1.0)',
+            'rgba(26, 188, 156, 1.0)',
+            'rgba(149, 165, 166, 1.0)'
+        ]
+
+        // Kategori yang ditampilkan adalah top x dari kategori yang ada di bulan yang dipilih user
+        let kategoriDitampilkan = Object.keys(this.totalPerKategori[0]).slice(0,maxQtyKategori)
+
+        // todo: buat kategori lainnya
+
+        kategoriDitampilkan.forEach((namaKategori, index) => {
+            let data = chartLabels.map((x,index) => this.totalPerKategori[berapaBulanSebelum-index][namaKategori])
+            chartData.push({
+                label: namaKategori,
+                data: data,
+                backgroundColor: colors[index]
+            })
+        })
+
+        const ctx = this.shadowRoot.getElementById('chart2').getContext('2d');
+
+        this.chart2 = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: chartLabels,
+                datasets: chartData,
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {position: 'bottom'}
+                },
+                scales: {
+                    x: {stacked: true},
+                    y: {stacked: true}
+                },
+            },
+        });
+    }
+
+    getPreviousMonths(year, month, count) {
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        const result = [];
+      
+        // Decrement month and year until count becomes zero
+        while (count >= 0) {
+          
+          if (month < 0) {
+            // If month becomes negative, wrap around to December and decrement the year
+            month = 11;
+            year--;
+          }
+      
+          // Add the formatted month and year to the result array
+          result.unshift(`${months[month]} ${year}`);
+          count--;
+          month--;
+        }
+
+        return result;
+      }
 }
 
 customElements.define('app-ringkasan', appRingkasan);
