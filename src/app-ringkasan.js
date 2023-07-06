@@ -317,10 +317,24 @@ class appRingkasan extends LitElement {
             'rgba(149, 165, 166, 1.0)'
         ]
 
-        // Kategori yang ditampilkan adalah top x dari kategori yang ada di bulan yang dipilih user
+        // Kategori yang ditampilkan adalah top [maxQtyKategori] dari kategori yang ada di bulan yang dipilih user
         let kategoriDitampilkan = Object.keys(this.totalPerKategori[0]).slice(0,maxQtyKategori)
 
-        // todo: buat kategori lainnya
+        // Hitung kategori lain (kategiri di luar kategori yang ditampilkan)
+        let totalKategoriLain = []
+
+        for(let i = berapaBulanSebelum; i >= 0; i--) {
+            Object.keys(this.totalPerKategori[i]).forEach(kat => {
+                if ( !kategoriDitampilkan.includes(kat) ) {
+                    if (totalKategoriLain[berapaBulanSebelum - i] == null) {
+                        totalKategoriLain[berapaBulanSebelum - i] = parseInt(this.totalPerKategori[i][kat])
+                    }
+                    else {
+                        totalKategoriLain[berapaBulanSebelum - i] += parseInt(this.totalPerKategori[i][kat])
+                    }
+                }
+            })
+        }
 
         kategoriDitampilkan.forEach((namaKategori, index) => {
             let data = chartLabels.map((x,index) => this.totalPerKategori[berapaBulanSebelum-index][namaKategori])
@@ -329,6 +343,13 @@ class appRingkasan extends LitElement {
                 data: data,
                 backgroundColor: colors[index]
             })
+        })
+
+        // Untuk masukkan 'Kategori Lain' ke chart
+        chartData.push({
+            label: 'Kategori Lain',
+            data: totalKategoriLain,
+            backgroundColor: colors[maxQtyKategori]
         })
 
         const ctx = this.shadowRoot.getElementById('chart2').getContext('2d');
@@ -341,6 +362,7 @@ class appRingkasan extends LitElement {
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {position: 'bottom'}
                 },
