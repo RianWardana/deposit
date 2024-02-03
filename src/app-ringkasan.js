@@ -11,7 +11,9 @@ class appRingkasan extends LitElement {
             pengeluaran: Object,
             total: Number,
             totalPerKategori: Object,
-            kategoriPengeluaran: Array
+            kategoriPengeluaran: Array,
+            topKategori: Array,
+            objKategoriPengeluaran: Object
         }
     }
 
@@ -21,8 +23,11 @@ class appRingkasan extends LitElement {
         let monthToday = (new Date()).getMonth();
         this.yearMonthLast = new Date(yearToday, monthToday+1).toISOString().slice(0,7);
 
+        // Perlu mendefinisikan variabel yang digunakan di render() agar tidak ada warning
         this.totalPerKategori = {}
         this.totalPerKategori[0] = {}
+        this.topKategori = []
+        this.objKategoriPengeluaran = {}
 
         firebase.auth().onAuthStateChanged(firebaseUser => {
             if (firebaseUser) {
@@ -112,7 +117,7 @@ class appRingkasan extends LitElement {
                     </paper-material>
 
                     <!-- DAFTAR PENGELUARAN -->
-                    <paper-material>
+                    <!-- <paper-material>
                         <h4>Pengeluaran</h4>
                         ${this._toArray(this.pengeluaran).map(item => {
                             return html`
@@ -122,7 +127,51 @@ class appRingkasan extends LitElement {
                                 </div>
                             `;
                         })}
-                    </paper-material>
+                    </paper-material> -->
+
+                    <!-- DAFTAR KATEGORI (top [maxQtyKategori]) -->
+                    ${this._toArray(this.totalPerKategori[0]).map(kategori => {
+                        return html `
+                            <paper-material>
+                            <h4>Kategori: ${kategori.nama}</h4>
+                            ${this._toArray(this.pengeluaran).map(item => {
+                                // Lewatkan iterasi kalau objKategoriPengeluaran belum selesai loaded
+                                if (this.objKategoriPengeluaran[kategori.nama] == undefined) return
+
+                                // Tulis item pengeluaran kalau pengeluaran tersebut termasuk dalam kategori iterasi ini
+                                if (this.objKategoriPengeluaran[kategori.nama].includes(item.nama)) {
+                                    return html `
+                                        <div class="flexSpaceBetween">
+                                            <span>${item.nama}</span>
+                                            <span>${this._formatJumlah(item.jumlah)}</span>
+                                        </div>
+                                    `
+                                }
+                            })}
+                            </paper-material>
+                        `
+                    })}
+
+                    <!-- KATEGORI LAIN -->
+                    <!-- <paper-material>
+                        <h4>Kategori: Kategori Lain</h4>
+                        ${this._toArray(this.pengeluaran).map(item => {
+                            let entriTopKategori = []
+
+                            this.topKategori.forEach(tk => {
+                                entriTopKategori = [...entriTopKategori, ...this.objKategoriPengeluaran[tk]]
+                            })
+
+                            if (!entriTopKategori.includes(item.nama)) {
+                                return html `
+                                    <div class="flexSpaceBetween">
+                                        <span>${item.nama}</span>
+                                        <span>${this._formatJumlah(item.jumlah)}</span>
+                                    </div>
+                                `
+                            }
+                        })}
+                    </paper-material> -->
                 </div>
             </app-header-layout>
         `;
@@ -159,17 +208,19 @@ class appRingkasan extends LitElement {
     // atau tidak apa-apa ya? karena di tagihan-edit juga ada dan sepertinya tidak memberatkan
     loadKategoriPengeluaran() {
         firebase.database().ref(this.uid).child("kategoriPengeluaran").on('value', queryResult => {
-            this.kategoriPengeluaran = [];
+            this.kategoriPengeluaran = []
+            this.objKategoriPengeluaran = {}
             
             queryResult.forEach(objNamaPengeluaran => {
-                this.kategoriPengeluaran = [...this.kategoriPengeluaran, objNamaPengeluaran.val()];
+                this.kategoriPengeluaran = [...this.kategoriPengeluaran, objNamaPengeluaran.val()]
+                this.objKategoriPengeluaran[objNamaPengeluaran.val().nama] = objNamaPengeluaran.val().entri
             });
         });
     }
 
     loadPengeluaran(year, month) {
         // Akan load data dari beberapa bulan sebelumnya
-        let berapaBulanSebelum = 2
+        let berapaBulanSebelum = 5
 
         let startTime = new Date(year, month - berapaBulanSebelum).getTime() / -1000; // pembagi negatif karena key di Firebase negatif
         let endTime = new Date(year, month+1).getTime() / -1000;
@@ -258,6 +309,9 @@ class appRingkasan extends LitElement {
             }
             index++
         })
+
+        // Berisi sebanyak [maxQtyKategori] dengan jumlah terbanyak
+        this.topKategori = labels
 
         let colors = [
             'rgba(243, 156, 18, 1.0)',
