@@ -151,27 +151,6 @@ class appRingkasan extends LitElement {
                             </paper-material>
                         `
                     })}
-
-                    <!-- KATEGORI LAIN -->
-                    <!-- <paper-material>
-                        <h4>Kategori: Kategori Lain</h4>
-                        ${this._toArray(this.pengeluaran).map(item => {
-                            let entriTopKategori = []
-
-                            this.topKategori.forEach(tk => {
-                                entriTopKategori = [...entriTopKategori, ...this.objKategoriPengeluaran[tk]]
-                            })
-
-                            if (!entriTopKategori.includes(item.nama)) {
-                                return html `
-                                    <div class="flexSpaceBetween">
-                                        <span>${item.nama}</span>
-                                        <span>${this._formatJumlah(item.jumlah)}</span>
-                                    </div>
-                                `
-                            }
-                        })}
-                    </paper-material> -->
                 </div>
             </app-header-layout>
         `;
