@@ -12,7 +12,7 @@ class appRingkasan extends LitElement {
             total: Number,
             totalPerKategori: Object,
             kategoriPengeluaran: Array,
-            topKategori: Array,
+            semuaNamaPengeluaran: Array,
             objKategoriPengeluaran: Object
         }
     }
@@ -26,7 +26,7 @@ class appRingkasan extends LitElement {
         // Perlu mendefinisikan variabel yang digunakan di render() agar tidak ada warning
         this.totalPerKategori = {}
         this.totalPerKategori[0] = {}
-        this.topKategori = []
+        this.semuaNamaPengeluaran = []
         this.objKategoriPengeluaran = {}
 
         firebase.auth().onAuthStateChanged(firebaseUser => {
@@ -129,7 +129,7 @@ class appRingkasan extends LitElement {
                         })}
                     </paper-material> -->
 
-                    <!-- DAFTAR KATEGORI (top [maxQtyKategori]) -->
+                    <!-- DAFTAR KATEGORI -->
                     ${this._toArray(this.totalPerKategori[0]).map(kategori => {
                         return html `
                             <paper-material>
@@ -139,7 +139,8 @@ class appRingkasan extends LitElement {
                                 if (this.objKategoriPengeluaran[kategori.nama] == undefined) return
 
                                 // Tulis item pengeluaran kalau pengeluaran tersebut termasuk dalam kategori iterasi ini
-                                if (this.objKategoriPengeluaran[kategori.nama].includes(item.nama)) {
+                                // Jika kategori yang diiterasi sekarang adalah 'Lainnya', masukkan juga pengeluaran yang tidak masuk ke kategori apapun
+                                if (this.objKategoriPengeluaran[kategori.nama].includes(item.nama) || (kategori.nama == 'Lainnya') && !this.semuaNamaPengeluaran.includes(item.nama) ) {
                                     return html `
                                         <div class="flexSpaceBetween">
                                             <span>${item.nama}</span>
@@ -189,11 +190,15 @@ class appRingkasan extends LitElement {
         firebase.database().ref(this.uid).child("kategoriPengeluaran").on('value', queryResult => {
             this.kategoriPengeluaran = []
             this.objKategoriPengeluaran = {}
+            this.semuaNamaPengeluaran = []
             
             queryResult.forEach(objNamaPengeluaran => {
                 this.kategoriPengeluaran = [...this.kategoriPengeluaran, objNamaPengeluaran.val()]
                 this.objKategoriPengeluaran[objNamaPengeluaran.val().nama] = objNamaPengeluaran.val().entri
+                this.semuaNamaPengeluaran = [...this.semuaNamaPengeluaran, ...objNamaPengeluaran.val().entri]
             });
+
+            console.log(this.semuaNamaPengeluaran)
         });
     }
 
