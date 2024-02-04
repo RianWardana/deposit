@@ -192,11 +192,12 @@ class appDeposit extends LitElement {
                 var bulan = (dateObject.getMonth() < 9 ? "0" : "") + (dateObject.getMonth() + 1);
                 var tahun = dateObject.getYear() - 100;
 
-                // Kredit, Debit, Sumber, Saldo di-0-kan kalau belum ada
+                // Kredit, Debit, Sumber, Saldo, Group di-0-kan kalau belum ada
                 let kredit = (typeof pengeluaran.val()['kredit'] == 'undefined' ? 0 : pengeluaran.val()['kredit'])
                 let debit = (pengeluaran.val()['jumlah'] > 0 ? pengeluaran.val()['jumlah'] : pengeluaran.val()['debit'])
                 let sumber = (typeof pengeluaran.val()['sumber'] == 'undefined' ? 0 : pengeluaran.val()['sumber'])
                 let saldo = (typeof pengeluaran.val()['saldo'] == 'undefined' ? 0 : pengeluaran.val()['saldo'])
+                let group = (typeof pengeluaran.val()['group'] == 'undefined' ? 0 : pengeluaran.val()['group'])
 
                 this.dataMutasi.push({
                     key: pengeluaran.key,
@@ -206,7 +207,8 @@ class appDeposit extends LitElement {
                     kredit: kredit,
                     debit: debit,
                     sumber: sumber,
-                    saldo: saldo
+                    saldo: saldo,
+                    group: group
                 })
             });
         });

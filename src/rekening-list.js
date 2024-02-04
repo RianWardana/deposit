@@ -35,14 +35,17 @@ class rekeningList extends LitElement {
                     <span><b>Rp${this._formatSaldo(this.saldo)}</b></span>
                 </paper-material>
                 
-                ${this.filteredData.map((item) => html`
-                    <rekening-item 
-                        waktu="${item.waktu}" 
-                        nama="${item.nama}" 
-                        debit="${item.debit}" 
-                        kredit="${item.kredit}">
-                    </rekening-item>
-                `)}
+                ${this.filteredData.map((item) => {
+                    if (item.group != 0) return
+                    return html`
+                        <rekening-item 
+                            waktu="${item.waktu}" 
+                            nama="${item.nama}" 
+                            debit="${item.debit}" 
+                            kredit="${item.kredit}">
+                        </rekening-item>
+                    `
+                })}
 
                 <!-- ${until(
                     new Promise(resolve => {
