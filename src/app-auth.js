@@ -37,8 +37,8 @@ class appAuth extends LitElement {
 
             <div id="container" class="vertical layout">
                 <iron-image style="width:280px; height:80px;" sizing="cover" src="./img/auth.png"></iron-image>
-                <mwc-button raised="" @click="${this._tapLoginGoogle}">Sign in with Google</mwc-button>
-                <mwc-button raised="" @click="${this._tapLoginMicrosoft}">Sign in with Microsoft</mwc-button>
+                <mwc-button raised="" @click="${e => this._tapLogin('google')}">Sign in with Google</mwc-button>
+                <mwc-button raised="" @click="${e => this._tapLogin('microsoft')}">Sign in with Microsoft</mwc-button>
                 <span>Your privacy is very important to us. This app will not share your personal information.</span>
             </div>
 
@@ -99,16 +99,17 @@ class appAuth extends LitElement {
         }
     }
 
-    _tapLoginGoogle() {
+    _tapLogin(sso) {
         this.shadowRoot.getElementById('toast').show({text: 'Logging in...', duration: 5000})
-        var provider = new firebase.auth.GoogleAuthProvider();
-        firebase.auth().signInWithRedirect(provider);
-    }
 
-    _tapLoginMicrosoft() {
-        this.shadowRoot.getElementById('toast').show({text: 'Logging in...', duration: 5000})
-        var provider = new firebase.auth.OAuthProvider('microsoft.com');
-        firebase.auth().signInWithRedirect(provider);
+        let provider
+        if (sso == 'google') provider = new firebase.auth.GoogleAuthProvider();
+        else if (sso == 'microsoft') provider = new firebase.auth.OAuthProvider('microsoft.com');
+
+        // Conditional to mitigate cross-origin redirect block by Google Chrome
+        if (location.hostname == 'deposit-ce46e.firebaseapp.com') firebase.auth().signInWithRedirect(provider);
+        else firebase.auth().signInWithPopup(provider);
+
     }
 }
 
